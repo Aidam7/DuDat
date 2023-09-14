@@ -46,3 +46,6 @@ package-lock.json
 
 #figma
 *.fig
+
+#Adobe Illustrator
+*.ai
