@@ -28,11 +28,10 @@ model Account {
   scope             String?
   id_token          String? // @db.Text
   session_state     String?
-  image             String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks             Task[]
-  group             Group   @relation(fields: [groupId], references: [id])
-  groupId           String
+  group             Group?  @relation(fields: [groupId], references: [id])
+  groupId           String?
 
   @@unique([provider, providerAccountId])
 }
@@ -50,6 +49,7 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  image         String?
   accounts      Account[]
   sessions      Session[]
 }
