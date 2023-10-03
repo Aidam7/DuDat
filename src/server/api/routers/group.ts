@@ -22,6 +22,15 @@ export const groupsRouter = createTRPCRouter({
   create: publicProcedure
     .input(z.object({ name: z.string(), memberIDs: z.array(z.string()) }))
     .mutation(async ({ ctx, input }) => {
-        
+      const group = await ctx.prisma.group.create({
+        data: {
+          name: input.name,
+        },
+      });
+      const data = input.memberIDs.map((id) => ({
+        userId: id,
+        groupId: group.id,
+      }));
+      await ctx.prisma.groupMembership.createMany({ data });
     }),
 });
