@@ -50,8 +50,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   tasks         Task[]
-  group         Group?    @relation(fields: [groupId], references: [id])
-  groupId       String?
+  group         Group[]
 }
 
 model VerificationToken {
