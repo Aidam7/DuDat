@@ -7,7 +7,16 @@ import {
 } from "~/server/api/trpc";
 
 export const tasksRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.task.findMany();
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.task.findMany();
   }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
