@@ -42,15 +42,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  tasks         Task[]
-  group         Group[]
+  id              String            @id @default(cuid())
+  name            String?
+  email           String?           @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  GroupMembership GroupMembership[]
+  TaskAssignemt   TaskAssignemt[]
 }
 
 model VerificationToken {
@@ -62,23 +62,40 @@ model VerificationToken {
 }
 
 model Task {
-  id           String    @id @default(cuid())
-  title        String
-  desccription String?
-  assignees    User[]
-  createdOn    DateTime  @default(now())
-  dueOn        DateTime?
-  finishedOn   DateTime?
-  group        Group     @relation(fields: [groupId], references: [id])
-  groupId      String
-  authorId     String
+  id            String          @id @default(cuid())
+  title         String
+  desccription  String?
+  createdOn     DateTime        @default(now())
+  dueOn         DateTime?
+  finishedOn    DateTime?
+  group         Group           @relation(fields: [groupId], references: [id])
+  groupId       String
+  authorId      String
+  TaskAssignemt TaskAssignemt[]
 
   @@index([authorId])
+  @@index([groupId])
 }
 
 model Group {
+  id              String            @id @default(cuid())
+  name            String
+  tasks           Task[]
+  GroupMembership GroupMembership[]
+}
+
+model GroupMembership {
   id      String @id @default(cuid())
-  name    String
-  members User[]
-  tasks   Task[]
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  groupId String
+  group   Group  @relation(fields: [groupId], references: [id])
+}
+
+model TaskAssignemt {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
 }
