@@ -89,7 +89,7 @@ model GroupMembership {
   userId  String
   user    User   @relation(fields: [userId], references: [id])
   groupId String
-  group   Group  @relation(fields: [groupId], references: [id])
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
 model TaskAssignemt {
