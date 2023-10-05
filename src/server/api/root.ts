@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { tasksRouter } from "./routers/tasks";
-import { groupsRouter } from "./routers/group";
+import { groupsRouter } from "./routers/groups";
 
 /**
  * This is the primary router for your server.
