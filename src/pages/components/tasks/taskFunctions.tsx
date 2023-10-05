@@ -20,8 +20,15 @@ export const TaskFunctions: React.FC = () => {
         assigneeIDs,
       });
     };
+    const deleteTaskMutation = api.tasks.deleteById.useMutation();
+    const deleteTaskById =async (id:string) => {
+        await deleteTaskMutation.mutateAsync({
+            id
+        })
+    }
     return <>
     <h1>Create task</h1>
     <button onClick={() => createTask("test", null, "clnbo5abk0005fei8avje7yfa", "clnbo50ri0000fei80fcycqkz", null, ["clnbo50ri0000fei80fcycqkz"])}>TVOŘ</button>
+    <button onClick={() => deleteTaskById("clndi6ahq0007fefsnuckbws0")}>SMAŽ</button>
     </>
 }
