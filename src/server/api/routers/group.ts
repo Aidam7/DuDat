@@ -33,4 +33,13 @@ export const groupsRouter = createTRPCRouter({
       }));
       await ctx.prisma.groupMembership.createMany({ data });
     }),
+  deleteById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.group.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
 });
