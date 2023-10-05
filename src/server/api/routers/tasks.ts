@@ -19,4 +19,31 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  create: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        desc: z.string().nullable(),
+        parentGroupId: z.string(),
+        authorId: z.string(),
+        assigneeIDs: z.array(z.string()),
+        dueOn: z.date().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.create({
+        data: {
+          title: input.title,
+          description: input.desc,
+          groupId: input.parentGroupId,
+          authorId: input.authorId,
+          dueOn: input.dueOn,
+        },
+      });
+      const data = input.assigneeIDs.map((id) => ({
+        userId: id,
+        taskId: task.id,
+      }));
+      await ctx.prisma.taskAssignemt.createMany({ data });
+    }),
 });

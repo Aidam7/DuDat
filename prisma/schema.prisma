@@ -69,7 +69,7 @@ model VerificationToken {
 model Task {
   id            String          @id @default(cuid())
   title         String
-  desccription  String?
+  description  String?
   createdOn     DateTime        @default(now())
   dueOn         DateTime?
   finishedOn    DateTime?
@@ -102,5 +102,5 @@ model TaskAssignemt {
   userId String
   user   User   @relation(fields: [userId], references: [id])
   taskId String
-  task   Task   @relation(fields: [taskId], references: [id])
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
