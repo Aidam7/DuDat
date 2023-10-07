@@ -14,8 +14,8 @@ generator client {
 //   url      = env("DATABASE_URL")
 // }
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
   directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
@@ -69,7 +69,7 @@ model VerificationToken {
 model Task {
   id            String          @id @default(cuid())
   title         String
-  description  String?
+  description   String?
   createdOn     DateTime        @default(now())
   dueOn         DateTime?
   finishedOn    DateTime?
@@ -87,6 +87,8 @@ model Group {
   name            String
   tasks           Task[]
   GroupMembership GroupMembership[]
+
+  @@index([name])
 }
 
 model GroupMembership {
