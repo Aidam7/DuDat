@@ -51,4 +51,16 @@ export const tasksRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.task.delete({ where: { id: input.id } });
     }),
+  locateByName: publicProcedure
+    .input(z.object({ name: z.string(), groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findMany({
+        where: {
+          title: {
+            contains: input.name,
+          },
+          groupId: input.groupId
+        },
+      });
+    }),
 });
