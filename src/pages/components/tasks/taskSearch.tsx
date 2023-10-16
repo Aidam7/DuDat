@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
@@ -24,7 +25,7 @@ export const TaskSearch: React.FC = () => {
       ></input>
       {foundTasks && foundTasks.length == 0
         ? "We couldn't find anything"
-        : foundTasks?.map((task) => <p key={task.title}>{task.title}</p>)}
+        : foundTasks?.map((task) => <Link key={task.title} href={"../tasks/" + task.id}>{task.title}</Link>)}
     </>
   );
 };
