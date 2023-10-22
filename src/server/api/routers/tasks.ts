@@ -44,7 +44,7 @@ export const tasksRouter = createTRPCRouter({
         userId: id,
         taskId: task.id,
       }));
-      await ctx.prisma.taskAssignemt.createMany({ data });
+      await ctx.prisma.taskAssignment.createMany({ data });
     }),
   deleteById: publicProcedure
     .input(z.object({ id: z.string() }))
