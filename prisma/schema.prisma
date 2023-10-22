@@ -55,7 +55,7 @@ model User {
   accounts        Account[]
   sessions        Session[]
   GroupMembership GroupMembership[]
-  TaskAssignemt   TaskAssignemt[]
+  TaskAssignment  TaskAssignment[]
   selectedGroupId String?
 }
 
@@ -68,16 +68,16 @@ model VerificationToken {
 }
 
 model Task {
-  id            String          @id @default(cuid())
-  title         String
-  description   String?
-  createdOn     DateTime        @default(now())
-  dueOn         DateTime?
-  finishedOn    DateTime?
-  group         Group           @relation(fields: [groupId], references: [id])
-  groupId       String
-  authorId      String
-  TaskAssignemt TaskAssignemt[]
+  id             String           @id @default(cuid())
+  title          String
+  description    String?
+  createdOn      DateTime         @default(now())
+  dueOn          DateTime?
+  finishedOn     DateTime?
+  group          Group            @relation(fields: [groupId], references: [id])
+  groupId        String
+  authorId       String
+  TaskAssignment TaskAssignment[]
 
   @@index([authorId])
   @@index([groupId])
@@ -95,15 +95,15 @@ model Group {
 model GroupMembership {
   id      String @id @default(cuid())
   userId  String
-  user    User   @relation(fields: [userId], references: [id])
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   groupId String
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }
 
-model TaskAssignemt {
+model TaskAssignment {
   id     String @id @default(cuid())
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
