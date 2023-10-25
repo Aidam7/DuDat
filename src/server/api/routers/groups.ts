@@ -53,4 +53,22 @@ export const groupsRouter = createTRPCRouter({
         },
       });
     }),
+  locateByNameAndMember: protectedProcedure
+    .input(z.object({ name: z.string(), memberId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.group.findMany({
+        where: {
+          name: {
+            contains: input.name,
+          },
+          GroupMembership: {
+            some: {
+              userId: {
+                equals: input.memberId,
+              },
+            },
+          },
+        },
+      });
+    }),
 });
