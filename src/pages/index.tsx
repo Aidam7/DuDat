@@ -6,8 +6,8 @@ import { api } from "~/utils/api";
 import styles from "./index.module.css";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
+  const { data } = api.tasks.getAll.useQuery();
+  console.log(data)
   return (
     <>
       <Head>
@@ -46,7 +46,6 @@ export default function Home() {
           </div>
           <div className={styles.showcaseContainer}>
             <p className={styles.showcaseText}>
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
             <AuthShowcase />
           </div>
@@ -58,17 +57,10 @@ export default function Home() {
 
 function AuthShowcase() {
   const { data: sessionData } = useSession();
-
-  const { data: secretMessage } = api.example.getSecretMessage.useQuery(
-    undefined, // no input
-    { enabled: sessionData?.user !== undefined }
-  );
-
   return (
     <div className={styles.authContainer}>
       <p className={styles.showcaseText}>
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
       </p>
       <button
         className={styles.loginButton}

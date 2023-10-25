@@ -46,6 +46,32 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   },
+  events: {
+    createUser: async ({user}) => {
+      if(!user.name)
+        return;
+      const group = await prisma.group.create({
+        data: {
+          name: user.name,
+        },
+      });
+      await prisma.groupMembership.create({
+        data: {
+          groupId: group.id,
+          userId: user.id
+        }
+      })
+      await prisma.user.upsert({
+        where: {
+          id: user.id,
+        },
+        create: {},
+        update: {
+          selectedGroupId: group.id
+        }
+      })
+    }
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     DiscordProvider({
