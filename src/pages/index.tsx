@@ -1,8 +1,5 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-
 import { api } from "~/utils/api";
-import styles from "./index.module.css";
 
 export default function Home() {
   const { data } = api.tasks.getAll.useQuery();
@@ -38,31 +35,8 @@ export default function Home() {
               </div>
             </Link>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {/* {hello.data ? hello.data.greeting : "Loading tRPC query..."} */}
-            </p>
-            <AuthShowcase />
-          </div>
         </div>
       </main>
     </>
-  );
-}
-
-function AuthShowcase() {
-  const { data: sessionData } = useSession();
-  return (
-    <div className={styles.authContainer}>
-      <p className={styles.showcaseText}>
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-      </p>
-      <button
-        className={styles.loginButton}
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
   );
 }
