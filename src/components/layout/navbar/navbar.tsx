@@ -37,7 +37,7 @@ const DuDatNavbar: React.FC = () => {
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-inherit">ACME</p>
+            <p className="font-bold text-inherit">DuDat</p>
           </NavbarBrand>
         </NavbarContent>
 
