@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { api } from "~/utils/api";
 import styles from "./index.module.css";
-import DuDatNavbar from "~/components/layout/navbar/navbar";
 
 export default function Home() {
   const { data } = api.tasks.getAll.useQuery();
