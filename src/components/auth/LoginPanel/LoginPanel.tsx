@@ -7,7 +7,12 @@ const LoginButton: React.FC = () => {
   return (
     <>
       <p>
-        {sessionData && <span>{sessionData.user?.name} </span>}
+        {sessionData?.user.name && (
+          <span className="pr-5">
+            {sessionData.user.name.charAt(0).toUpperCase() +
+              sessionData.user.name.slice(1)}
+          </span>
+        )}
         <Button
           color="primary"
           onClick={sessionData ? () => void signOut() : () => void signIn()}
