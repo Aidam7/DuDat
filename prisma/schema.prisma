@@ -94,6 +94,7 @@ model Group {
   groupMembership GroupMembership[]
   owner           User              @relation(fields: [ownerId], references: [id])
   ownerId         String
+  description     String?
 
   @@index([name])
   @@index([ownerId])

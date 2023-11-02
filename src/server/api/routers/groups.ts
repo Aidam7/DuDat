@@ -25,6 +25,7 @@ export const groupsRouter = createTRPCRouter({
         name: z.string(),
         memberIDs: z.array(z.string()),
         ownerId: z.string(),
+        description: z.string().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -32,6 +33,7 @@ export const groupsRouter = createTRPCRouter({
         data: {
           name: input.name,
           ownerId: input.ownerId,
+          description: input.description,
         },
       });
       const data = input.memberIDs.map((id) => ({
