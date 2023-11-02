@@ -54,9 +54,13 @@ model User {
   image           String?
   accounts        Account[]
   sessions        Session[]
-  GroupMembership GroupMembership[]
+  groupMembership GroupMembership[]
+  groupOwnership  Group[]
   TaskAssignment  TaskAssignment[]
   selectedGroupId String?
+
+  @@index([name])
+  @@index([id])
 }
 
 model VerificationToken {
@@ -77,7 +81,7 @@ model Task {
   group          Group            @relation(fields: [groupId], references: [id])
   groupId        String
   authorId       String
-  TaskAssignment TaskAssignment[]
+  taskAssignment TaskAssignment[]
 
   @@index([authorId])
   @@index([groupId])
@@ -87,9 +91,12 @@ model Group {
   id              String            @id @default(cuid())
   name            String
   tasks           Task[]
-  GroupMembership GroupMembership[]
+  groupMembership GroupMembership[]
+  owner           User              @relation(fields: [ownerId], references: [id])
+  ownerId         String
 
   @@index([name])
+  @@index([ownerId])
 }
 
 model GroupMembership {
@@ -98,6 +105,9 @@ model GroupMembership {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   groupId String
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([groupId])
 }
 
 model TaskAssignment {
@@ -106,4 +116,7 @@ model TaskAssignment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([taskId])
 }
