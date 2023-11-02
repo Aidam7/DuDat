@@ -1,20 +1,20 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-export default function GroupDetail() {
+export default function UserDetail() {
   const router = useRouter();
   const id = router.query.id as string;
-  let group;
+  let user;
   if (typeof id === "string") {
-    const { data } = api.groups.getById.useQuery({ id });
-    group = data;
+    const { data } = api.users.getById.useQuery({ id });
+    user = data;
   }
   return (
     <>
-      {group ? (
+      {user ? (
         <>
-          <h1 className="bg-slate-600 text-6xl">{group.id}</h1>
+          <h1 className="bg-slate-600 text-6xl">{user.id}</h1>
           <br></br>
-          {group.name}
+          {user.name}
         </>
       ) : (
         <>404</>
