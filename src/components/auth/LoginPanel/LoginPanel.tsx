@@ -32,10 +32,7 @@ const LoginButton: React.FC = () => {
               />
             )}
             {sessionData?.user.name && (
-              <span className="pl-2 pr-4">
-                {sessionData.user.name.charAt(0).toUpperCase() +
-                  sessionData.user.name.slice(1)}
-              </span>
+              <span className="pl-2 pr-4">{sessionData.user.name}</span>
             )}
           </Link>
           <Button

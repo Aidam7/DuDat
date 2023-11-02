@@ -51,9 +51,11 @@ export const authOptions: NextAuthOptions = {
       if (!user.name) return;
       const group = await prisma.group.create({
         data: {
-          name: user.name,
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
           ownerId: user.id,
-          description: `You personal group, ${user.name}!`,
+          description: `You personal group, ${
+            user.name.charAt(0).toUpperCase() + user.name.slice(1)
+          }!`,
         },
       });
       await prisma.groupMembership.create({
@@ -69,6 +71,7 @@ export const authOptions: NextAuthOptions = {
         create: {},
         update: {
           selectedGroupId: group.id,
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
         },
       });
     },
