@@ -57,6 +57,7 @@ model User {
   groupMembership   GroupMembership[]
   groupOwnership    Group[]
   taskAssignment    TaskAssignment[]
+  taskOwnership     Task[]
   categoryOwnership Category[]
   selectedGroupId   String?
 
@@ -81,6 +82,7 @@ model Task {
   finishedOn     DateTime?
   group          Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId        String
+  author         User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId       String
   taskAssignment TaskAssignment[]
   categories     CategoryAssignment[]
