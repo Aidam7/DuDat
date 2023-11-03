@@ -47,30 +47,34 @@ export const authOptions: NextAuthOptions = {
     }),
   },
   events: {
-    createUser: async ({user}) => {
-      if(!user.name)
-        return;
+    createUser: async ({ user }) => {
+      if (!user.name) return;
       const group = await prisma.group.create({
         data: {
-          name: user.name,
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+          ownerId: user.id,
+          description: `You personal group, ${
+            user.name.charAt(0).toUpperCase() + user.name.slice(1)
+          }!`,
         },
       });
       await prisma.groupMembership.create({
         data: {
           groupId: group.id,
-          userId: user.id
-        }
-      })
+          userId: user.id,
+        },
+      });
       await prisma.user.upsert({
         where: {
           id: user.id,
         },
         create: {},
         update: {
-          selectedGroupId: group.id
-        }
-      })
-    }
+          selectedGroupId: group.id,
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+        },
+      });
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [

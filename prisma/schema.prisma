@@ -47,16 +47,22 @@ model Session {
 }
 
 model User {
-  id              String            @id @default(cuid())
-  name            String?
-  email           String?           @unique
-  emailVerified   DateTime?
-  image           String?
-  accounts        Account[]
-  sessions        Session[]
-  GroupMembership GroupMembership[]
-  TaskAssignment  TaskAssignment[]
-  selectedGroupId String?
+  id                String            @id @default(cuid())
+  name              String?
+  email             String?           @unique
+  emailVerified     DateTime?
+  image             String?
+  accounts          Account[]
+  sessions          Session[]
+  groupMembership   GroupMembership[]
+  groupOwnership    Group[]
+  taskAssignment    TaskAssignment[]
+  taskOwnership     Task[]
+  categoryOwnership Category[]
+  selectedGroupId   String?
+
+  @@index([name])
+  @@index([id])
 }
 
 model VerificationToken {
@@ -68,16 +74,18 @@ model VerificationToken {
 }
 
 model Task {
-  id             String           @id @default(cuid())
+  id             String               @id @default(cuid())
   title          String
   description    String?
-  createdOn      DateTime         @default(now())
+  createdOn      DateTime             @default(now())
   dueOn          DateTime?
   finishedOn     DateTime?
-  group          Group            @relation(fields: [groupId], references: [id])
+  group          Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId        String
+  author         User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId       String
-  TaskAssignment TaskAssignment[]
+  taskAssignment TaskAssignment[]
+  categories     CategoryAssignment[]
 
   @@index([authorId])
   @@index([groupId])
@@ -87,9 +95,25 @@ model Group {
   id              String            @id @default(cuid())
   name            String
   tasks           Task[]
-  GroupMembership GroupMembership[]
+  groupMembership GroupMembership[]
+  owner           User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
+  ownerId         String
+  description     String?
 
   @@index([name])
+  @@index([ownerId])
+}
+
+model Category {
+  id                 String               @id @default(cuid())
+  name               String
+  description        String?
+  authorId           String
+  author             User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  categoryAssignment CategoryAssignment[]
+
+  @@index([name])
+  @@index([authorId])
 }
 
 model GroupMembership {
@@ -98,6 +122,9 @@ model GroupMembership {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   groupId String
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([groupId])
 }
 
 model TaskAssignment {
@@ -106,4 +133,18 @@ model TaskAssignment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([taskId])
+}
+
+model CategoryAssignment {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  taskId     String
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
+  @@index([taskId])
 }
