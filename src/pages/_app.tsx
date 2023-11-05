@@ -39,7 +39,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <link rel="icon" href="/favicon.ico" />
           </Head>
           <DuDatNavbar></DuDatNavbar>
-          <main className=" flex min-h-screen flex-col">
+          <main className=" flex min-h-screen flex-col px-8">
             <Component {...pageProps} />
           </main>
         </Wrapper>
