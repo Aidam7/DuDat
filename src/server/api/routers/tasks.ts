@@ -28,7 +28,7 @@ export const tasksRouter = createTRPCRouter({
         authorId: z.string(),
         assigneeIDs: z.array(z.string()),
         dueOn: z.date().nullable(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const task = await ctx.prisma.task.create({
@@ -59,7 +59,25 @@ export const tasksRouter = createTRPCRouter({
           title: {
             contains: input.name,
           },
-          groupId: input.groupId
+          groupId: input.groupId,
+        },
+      });
+    }),
+  locateByAssigneeAndTitle: protectedProcedure
+    .input(z.object({ assigneeId: z.string(), title: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findMany({
+        where: {
+          title: {
+            contains: input.title,
+          },
+          taskAssignment: {
+            some: {
+              userId: {
+                equals: input.assigneeId,
+              },
+            },
+          },
         },
       });
     }),
