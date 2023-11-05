@@ -1,24 +1,25 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import { useState } from "react";
+
 export default function GroupDetail() {
   const router = useRouter();
   const id = router.query.id as string;
-  let group;
-  if (typeof id === "string") {
-    const { data } = api.groups.getById.useQuery({ id });
-    group = data;
-  }
+  const [loading, setLoading] = useState(true);
+
+  const { data: group } = api.groups.getById.useQuery(
+    { id },
+    {
+      enabled: typeof id === "string",
+      onSuccess: () => setLoading(false),
+    },
+  );
+  if (loading) return <>Loading...</>;
+  if (!group) return <>404</>;
   return (
     <>
-      {group ? (
-        <>
-          <h1 className="bg-slate-600 text-6xl">{group.id}</h1>
-          <br></br>
-          {group.name}
-        </>
-      ) : (
-        <>404</>
-      )}
+      <h1 className="bg-slate-600 text-6xl">{group.id}</h1>
+      {group.name}
     </>
   );
 }
