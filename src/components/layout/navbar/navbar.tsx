@@ -15,70 +15,46 @@ import LoginPanel from "~/components/auth/LoginPanel";
 const DuDatNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+  interface NavItem {
+    label: string;
+    href: string;
+  }
 
+  const navItems: NavItem[] = [
+    { label: "Groups", href: "/groups" },
+    { label: "Tasks", href: "/tasks" },
+  ];
   return (
     <>
-      <Navbar onMenuOpenChange={setIsMenuOpen}>
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="mb-5">
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="sm:hidden"
           />
           <NavbarBrand>
-            <p className="font-bold text-inherit">DuDat</p>
+            <Link href="/">
+              <span className="text-2xl font-bold">DuDat</span>
+            </Link>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden gap-4 sm:flex" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
+          {navItems.map((item) => (
+            <NavbarItem key={item.href}>
+              <Link href={item.href}>{item.label}</Link>
+            </NavbarItem>
+          ))}
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
             <LoginPanel />
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu>
-          {menuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === menuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                className="lg w-full"
-                href="#"
-              >
-                {item}
-              </Link>
+        <NavbarMenu className="font-mono">
+          {navItems.map((item) => (
+            <NavbarMenuItem key={item.href}>
+              <Link href={item.href}>{item.label}</Link>
             </NavbarMenuItem>
           ))}
         </NavbarMenu>
