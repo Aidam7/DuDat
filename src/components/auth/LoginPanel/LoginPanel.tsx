@@ -1,6 +1,7 @@
-import { Button, Image, Link } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 const LoginButton: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -19,7 +20,7 @@ const LoginButton: React.FC = () => {
       <div className="flex items-center">
         <Link
           href={`/users/${sessionData?.user.id}`}
-          className="text-foreground"
+          className="flex items-center text-foreground"
         >
           {sessionData?.user.image && (
             <Image
@@ -27,7 +28,7 @@ const LoginButton: React.FC = () => {
               alt="Users avatar"
               width={48}
               height={48}
-              className="rounded-full"
+              className="mr-2 rounded-full"
             />
           )}
           {sessionData?.user.name && (
