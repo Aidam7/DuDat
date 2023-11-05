@@ -22,7 +22,7 @@ export default function Tasks() {
     <>
       <h1 className="pb-5 text-6xl">Tasks</h1>
       <input
-        placeholder="Search for a group"
+        placeholder="Search for a task"
         className={"inner h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {

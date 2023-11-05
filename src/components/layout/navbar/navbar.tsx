@@ -21,8 +21,8 @@ const DuDatNavbar: React.FC = () => {
   }
 
   const navItems: NavItem[] = [
-    { label: "Groups", href: "/groups" },
-    { label: "Tasks", href: "/tasks" },
+    { label: "My Groups", href: "/groups" },
+    { label: "My Tasks", href: "/tasks" },
   ];
   return (
     <>
