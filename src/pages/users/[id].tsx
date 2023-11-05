@@ -1,24 +1,22 @@
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { api } from "~/utils/api";
 export default function UserDetail() {
   const router = useRouter();
   const id = router.query.id as string;
-  let user;
-  if (typeof id === "string") {
-    const { data } = api.users.getById.useQuery({ id });
-    user = data;
-  }
+  const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+  const { data: user } = api.users.getById.useQuery(
+    { id },
+    { enabled: session != null, onSuccess: () => setLoading(false) },
+  );
+  if (!session) return <>Please sign in</>;
+  if (loading) return <>Loading...</>;
+  if (!user) return <>404</>;
   return (
     <>
-      {user ? (
-        <>
-          <h1 className="bg-slate-600 text-6xl">{user.id}</h1>
-          <br></br>
-          {user.name}
-        </>
-      ) : (
-        <>404</>
-      )}
+      <h1 className="bg-slate-600 text-6xl">{user.name}</h1>
     </>
   );
 }
