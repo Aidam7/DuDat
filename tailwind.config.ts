@@ -12,6 +12,12 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      colors: {
+        black: "#0B191E",
+        cobalt: "#1D5B72",
+        blue: "#043B62",
+        "neon-blue": "#58C6BE",
+      },
     },
   },
   darkMode: "class",
