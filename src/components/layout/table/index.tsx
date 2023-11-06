@@ -1,3 +1,3 @@
-import { BasicTable } from "./table";
+import { GroupTable } from "./table";
 
-export default BasicTable;
+export default GroupTable;
