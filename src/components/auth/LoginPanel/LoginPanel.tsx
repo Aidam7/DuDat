@@ -20,7 +20,7 @@ const LoginButton: React.FC = () => {
       <div className="flex items-center">
         <Link
           href={`/users/${sessionData?.user.id}`}
-          className="flex items-center text-foreground"
+          className="flex items-center"
         >
           {sessionData?.user.image && (
             <Image

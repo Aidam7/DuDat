@@ -16,7 +16,7 @@ export default function UserDetail() {
   if (!user) return <>404</>;
   return (
     <>
-      <h1 className="bg-slate-600 text-6xl">{user.name}</h1>
+      <h1 className="text-6xl">{user.name}</h1>
     </>
   );
 }

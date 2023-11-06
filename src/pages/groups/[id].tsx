@@ -20,7 +20,7 @@ export default function GroupDetail() {
   if (!group) return <>404</>;
   return (
     <>
-      <h1 className="bg-slate-600 text-6xl">{group.name}</h1>
+      <h1 className="text-6xl">{group.name}</h1>
     </>
   );
 }

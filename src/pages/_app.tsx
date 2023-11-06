@@ -29,7 +29,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }: AppPropsWithLayout) => {
   const Wrapper = Component.Layout ?? DefaultLayout;
   return (
-    <NextUIProvider className="bg-slate-600 font-mono text-foreground dark">
+    <NextUIProvider className="bg-black font-mono text-white dark">
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
       <SessionProvider session={session}>
         <Wrapper>

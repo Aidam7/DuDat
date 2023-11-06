@@ -1,21 +1,16 @@
 import Link from "next/link";
-import GroupTable from "~/components/layout/table";
-import { api } from "~/utils/api";
 
 export default function Home() {
-  const { data: groups } = api.groups.getAll.useQuery();
-  console.log(groups);
   return (
     <>
-      <main className=" flex min-h-screen flex-col items-center justify-center bg-slate-600">
+      <main className=" flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-9xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+          <h1 className="text-9xl font-extrabold tracking-tight sm:text-[5rem]">
             DuDat
-          </h1>{groups &&
-          <GroupTable columns={[{"key": "id", "label": "chci se zabit"}, {"key": "name", "label": "Vojta smrdi"}]} rows={groups}/>}
+          </h1>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex max-w-xs flex-col gap-4 rounded-xl "
               href="https://create.t3.gg/en/usage/first-steps"
               target="_blank"
             >
@@ -26,7 +21,7 @@ export default function Home() {
               </div>
             </Link>
             <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex max-w-xs flex-col gap-4 rounded-xl "
               href="https://create.t3.gg/en/introduction"
               target="_blank"
             >
