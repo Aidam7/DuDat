@@ -7,16 +7,16 @@ import {
   TableRow,
   TableCell,
   getKeyValue,
+  Spinner,
 } from "@nextui-org/react";
 import { type Group } from "@prisma/client";
+import Link from "next/link";
+import { type ITableColumns } from "~/utils/types";
 
-interface IColums {
-  key: string;
-  label: string;
-}
 type Props = {
-  columns: IColums[];
+  columns: ITableColumns[];
   rows: Group[];
+  loading: boolean;
 };
 export const GroupTable: FC<Props> = (props: Props) => {
   return (
@@ -24,11 +24,20 @@ export const GroupTable: FC<Props> = (props: Props) => {
       <TableHeader columns={props.columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={props.rows}>
+      <TableBody
+        items={props.rows}
+        isLoading={props.loading}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent={"We couldn't find anything"}
+      >
         {(item) => (
           <TableRow>
             {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              <TableCell>
+                <Link href={`/groups/${item.id}`}>
+                  {getKeyValue(item, columnKey)}
+                </Link>
+              </TableCell>
             )}
           </TableRow>
         )}

@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React, { useState } from "react";
+import GroupTable from "~/components/layout/table";
 import { api } from "~/utils/api";
+import { type ITableColumns } from "~/utils/types";
 
 export default function Groups() {
   const { data: session } = useSession();
@@ -18,24 +19,26 @@ export default function Groups() {
     { enabled: session != null, onSuccess: () => setLoading(false) },
   );
   if (!session) return <>Please sign in</>;
+  const columns: ITableColumns[] = [
+    { key: "name", label: "Name" },
+    { key: "description", label: "Description" },
+  ];
   return (
     <>
       <h1 className="pb-5 text-6xl">Groups</h1>
       <input
         placeholder="Search for a group"
-        className={"inner h-10 rounded-md pl-2"}
+        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value), setLoading(true);
         }}
       ></input>
-      {loading && <>Loading...</>}
-      {groups?.length == 0 && "We couldn't find anything"}
-      {groups?.map((group) => (
-        <Link key={group.name} href={"../groups/" + group.id}>
-          {group.name}
-        </Link>
-      ))}
+      {groups ? (
+        <GroupTable columns={columns} loading={loading} rows={groups} />
+      ) : (
+        <GroupTable columns={columns} loading={loading} rows={[]} />
+      )}
     </>
   );
 }
