@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import GroupTable from "~/components/layout/table";
+import GroupTable from "~/components/groups/table";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
 
