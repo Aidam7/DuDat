@@ -6,6 +6,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -81,6 +82,12 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      //* For some reason it would throw an unsafe any assignment error even though it doesn't mind for the discord provider above ¯\_(ツ)_/¯
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
