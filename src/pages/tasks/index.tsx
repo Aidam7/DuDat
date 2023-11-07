@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import React, { useState } from "react";
+import TaskTable from "~/components/tasks/table";
 import { api } from "~/utils/api";
+import { type ITableColumns } from "~/utils/types";
 
 export default function Tasks() {
   const { data: session } = useSession();
@@ -18,24 +19,26 @@ export default function Tasks() {
     { enabled: session != null, onSuccess: () => setLoading(false) },
   );
   if (!session) return <>Please sign in</>;
+  const columns: ITableColumns[] = [
+    { key: "title", label: "Title" },
+    { key: "description", label: "Description" },
+  ];
   return (
     <>
       <h1 className="pb-5 text-6xl">Tasks</h1>
       <input
         placeholder="Search for a task"
-        className={"inner h-10 rounded-md pl-2"}
+        className={"inner h-10 rounded-md pl-2 mb-5"}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value), setLoading(true);
         }}
       ></input>
-      {loading && <>Loading...</>}
-      {tasks && tasks.length == 0 && "We couldn't find anything"}
-      {tasks?.map((task) => (
-        <Link key={task.title} href={"../tasks/" + task.id}>
-          {task.title}
-        </Link>
-      ))}
+      {tasks ? (
+        <TaskTable columns={columns} loading={loading} rows={tasks} />
+      ) : (
+        <TaskTable columns={columns} loading={loading} rows={[]} />
+      )}
     </>
   );
 }
