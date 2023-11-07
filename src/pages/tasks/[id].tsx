@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Code404 from "~/components/layout/404";
 import { api } from "~/utils/api";
 export default function TaskDetail() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function TaskDetail() {
   );
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
-  if (!task) return <>404</>;
+  if (!task) return <Code404 />;
   return (
     <>
       <h1>{task.id}</h1>

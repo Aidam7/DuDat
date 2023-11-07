@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Code404 from "~/components/layout/404";
 import { api } from "~/utils/api";
 export default function UserDetail() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function UserDetail() {
   );
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
-  if (!user) return <>404</>;
+  if (!user) return <Code404 />;
   return (
     <>
       <h1 className="text-6xl">{user.name}</h1>
