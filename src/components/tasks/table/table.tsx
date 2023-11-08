@@ -9,12 +9,9 @@ import {
   getKeyValue,
   Spinner,
 } from "@nextui-org/react";
-import { type Group, type Task } from "@prisma/client";
 import Link from "next/link";
-import { type ITableColumns } from "~/utils/types";
-interface ITaskWithGroup extends Task {
-  group: Group
-}
+import { type ITaskWithGroup, type ITableColumns } from "~/utils/types";
+
 type Props = {
   columns: ITableColumns[];
   rows: ITaskWithGroup[];
