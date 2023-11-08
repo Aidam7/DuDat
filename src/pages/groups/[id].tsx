@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Code404 from "~/components/layout/404";
 
 export default function GroupDetail() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function GroupDetail() {
   );
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
-  if (!group) return <>404</>;
+  if (!group) return <Code404 />;
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
