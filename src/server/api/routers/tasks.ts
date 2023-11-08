@@ -79,6 +79,9 @@ export const tasksRouter = createTRPCRouter({
             },
           },
         },
+        include: {
+          group: true,
+        }
       });
     }),
 });
