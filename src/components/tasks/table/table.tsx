@@ -9,16 +9,19 @@ import {
   getKeyValue,
   Spinner,
 } from "@nextui-org/react";
-import { type Task } from "@prisma/client";
+import { type Group, type Task } from "@prisma/client";
 import Link from "next/link";
 import { type ITableColumns } from "~/utils/types";
-
+interface ITaskWithGroup extends Task {
+  group: Group
+}
 type Props = {
   columns: ITableColumns[];
-  rows: Task[];
+  rows: ITaskWithGroup[];
   loading: boolean;
 };
 export const TaskTable: FC<Props> = (props: Props) => {
+  console.table(props.rows)
   return (
     <Table>
       <TableHeader columns={props.columns}>
