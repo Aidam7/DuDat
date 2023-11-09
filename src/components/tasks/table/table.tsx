@@ -35,7 +35,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
             {(columnKey) => (
               <TableCell>
                 <Link href={`/tasks/${item.id}`}>
-                  {getKeyValue(item, columnKey)}
+                  {getKeyValue(item, columnKey) == null ? "—" : getKeyValue(item, columnKey)}
                 </Link>
               </TableCell>
             )}
