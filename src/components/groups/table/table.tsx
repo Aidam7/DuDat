@@ -35,7 +35,10 @@ export const GroupTable: FC<Props> = (props: Props) => {
             {(columnKey) => (
               <TableCell>
                 <Link href={`/groups/${item.id}`}>
-                  {getKeyValue(item, columnKey) == null ? "—" : getKeyValue(item, columnKey)}
+                  {getKeyValue(item, columnKey) == null ||
+                  getKeyValue(item, columnKey) == ""
+                    ? "—"
+                    : getKeyValue(item, columnKey)}
                 </Link>
               </TableCell>
             )}
