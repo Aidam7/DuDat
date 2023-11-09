@@ -9,6 +9,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { NextUIProvider } from "@nextui-org/react";
 import DuDatNavbar from "~/components/layout/navbar/";
+import Footer from "~/components/layout/footer";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   // getLayout?: (page: ReactElement) => ReactNode,
@@ -42,6 +43,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <main className=" flex min-h-screen flex-col px-8">
             <Component {...pageProps} />
           </main>
+          <Footer/>
         </Wrapper>
       </SessionProvider>
     </NextUIProvider>
