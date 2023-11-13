@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { type FC, useState, type FormEvent } from "react";
 import { api } from "~/utils/api";
-export interface Props {
+interface Props {
   groupId: string;
 }
 export const TaskCreate: FC<Props> = (props: Props) => {
