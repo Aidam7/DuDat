@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Code404 from "~/components/layout/404";
+import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
 export default function TaskDetail() {
   const router = useRouter();
