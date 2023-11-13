@@ -47,7 +47,7 @@ export const GroupCreate: FC = () => {
           className="mb-4"
         />
 
-        <input type="submit" value="Submit" />
+        <Input type="submit" value="Submit" color="primary" />
       </form>
     </>
   );
