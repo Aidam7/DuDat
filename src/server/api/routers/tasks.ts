@@ -45,6 +45,7 @@ export const tasksRouter = createTRPCRouter({
         taskId: task.id,
       }));
       await ctx.prisma.taskAssignment.createMany({ data });
+      return task;
     }),
   deleteById: publicProcedure
     .input(z.object({ id: z.string() }))
@@ -81,7 +82,7 @@ export const tasksRouter = createTRPCRouter({
         },
         include: {
           group: true,
-        }
+        },
       });
     }),
 });
