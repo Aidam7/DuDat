@@ -41,6 +41,7 @@ export const groupsRouter = createTRPCRouter({
         groupId: group.id,
       }));
       await ctx.prisma.groupMembership.createMany({ data });
+      return group;
     }),
   deleteById: publicProcedure
     .input(z.object({ id: z.string() }))
