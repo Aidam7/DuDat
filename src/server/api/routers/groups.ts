@@ -81,4 +81,32 @@ export const groupsRouter = createTRPCRouter({
         },
       });
     }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        name: z.string(),
+        description: z.string(),
+        ownerId: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findFirst({
+        where: { id: input.groupId },
+      });
+      if (!group) throw new Error("Group not found");
+      if (input.ownerId && group.ownerId !== input.ownerId)
+        throw new Error("You are not the owner of this group");
+      if (!input.ownerId) input.ownerId = group.ownerId;
+      return await ctx.prisma.group.update({
+        where: {
+          id: input.groupId,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          ownerId: input.ownerId,
+        },
+      });
+    }),
 });
