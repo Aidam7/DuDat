@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { type FC, useState } from "react";
+import { type FC, useState, type FormEvent } from "react";
 import { api } from "~/utils/api";
 
 export const GroupCreate: FC = () => {
@@ -11,16 +11,17 @@ export const GroupCreate: FC = () => {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    //*This is the only way I could find that prevents a redirect on the same page
+    event.preventDefault();
     if (!session) return null;
-    await createGroupMutation.mutateAsync({
+    const group = await createGroupMutation.mutateAsync({
       name,
       description,
       memberIDs: [session.user.id],
       ownerId: session.user.id,
     });
-    //TODO: For some reason the page refreshes after submit, so this never gets called
-    router.push("/groups");
+    router.push(`/groups/${group.id}`);
   };
 
   return (
