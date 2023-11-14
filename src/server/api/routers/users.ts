@@ -31,8 +31,20 @@ export const usersRouter = createTRPCRouter({
         where: {
           name: {
             contains: input.name,
-          }
+          },
         },
       });
+    }),
+  isMemberOfGroup: protectedProcedure
+    .input(z.object({ userId: z.string(), groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const membership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: input.userId,
+          groupId: input.groupId,
+        },
+      });
+      if (membership) return true;
+      return false;
     }),
 });
