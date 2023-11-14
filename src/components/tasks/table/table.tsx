@@ -18,7 +18,6 @@ type Props = {
   loading: boolean;
 };
 export const TaskTable: FC<Props> = (props: Props) => {
-  console.table(props.rows);
   return (
     <Table>
       <TableHeader columns={props.columns}>
