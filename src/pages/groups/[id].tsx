@@ -4,14 +4,14 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Code404 from "~/components/layout/errorCodes/404";
 import { Button } from "@nextui-org/react";
-import TaskTable from "~/components/tasks/table";
-import { ITableColumns } from "~/utils/types";
+import Code401 from "~/components/layout/errorCodes/401";
 
 export default function GroupDetail() {
   const router = useRouter();
   const id = router.query.id as string;
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
+  const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const { data: group } = api.groups.getById.useQuery(
     { id },
     {
@@ -19,17 +19,22 @@ export default function GroupDetail() {
       onSuccess: () => setLoading(false),
     },
   );
-  const { data: isMemberOfGroup } = api.users.isMemberOfGroup.useQuery({
-    groupId: id,
-    userId: session?.user.id,
-  });
+  let memberId = "";
+  if (session) memberId = session.user.id;
+  const { data: isMember } = isMemberOfGroupQuery.useQuery(
+    {
+      groupId: id,
+      userId: memberId,
+    },
+    {
+      enabled: session != null && group != null,
+      onSuccess: () => setLoading(false),
+    },
+  );
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
   if (!group) return <Code404 />;
-  const columns: ITableColumns[] = [
-    { key: "title", label: "Title" },
-    { key: "description", label: "Description" },
-  ];
+  if (!isMember) return <Code401 />;
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
@@ -40,7 +45,6 @@ export default function GroupDetail() {
       >
         Create a new task
       </Button>
-      <TaskTable />
     </>
   );
 }
