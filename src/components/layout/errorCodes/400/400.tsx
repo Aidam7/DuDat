@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import img400 from "public/images/400.jpg";
+import img400 from "public/images/errors/400.jpg";
 interface Props {
   specifier: string;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import img404 from "public/images/404.jpg";
+import img404 from "public/images/errors/404.jpg";
 
 const Code404: React.FC = () => {
   return (
