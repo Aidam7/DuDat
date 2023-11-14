@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Code404 from "~/components/layout/errorCodes/404";
 import { Button } from "@nextui-org/react";
@@ -29,17 +29,13 @@ export default function GroupDetail() {
     },
     {
       enabled: session != null && group != null,
-      onSuccess: () => setLoading(false),
+      onSuccess: () => setAuthLoading(false),
     },
   );
-  useEffect(() => {
-    if (session) {
-      setAuthLoading(false);
-    }
-  }, [session]);
-  if (loading || authLoading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
+  if (loading) return <>Loading...</>;
   if (!group) return <Code404 />;
+  if (authLoading) return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
   return (
     <>
