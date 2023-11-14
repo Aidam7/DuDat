@@ -31,6 +31,7 @@ export const tasksRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.desc == "") input.desc = null;
       const task = await ctx.prisma.task.create({
         data: {
           title: input.title,
