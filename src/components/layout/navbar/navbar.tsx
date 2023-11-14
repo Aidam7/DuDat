@@ -4,7 +4,6 @@ import {
   NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
-  Button,
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/react";
@@ -26,7 +25,7 @@ const DuDatNavbar: React.FC = () => {
   ];
   return (
     <>
-      <Navbar onMenuOpenChange={setIsMenuOpen} className="bg-blue mb-5">
+      <Navbar onMenuOpenChange={setIsMenuOpen} className="mb-5 bg-blue">
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}

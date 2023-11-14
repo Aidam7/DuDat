@@ -10,7 +10,6 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { type Group } from "@prisma/client";
-import Link from "next/link";
 import { type ITableColumns } from "~/utils/types";
 import { useRouter } from "next/navigation";
 
