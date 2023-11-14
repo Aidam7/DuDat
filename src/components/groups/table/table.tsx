@@ -12,6 +12,7 @@ import {
 import { type Group } from "@prisma/client";
 import Link from "next/link";
 import { type ITableColumns } from "~/utils/types";
+import { useRouter } from "next/navigation";
 
 type Props = {
   columns: ITableColumns[];
@@ -19,8 +20,13 @@ type Props = {
   loading: boolean;
 };
 export const GroupTable: FC<Props> = (props: Props) => {
+  const router = useRouter();
   return (
-    <Table>
+    <Table
+      onRowAction={(key) => router.push(`/groups/${key}`)}
+      isStriped
+      selectionMode="single"
+    >
       <TableHeader columns={props.columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
@@ -34,12 +40,10 @@ export const GroupTable: FC<Props> = (props: Props) => {
           <TableRow>
             {(columnKey) => (
               <TableCell>
-                <Link href={`/groups/${item.id}`}>
-                  {getKeyValue(item, columnKey) == null ||
-                  getKeyValue(item, columnKey) == ""
-                    ? "—"
-                    : getKeyValue(item, columnKey)}
-                </Link>
+                {getKeyValue(item, columnKey) == null ||
+                getKeyValue(item, columnKey) == ""
+                  ? "—"
+                  : getKeyValue(item, columnKey)}
               </TableCell>
             )}
           </TableRow>
