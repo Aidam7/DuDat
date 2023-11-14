@@ -76,7 +76,7 @@ model VerificationToken {
 model Task {
   id             String               @id @default(cuid())
   title          String
-  description    String?
+  description    String               @default("")
   createdOn      DateTime             @default(now())
   dueOn          DateTime?
   finishedOn     DateTime?
@@ -98,7 +98,7 @@ model Group {
   groupMembership GroupMembership[]
   owner           User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   ownerId         String
-  description     String?
+  description     String            @default("")
 
   @@index([name])
   @@index([ownerId])
@@ -107,7 +107,7 @@ model Group {
 model Category {
   id                 String               @id @default(cuid())
   name               String
-  description        String?
+  description        String               @default("")
   authorId           String
   author             User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
   categoryAssignment CategoryAssignment[]
