@@ -9,7 +9,7 @@ const Create: React.FC = () => {
   if (!groupId) return <Code400 specifier="Invalid group ID" />;
   return (
     <>
-      <TaskCreateForm groupId="" />
+      <TaskCreateForm groupId={groupId} />
     </>
   );
 };
