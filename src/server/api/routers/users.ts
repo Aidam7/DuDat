@@ -47,4 +47,16 @@ export const usersRouter = createTRPCRouter({
       if (membership) return true;
       return false;
     }),
+  isOwnerOfGroup: protectedProcedure
+    .input(z.object({ userId: z.string(), groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const ownership = await ctx.prisma.group.findFirst({
+        where: {
+          ownerId: input.userId,
+          id: input.groupId,
+        },
+      });
+      if (ownership) return true;
+      return false;
+    }),
 });
