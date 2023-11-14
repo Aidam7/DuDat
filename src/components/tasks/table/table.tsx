@@ -18,7 +18,7 @@ type Props = {
   loading: boolean;
 };
 export const TaskTable: FC<Props> = (props: Props) => {
-  console.table(props.rows)
+  console.table(props.rows);
   return (
     <Table>
       <TableHeader columns={props.columns}>
@@ -35,7 +35,10 @@ export const TaskTable: FC<Props> = (props: Props) => {
             {(columnKey) => (
               <TableCell>
                 <Link href={`/tasks/${item.id}`}>
-                  {getKeyValue(item, columnKey) == null ? "—" : getKeyValue(item, columnKey)}
+                  {getKeyValue(item, columnKey) == null ||
+                  getKeyValue(item, columnKey) == ""
+                    ? "—"
+                    : getKeyValue(item, columnKey)}
                 </Link>
               </TableCell>
             )}
