@@ -10,7 +10,7 @@ export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.id as string;
   const [loading, setLoading] = useState(true);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [authLoading, setAuthLoading] = useState(true);
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
@@ -43,8 +43,8 @@ export default function GroupDetail() {
       onSuccess: () => setAuthLoading(false),
     },
   );
+  if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
-  if (loading) return <>Loading...</>;
   if (!group) return <Code404 />;
   if (authLoading) return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
