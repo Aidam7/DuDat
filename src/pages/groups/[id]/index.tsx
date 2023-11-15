@@ -2,30 +2,41 @@ import { useRouter } from "next/router";
 import { api } from "~/utils/api";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import Code404 from "~/components/layout/errorCodes/404";
 import { Button } from "@nextui-org/react";
+import Code404 from "~/components/layout/errorCodes/404";
 import Code401 from "~/components/layout/errorCodes/401";
 
 export default function GroupDetail() {
   const router = useRouter();
-  const id = router.query.id as string;
+  const groupId = router.query.id as string;
   const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
   const [authLoading, setAuthLoading] = useState(true);
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
+  const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
   const { data: group } = api.groups.getById.useQuery(
-    { id },
+    { id: groupId },
     {
       enabled: session != null,
       onSuccess: () => setLoading(false),
     },
   );
-  let memberId = "";
-  if (session) memberId = session.user.id;
+  let userId = "";
+  if (session) userId = session.user.id;
   const { data: isMember } = isMemberOfGroupQuery.useQuery(
     {
-      groupId: id,
-      userId: memberId,
+      groupId,
+      userId,
+    },
+    {
+      enabled: session != null && group != null,
+      onSuccess: () => setAuthLoading(false),
+    },
+  );
+  const { data: isOwner } = isOwnerOfGroupQuery.useQuery(
+    {
+      groupId,
+      userId,
     },
     {
       enabled: session != null && group != null,
@@ -40,13 +51,23 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
-      <Button
-        color="primary"
-        className="mb-5 ml-auto w-min"
-        onClick={() => router.push(`/tasks/create?groupId=${id}`)}
-      >
-        Create a new task
-      </Button>
+      <div className="ml-auto flex flex-col">
+        <Button
+          color="primary"
+          onClick={() => router.push(`/tasks/create?groupId=${groupId}`)}
+          className="mb-2"
+        >
+          Create a new task
+        </Button>
+        {isOwner && (
+          <Button
+            color="warning"
+            onClick={() => router.push(`${groupId}/admin`)}
+          >
+            Settings
+          </Button>
+        )}
+      </div>
     </>
   );
 }
