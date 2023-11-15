@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
+import { Image } from "@nextui-org/react";
 export default function UserDetail() {
   const router = useRouter();
   const id = router.query.id as string;
@@ -18,6 +19,9 @@ export default function UserDetail() {
   return (
     <>
       <h1 className="text-6xl">{user.name}</h1>
+      {user.image && (
+        <Image src={user.image} alt={`Users image`} width={200} height={200} />
+      )}
     </>
   );
 }
