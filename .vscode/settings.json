@@ -4,5 +4,6 @@
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "cSpell.words": ["nextui"]
+  "cSpell.words": ["nextui"],
+  "editor.tabSize": 2
 }
