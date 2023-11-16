@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { type FC, useState, type FormEvent, useEffect } from "react";
+import { useEffect, useState, type FC, type FormEvent } from "react";
 import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
 interface Props {
@@ -45,7 +45,7 @@ export const GroupEdit: FC<Props> = (props: Props) => {
         className="flex flex-col items-center justify-center"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Edit a group</h3>
+        <h3 className="mb-4 text-3xl font-bold">Edit this group</h3>
         <Input
           type="text"
           label="Group name"
