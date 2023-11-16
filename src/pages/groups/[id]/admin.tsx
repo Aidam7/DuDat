@@ -42,13 +42,11 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>
-      <div className="w-full sm:w-[25%]">
+      <div className="w-full sm:w-[33%] ">
         <div className="mb-5">
           <GroupEdit groupId={groupId} />
         </div>
-        <div className="sw:w-[25%] w-full">
-          <GroupDelete groupId={groupId} />
-        </div>
+        <GroupDelete groupId={groupId} />
       </div>
     </>
   );

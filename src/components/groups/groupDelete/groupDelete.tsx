@@ -36,7 +36,7 @@ const GroupDelete: React.FC<Props> = (props: Props) => {
   if (!isOwner) return null;
   return (
     <>
-      <Button onPress={onOpen} color="danger">
+      <Button onPress={onOpen} color="danger" className="w-full">
         Delete this group
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
