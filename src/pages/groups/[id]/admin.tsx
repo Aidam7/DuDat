@@ -1,10 +1,10 @@
-import { useRouter } from "next/router";
-import { api } from "~/utils/api";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
-import Code404 from "~/components/layout/errorCodes/404";
-import Code401 from "~/components/layout/errorCodes/401";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
+import Code401 from "~/components/layout/errorCodes/401";
+import Code404 from "~/components/layout/errorCodes/404";
+import { api } from "~/utils/api";
 
 export default function GroupDetail() {
   const router = useRouter();
@@ -41,7 +41,9 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>
-      <GroupEdit groupId={groupId} />
+      <div className="w-[25%]">
+        <GroupEdit groupId={groupId} />
+      </div>
     </>
   );
 }

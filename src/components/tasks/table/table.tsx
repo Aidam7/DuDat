@@ -1,16 +1,16 @@
-import React, { type FC } from "react";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
   Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  getKeyValue,
 } from "@nextui-org/react";
-import { type ITaskWithGroup, type ITableColumns } from "~/utils/types";
 import { useRouter } from "next/navigation";
+import { type FC } from "react";
+import { type ITableColumns, type ITaskWithGroup } from "~/utils/types";
 
 type Props = {
   columns: ITableColumns[];

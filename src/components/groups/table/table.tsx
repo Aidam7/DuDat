@@ -1,17 +1,17 @@
-import React, { type FC } from "react";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
   Spinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  getKeyValue,
 } from "@nextui-org/react";
 import { type Group } from "@prisma/client";
-import { type ITableColumns } from "~/utils/types";
 import { useRouter } from "next/navigation";
+import { type FC } from "react";
+import { type ITableColumns } from "~/utils/types";
 
 type Props = {
   columns: ITableColumns[];
