@@ -1,19 +1,10 @@
 import { Button } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const LoginButton: React.FC = () => {
   const { data: sessionData } = useSession();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <>
