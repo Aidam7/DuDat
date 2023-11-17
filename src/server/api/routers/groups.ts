@@ -95,7 +95,7 @@ export const groupsRouter = createTRPCRouter({
         where: { id: input.groupId },
       });
       if (!group) throw new Error("Group not found");
-      if (input.ownerId && group.ownerId !== input.ownerId)
+      if (group.ownerId !== ctx.session.user.id)
         throw new Error("You are not the owner of this group");
       if (!input.ownerId) input.ownerId = group.ownerId;
       return await ctx.prisma.group.update({
