@@ -24,13 +24,29 @@ export const usersRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.user.delete({ where: { id: input.id } });
     }),
-  locateByName: publicProcedure
+  locateByName: protectedProcedure
+    .input(z.object({ name: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.user.findMany({
+        where: {
+          name: {
+            contains: input.name,
+          },
+        },
+      });
+    }),
+  locateByNameAndGroup: protectedProcedure
     .input(z.object({ name: z.string(), groupId: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.user.findMany({
         where: {
           name: {
             contains: input.name,
+          },
+          groupMembership: {
+            some: {
+              groupId: input.groupId,
+            },
           },
         },
       });
