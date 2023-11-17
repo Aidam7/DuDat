@@ -43,13 +43,13 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>
-      <div className="w-full lg:w-[50%] ">
+      <div className="mb-5 w-full lg:w-[50%]">
         <div className="mb-5">
           <GroupEdit groupId={groupId} />
         </div>
         <GroupDelete groupId={groupId} />
       </div>
-      <GroupTransferOwnership groupId={groupId} />
+      <GroupTransferOwnership group={group} />
     </>
   );
 }
