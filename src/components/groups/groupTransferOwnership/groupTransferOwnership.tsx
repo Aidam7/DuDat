@@ -15,6 +15,7 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
+import { Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { api } from "~/utils/api";
@@ -25,7 +26,7 @@ const columns: ITableColumns[] = [
   { label: "", key: "actions" },
 ];
 interface Props {
-  groupId: string;
+  group: Group;
 }
 const GroupTransferOwnership: FC<Props> = (props: Props) => {
   const findUsersQuery = api.users.locateByNameAndGroup;
@@ -34,13 +35,22 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
   const [selectedUserId, setSelectedUserId] = useState("");
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const editGroupMutation = api.groups.edit.useMutation();
   let { data: users } = findUsersQuery.useQuery(
-    { name: query, groupId: props.groupId },
+    { name: query, groupId: props.group.id },
     { onSuccess: () => setLoading(false) },
   );
   if (!users) users = [];
-  function transferGroup(userId: string) {
-    throw new Error(`Not implemented ${userId}`);
+  function transferGroup() {
+    editGroupMutation.mutate(
+      {
+        name: props.group.name,
+        description: props.group.description,
+        ownerId: selectedUserId,
+        groupId: props.group.id,
+      },
+      { onSuccess: () => router.push(`/groups/${props.group.id}`) },
+    );
   }
   return (
     <>
@@ -122,7 +132,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
                   color="danger"
                   variant="flat"
                   onClick={() => {
-                    transferGroup(selectedUserId);
+                    transferGroup();
                   }}
                 >
                   Proceed
