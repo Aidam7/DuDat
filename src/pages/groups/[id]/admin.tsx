@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import GroupDelete from "~/components/groups/groupDelete";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
+import GroupTransferOwnership from "~/components/groups/groupTransferOwnership/groupTransferOwnership";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
@@ -42,12 +43,13 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>
-      <div className="w-full sm:w-[33%] ">
+      <div className="w-full lg:w-[50%] ">
         <div className="mb-5">
           <GroupEdit groupId={groupId} />
         </div>
         <GroupDelete groupId={groupId} />
       </div>
+      <GroupTransferOwnership groupId={groupId} />
     </>
   );
 }
