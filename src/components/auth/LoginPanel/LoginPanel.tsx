@@ -1,7 +1,7 @@
-import { Button, Image } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const LoginButton: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -23,13 +23,27 @@ const LoginButton: React.FC = () => {
           className="flex items-center"
         >
           {sessionData?.user.image && (
-            <Image
-              src={sessionData.user.image}
-              alt="Users avatar"
-              width={48}
-              height={48}
-              className="mr-2 rounded-full"
-            />
+            <>
+              {/* Due to using the google provider we need to use the img tag
+              instead of next/image as the google profile picture sometimes had
+              trouble loading */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={sessionData.user.image}
+                alt={`${sessionData.user.name}'s avatar`}
+                className="mr-2 rounded-full max-md:hidden"
+                height={48}
+                width={48}
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={sessionData.user.image}
+                alt={`${sessionData.user.name}'s avatar`}
+                className="mr-2 rounded-full md:hidden"
+                height={24}
+                width={24}
+              />
+            </>
           )}
           {sessionData?.user.name && (
             <span className="pl-2 pr-4">{sessionData.user.name}</span>
