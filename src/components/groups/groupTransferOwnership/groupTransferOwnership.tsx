@@ -41,6 +41,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
     { onSuccess: () => setLoading(false) },
   );
   if (!users) users = [];
+  users = users.filter((user) => user.id !== props.group.ownerId);
   function transferGroup() {
     editGroupMutation.mutate(
       {
@@ -77,7 +78,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
           items={users}
           isLoading={loading}
           loadingContent={<Spinner label="Loading..." />}
-          emptyContent={"We couldn't find anything"}
+          emptyContent={"We couldn't find anyone to transfer ownership to."}
         >
           {(user) => (
             <TableRow key={user.id}>
