@@ -65,13 +65,11 @@ export const authOptions: NextAuthOptions = {
           userId: user.id,
         },
       });
-      await prisma.user.upsert({
+      await prisma.user.update({
         where: {
           id: user.id,
         },
-        create: {},
-        update: {
-          selectedGroupId: group.id,
+        data: {
           name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
         },
       });
