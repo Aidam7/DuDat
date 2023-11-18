@@ -123,6 +123,7 @@ model GroupMembership {
   groupId String
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, groupId])
   @@index([userId])
   @@index([groupId])
 }
@@ -134,6 +135,7 @@ model TaskAssignment {
   taskId String
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, taskId])
   @@index([userId])
   @@index([taskId])
 }
@@ -145,6 +147,7 @@ model CategoryAssignment {
   taskId     String
   task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
+  @@unique([categoryId, taskId])
   @@index([categoryId])
   @@index([taskId])
 }
