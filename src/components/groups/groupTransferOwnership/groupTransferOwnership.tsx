@@ -15,7 +15,7 @@ import {
   TableRow,
   useDisclosure,
 } from "@nextui-org/react";
-import { Group } from "@prisma/client";
+import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { api } from "~/utils/api";
@@ -94,15 +94,19 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
                 </div>
               </TableCell>
               <TableCell align="right">
-                <Button
-                  color="danger"
-                  onClick={() => {
-                    onOpen();
-                    setSelectedUserId(user.id);
-                  }}
-                >
-                  Transfer Ownership
-                </Button>
+                {user.id !== props.group.ownerId ? (
+                  <Button
+                    color="danger"
+                    onClick={() => {
+                      onOpen();
+                      setSelectedUserId(user.id);
+                    }}
+                  >
+                    Transfer Ownership
+                  </Button>
+                ) : (
+                  <span className="text-green-500">Owner</span>
+                )}
               </TableCell>
             </TableRow>
           )}
