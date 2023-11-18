@@ -57,6 +57,7 @@ export const authOptions: NextAuthOptions = {
         },
         data: {
           name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+          image: `https://api.dicebear.com/7.x/thumbs/svg?seed=${user.id}`,
         },
       });
       if (!user.name) return;
