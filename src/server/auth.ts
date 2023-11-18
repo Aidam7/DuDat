@@ -49,28 +49,28 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     createUser: async ({ user }) => {
+      //* For some reason TS doesn't recognize that name really does exist after the first check, so, whatever, we check twice
+      if (!user.name) return;
+      user = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+        },
+      });
       if (!user.name) return;
       const group = await prisma.group.create({
         data: {
-          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+          name: user.name,
           ownerId: user.id,
-          description: `You personal group, ${
-            user.name.charAt(0).toUpperCase() + user.name.slice(1)
-          }!`,
+          description: `You personal group, ${user.name}!`,
         },
       });
       await prisma.groupMembership.create({
         data: {
           groupId: group.id,
           userId: user.id,
-        },
-      });
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
         },
       });
     },
