@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import GroupDelete from "~/components/groups/groupDelete";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
+import GroupRemoveMembers from "~/components/groups/groupRemoveMembership/";
 import GroupTransferOwnership from "~/components/groups/groupTransferOwnership/";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
@@ -50,6 +51,7 @@ export default function GroupDetail() {
         <GroupDelete groupId={groupId} />
       </div>
       <GroupTransferOwnership group={group} />
+      <GroupRemoveMembers group={group} />
     </>
   );
 }
