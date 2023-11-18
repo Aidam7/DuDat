@@ -23,12 +23,13 @@ interface Props {
 }
 
 const GroupRemoveMembers: FC<Props> = (props: Props) => {
-  const findUsersQuery = api.users.locateByNameAndGroup;
+  const findMembersQuery = api.users.locateByNameAndGroup;
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedUserId, setSelectedUserId] = useState("");
-  let { data: users } = findUsersQuery.useQuery(
+  const apiUtils = api.useUtils();
+  let { data: users } = findMembersQuery.useQuery(
     { name: query, groupId: props.group.id },
     { onSuccess: () => setLoading(false) },
   );
@@ -36,7 +37,12 @@ const GroupRemoveMembers: FC<Props> = (props: Props) => {
   if (!users) users = [];
   users = users.filter((user) => user.id !== props.group.ownerId);
   function removeMember(userId: string) {
-    removeMemberMutation.mutate({ groupId: props.group.id, userId });
+    removeMemberMutation.mutate(
+      { groupId: props.group.id, userId },
+      {
+        onSuccess: () => void apiUtils.users.locateByNameAndGroup.invalidate(),
+      },
+    );
   }
   return (
     <div className="flex flex-col gap-3">
