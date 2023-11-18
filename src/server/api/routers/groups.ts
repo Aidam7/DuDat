@@ -109,4 +109,22 @@ export const groupsRouter = createTRPCRouter({
         },
       });
     }),
+  removeMember: protectedProcedure
+    .input(z.object({ userId: z.string(), groupId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findFirst({
+        where: { id: input.groupId },
+      });
+      if (!group) throw new Error("Group not found");
+      if (group.ownerId !== ctx.session.user.id)
+        throw new Error("You are not the owner of this group");
+      const deleted = await ctx.prisma.groupMembership.deleteMany({
+        where: {
+          groupId: input.groupId,
+          userId: input.userId,
+        },
+      });
+      if (deleted) return true;
+      return false;
+    }),
 });
