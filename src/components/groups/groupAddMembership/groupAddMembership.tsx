@@ -17,27 +17,23 @@ interface Props {
 }
 
 const GroupAddMembers: FC<Props> = (props: Props) => {
-  const findMembersQuery = api.users.locateByNameAndGroup;
-  const getUsersQuery = api.users.locateByName;
-  const [loading, setLoading] = useState(true);
+  const findNonMembersQuery = api.users.getAllWhereNotMemberOfGroup;
   const [query, setQuery] = useState("");
-  let { data: members } = findMembersQuery.useQuery({
-    name: "",
+  // eslint-disable-next-line prefer-const
+  let { data: nonMembers, isFetching: loading } = findNonMembersQuery.useQuery({
     groupId: props.group.id,
   });
-  let { data: users } = getUsersQuery.useQuery({ name: query });
-  if (members && users && loading) setLoading(false);
+  if (!nonMembers) nonMembers = [];
   const addMemberMutation = api.groups.addMember.useMutation();
   const apiUtils = api.useUtils();
-  if (!members) members = [];
-  if (!users) users = [];
   function addMember(userId: string) {
-    //*Due to reasons beyond me this
-    setLoading(true);
     addMemberMutation.mutate(
       { groupId: props.group.id, userId },
       {
-        onSuccess: () => void apiUtils.users.invalidate(),
+        onSuccess: () => {
+          void apiUtils.users.getAllWhereNotMemberOfGroup.invalidate(),
+            void apiUtils.users.locateByNameAndGroup.invalidate();
+        },
       },
     );
   }
@@ -45,11 +41,11 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Add members</h2>
       <input
-        placeholder="Search for a member"
+        placeholder="Search for a new member"
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
-          setQuery(e.target.value), setLoading(true);
+          setQuery(e.target.value);
         }}
       ></input>
       <Table selectionMode="single" aria-label="Member table">
@@ -58,7 +54,7 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
           <TableColumn>{""}</TableColumn>
         </TableHeader>
         <TableBody
-          items={users}
+          items={nonMembers}
           isLoading={loading}
           loadingContent={<Spinner label="Loading..." />}
           emptyContent={"We couldn't find anyone."}
