@@ -75,4 +75,18 @@ export const usersRouter = createTRPCRouter({
       if (ownership) return true;
       return false;
     }),
+  getAllWhereNotMemberOfGroup: protectedProcedure
+    .input(z.object({ groupId: z.string() }))
+    .query(({ ctx, input }) => {
+      return ctx.prisma.user.findMany({
+        where: {
+          groupMembership: {
+            none: {
+              groupId: input.groupId,
+            },
+          },
+        },
+      });
+      return;
+    }),
 });

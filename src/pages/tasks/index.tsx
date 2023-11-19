@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useState } from "react";
 import TaskTable from "~/components/tasks/table";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
@@ -8,15 +8,14 @@ export default function Tasks() {
   const { data: session } = useSession();
   const findTasks = api.tasks.locateByAssigneeAndTitle;
   let assigneeId = "";
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   if (session) assigneeId = session.user.id;
-  const { data: tasks } = findTasks.useQuery(
+  const { data: tasks, isFetching: loading } = findTasks.useQuery(
     {
       title: query,
       assigneeId: assigneeId,
     },
-    { enabled: session != null, onSuccess: () => setLoading(false) },
+    { enabled: session != null },
   );
   if (!session) return <>Please sign in</>;
   const columns: ITableColumns[] = [
@@ -28,10 +27,10 @@ export default function Tasks() {
       <h1 className="pb-5 text-6xl">Tasks</h1>
       <input
         placeholder="Search for a task"
-        className={"inner h-10 rounded-md pl-2 mb-5"}
+        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
-          setQuery(e.target.value), setLoading(true);
+          setQuery(e.target.value);
         }}
       ></input>
       {tasks ? (

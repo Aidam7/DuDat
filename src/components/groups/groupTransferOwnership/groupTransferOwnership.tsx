@@ -30,16 +30,16 @@ interface Props {
 }
 const GroupTransferOwnership: FC<Props> = (props: Props) => {
   const findUsersQuery = api.users.locateByNameAndGroup;
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const editGroupMutation = api.groups.edit.useMutation();
-  let { data: users } = findUsersQuery.useQuery(
-    { name: query, groupId: props.group.id },
-    { onSuccess: () => setLoading(false) },
-  );
+  // eslint-disable-next-line prefer-const
+  let { data: users, isFetching: loading } = findUsersQuery.useQuery({
+    name: query,
+    groupId: props.group.id,
+  });
   if (!users) users = [];
   users = users.filter((user) => user.id !== props.group.ownerId);
   function transferGroup() {
@@ -61,7 +61,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
-          setQuery(e.target.value), setLoading(true);
+          setQuery(e.target.value);
         }}
       ></input>
       <Table

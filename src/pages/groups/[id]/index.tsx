@@ -1,52 +1,48 @@
-import { useRouter } from "next/router";
-import { api } from "~/utils/api";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
 import { Button } from "@nextui-org/react";
-import Code404 from "~/components/layout/errorCodes/404";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
+import Code404 from "~/components/layout/errorCodes/404";
+import { api } from "~/utils/api";
 
 export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.id as string;
-  const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
-  const [authLoading, setAuthLoading] = useState(true);
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
-  const { data: group } = api.groups.getById.useQuery(
+  const { data: group, isFetching: loading } = api.groups.getById.useQuery(
     { id: groupId },
     {
       enabled: session != null,
-      onSuccess: () => setLoading(false),
     },
   );
   let userId = "";
   if (session) userId = session.user.id;
-  const { data: isMember } = isMemberOfGroupQuery.useQuery(
-    {
-      groupId,
-      userId,
-    },
-    {
-      enabled: session != null && group != null,
-      onSuccess: () => setAuthLoading(false),
-    },
-  );
-  const { data: isOwner } = isOwnerOfGroupQuery.useQuery(
-    {
-      groupId,
-      userId,
-    },
-    {
-      enabled: session != null && group != null,
-      onSuccess: () => setAuthLoading(false),
-    },
-  );
+  const { data: isMember, isFetching: isMemberLoading } =
+    isMemberOfGroupQuery.useQuery(
+      {
+        groupId,
+        userId,
+      },
+      {
+        enabled: session != null && group != null,
+      },
+    );
+  const { data: isOwner, isFetching: isOwnerLoading } =
+    isOwnerOfGroupQuery.useQuery(
+      {
+        groupId,
+        userId,
+      },
+      {
+        enabled: session != null && group != null,
+      },
+    );
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  if (authLoading) return <>Authenticating...</>;
+  if (isMemberLoading || isOwnerLoading) return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
   return (
     <>

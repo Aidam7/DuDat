@@ -1,24 +1,23 @@
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import GroupTable from "~/components/groups/table";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
-import { useRouter } from "next/navigation";
 
 export default function Groups() {
   const { data: session } = useSession();
   const findGroups = api.groups.locateByNameAndMember;
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   let memberId = "";
   if (session) memberId = session.user.id;
-  const { data: groups } = findGroups.useQuery(
+  const { data: groups, isFetching: loading } = findGroups.useQuery(
     {
       name: query,
       memberId: memberId,
     },
-    { enabled: session != null, onSuccess: () => setLoading(false) },
+    { enabled: session != null },
   );
   const router = useRouter();
   if (!session) return <>Please sign in</>;
@@ -41,7 +40,7 @@ export default function Groups() {
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
-          setQuery(e.target.value), setLoading(true);
+          setQuery(e.target.value);
         }}
       ></input>
       {groups ? (

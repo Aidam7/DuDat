@@ -24,15 +24,15 @@ interface Props {
 
 const GroupRemoveMembers: FC<Props> = (props: Props) => {
   const findMembersQuery = api.users.locateByNameAndGroup;
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedUserId, setSelectedUserId] = useState("");
   const apiUtils = api.useUtils();
-  let { data: users } = findMembersQuery.useQuery(
-    { name: query, groupId: props.group.id },
-    { onSuccess: () => setLoading(false) },
-  );
+  // eslint-disable-next-line prefer-const
+  let { data: users, isFetching: loading } = findMembersQuery.useQuery({
+    name: query,
+    groupId: props.group.id,
+  });
   const removeMemberMutation = api.groups.removeMember.useMutation();
   if (!users) users = [];
   users = users.filter((user) => user.id !== props.group.ownerId);
@@ -40,7 +40,10 @@ const GroupRemoveMembers: FC<Props> = (props: Props) => {
     removeMemberMutation.mutate(
       { groupId: props.group.id, userId },
       {
-        onSuccess: () => void apiUtils.users.locateByNameAndGroup.invalidate(),
+        onSuccess: () => {
+          void apiUtils.users.locateByNameAndGroup.invalidate(),
+            void apiUtils.users.getAllWhereNotMemberOfGroup.invalidate();
+        },
       },
     );
   }
@@ -52,7 +55,7 @@ const GroupRemoveMembers: FC<Props> = (props: Props) => {
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onChange={(e) => {
-          setQuery(e.target.value), setLoading(true);
+          setQuery(e.target.value);
         }}
       ></input>
       <Table selectionMode="single" aria-label="Member table">

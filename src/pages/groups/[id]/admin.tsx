@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import GroupAddMembers from "~/components/groups/groupAddMembership/groupAddMembership";
 import GroupDelete from "~/components/groups/groupDelete";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
 import GroupRemoveMembers from "~/components/groups/groupRemoveMembership/";
@@ -12,29 +12,26 @@ import { api } from "~/utils/api";
 export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.id as string;
-  const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
-  const [authLoading, setAuthLoading] = useState(true);
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
-  const { data: group } = api.groups.getById.useQuery(
+  const { data: group, isFetching: loading } = api.groups.getById.useQuery(
     { id: groupId },
     {
       enabled: session != null,
-      onSuccess: () => setLoading(false),
     },
   );
   let userId = "";
   if (session) userId = session.user.id;
-  const { data: isOwner } = isOwnerOfGroupQuery.useQuery(
-    {
-      groupId,
-      userId,
-    },
-    {
-      enabled: session != null && group != null,
-      onSuccess: () => setAuthLoading(false),
-    },
-  );
+  const { data: isOwner, isFetching: authLoading } =
+    isOwnerOfGroupQuery.useQuery(
+      {
+        groupId,
+        userId,
+      },
+      {
+        enabled: session != null && group != null,
+      },
+    );
   if (status === "loading") return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
@@ -52,6 +49,7 @@ export default function GroupDetail() {
       </div>
       <GroupTransferOwnership group={group} />
       <GroupRemoveMembers group={group} />
+      <GroupAddMembers group={group} />
     </>
   );
 }
