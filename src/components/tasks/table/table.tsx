@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { type ITaskWithGroup } from "~/utils/types";
@@ -46,7 +47,9 @@ export const TaskTable: FC<Props> = (props: Props) => {
             <TableCell>
               {task.dueOn != null ? task.dueOn.toLocaleDateString() : "—"}
             </TableCell>
-            <TableCell>{task.group.name}</TableCell>
+            <TableCell>
+              <Link href={`/groups/${task.groupId}`}>{task.group.name}</Link>
+            </TableCell>
             <TableCell>
               <Button>Assign myself</Button>
             </TableCell>
