@@ -62,6 +62,9 @@ export const tasksRouter = createTRPCRouter({
           },
           groupId: input.groupId,
         },
+        include: {
+          group: true,
+        },
       });
     }),
   locateByAssigneeAndTitle: protectedProcedure

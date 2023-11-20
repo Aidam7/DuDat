@@ -1,5 +1,4 @@
 import {
-  Button,
   Spinner,
   Table,
   TableBody,
@@ -30,7 +29,6 @@ export const TaskTable: FC<Props> = (props: Props) => {
         <TableColumn>Description</TableColumn>
         <TableColumn>Due Date</TableColumn>
         <TableColumn>Group</TableColumn>
-        <TableColumn>{""}</TableColumn>
       </TableHeader>
       <TableBody
         items={props.rows}
@@ -49,9 +47,6 @@ export const TaskTable: FC<Props> = (props: Props) => {
             </TableCell>
             <TableCell>
               <Link href={`/groups/${task.groupId}`}>{task.group.name}</Link>
-            </TableCell>
-            <TableCell>
-              <Button>Assign myself</Button>
             </TableCell>
           </TableRow>
         )}

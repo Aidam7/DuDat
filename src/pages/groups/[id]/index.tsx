@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import TaskTable from "~/components/tasks/table";
 import { api } from "~/utils/api";
 
 export default function GroupDetail() {
@@ -11,6 +12,7 @@ export default function GroupDetail() {
   const { data: session, status } = useSession();
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
+  const findTasks = api.tasks.locateByName;
   const { data: group, isFetching: loading } = api.groups.getById.useQuery(
     { id: groupId },
     {
@@ -39,10 +41,15 @@ export default function GroupDetail() {
         enabled: session != null && group != null,
       },
     );
+  const { data: tasks, isFetching: loadingTasks } = findTasks.useQuery({
+    name: "",
+    groupId,
+  });
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  if (isMemberLoading || isOwnerLoading) return <>Authenticating...</>;
+  if (isMemberLoading || isOwnerLoading || loadingTasks)
+    return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
   return (
     <>
@@ -64,6 +71,11 @@ export default function GroupDetail() {
           </Button>
         )}
       </div>
+      {tasks ? (
+        <TaskTable loading={loading} rows={tasks} />
+      ) : (
+        <TaskTable loading={loading} rows={[]} />
+      )}
     </>
   );
 }
