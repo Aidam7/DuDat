@@ -20,9 +20,12 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
   const findNonMembersQuery = api.users.getAllWhereNotMemberOfGroup;
   const [query, setQuery] = useState("");
   // eslint-disable-next-line prefer-const
-  let { data: nonMembers, isFetching: loading } = findNonMembersQuery.useQuery({
-    groupId: props.group.id,
-  });
+  let { data: nonMembers, isFetching: loading } = findNonMembersQuery.useQuery(
+    {
+      groupId: props.group.id,
+    },
+    { enabled: query != "" },
+  );
   if (!nonMembers) nonMembers = [];
   const addMemberMutation = api.groups.addMember.useMutation();
   const apiUtils = api.useUtils();
@@ -57,7 +60,7 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
           items={nonMembers}
           isLoading={loading}
           loadingContent={<Spinner label="Loading..." />}
-          emptyContent={"We couldn't find anyone."}
+          emptyContent={query == "" ? "Search for a user" : "No users found"}
         >
           {(user) => (
             <TableRow key={user.id}>
