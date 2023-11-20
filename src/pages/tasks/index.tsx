@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import TaskTable from "~/components/tasks/table";
 import { api } from "~/utils/api";
-import { type ITableColumns } from "~/utils/types";
 
 export default function Tasks() {
   const { data: session } = useSession();
@@ -18,10 +17,6 @@ export default function Tasks() {
     { enabled: session != null },
   );
   if (!session) return <>Please sign in</>;
-  const columns: ITableColumns[] = [
-    { key: "title", label: "Title" },
-    { key: "description", label: "Description" },
-  ];
   return (
     <>
       <h1 className="pb-5 text-6xl">Tasks</h1>
@@ -34,9 +29,9 @@ export default function Tasks() {
         }}
       ></input>
       {tasks ? (
-        <TaskTable columns={columns} loading={loading} rows={tasks} />
+        <TaskTable loading={loading} rows={tasks} />
       ) : (
-        <TaskTable columns={columns} loading={loading} rows={[]} />
+        <TaskTable loading={loading} rows={[]} />
       )}
     </>
   );

@@ -1,4 +1,5 @@
 import {
+  Button,
   Spinner,
   Table,
   TableBody,
@@ -6,14 +7,12 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  getKeyValue,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
-import { type ITableColumns, type ITaskWithGroup } from "~/utils/types";
+import { type ITaskWithGroup } from "~/utils/types";
 
 type Props = {
-  columns: ITableColumns[];
   rows: ITaskWithGroup[];
   loading: boolean;
 };
@@ -25,8 +24,12 @@ export const TaskTable: FC<Props> = (props: Props) => {
       isStriped
       selectionMode="single"
     >
-      <TableHeader columns={props.columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+      <TableHeader>
+        <TableColumn>Title</TableColumn>
+        <TableColumn>Description</TableColumn>
+        <TableColumn>Due Date</TableColumn>
+        <TableColumn>Group</TableColumn>
+        <TableColumn>{""}</TableColumn>
       </TableHeader>
       <TableBody
         items={props.rows}
@@ -34,16 +37,19 @@ export const TaskTable: FC<Props> = (props: Props) => {
         loadingContent={<Spinner label="Loading..." />}
         emptyContent={"We couldn't find anything"}
       >
-        {(item) => (
+        {(task) => (
           <TableRow>
-            {(columnKey) => (
-              <TableCell>
-                {getKeyValue(item, columnKey) == null ||
-                getKeyValue(item, columnKey) == ""
-                  ? "—"
-                  : getKeyValue(item, columnKey)}
-              </TableCell>
-            )}
+            <TableCell>{task.title}</TableCell>
+            <TableCell>
+              {task.description != "" ? task.description : "—"}
+            </TableCell>
+            <TableCell>
+              {task.dueOn != null ? task.dueOn.toLocaleDateString() : "—"}
+            </TableCell>
+            <TableCell>{task.group.name}</TableCell>
+            <TableCell>
+              <Button>Assign myself</Button>
+            </TableCell>
           </TableRow>
         )}
       </TableBody>
