@@ -16,7 +16,7 @@ type Props = {
   rows: Task[];
   loading: boolean;
 };
-export const TaskManageAssignments: FC<Props> = (props: Props) => {
+export const TaskAddAssignments: FC<Props> = (props: Props) => {
   const router = useRouter();
   return (
     <Table
