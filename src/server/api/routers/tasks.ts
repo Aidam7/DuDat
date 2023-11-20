@@ -85,4 +85,27 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  assignUser: protectedProcedure
+    .input(z.object({ userId: z.string(), taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: { id: input.taskId },
+      });
+      if (!task) throw new Error("Task not found");
+      const groupMembership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: input.userId,
+          groupId: task.groupId,
+        },
+      });
+      if (!groupMembership)
+        throw new Error("User is not a member of the group");
+      const taskAssignment = await ctx.prisma.taskAssignment.create({
+        data: {
+          userId: input.userId,
+          taskId: input.taskId,
+        },
+      });
+      return taskAssignment ? true : false;
+    }),
 });
