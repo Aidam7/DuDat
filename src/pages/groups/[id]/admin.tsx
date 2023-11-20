@@ -10,7 +10,8 @@ import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
 
-export default function GroupDetail() {
+export default function GroupAdminPanel() {
+  //TODO: Remove onSuccess callbacks (issue #19)
   const router = useRouter();
   const groupId = router.query.id as string;
   const [loading, setLoading] = useState(true);
@@ -24,12 +25,10 @@ export default function GroupDetail() {
       onSuccess: () => setLoading(false),
     },
   );
-  let userId = "";
-  if (session) userId = session.user.id;
   const { data: isOwner } = isOwnerOfGroupQuery.useQuery(
     {
       groupId,
-      userId,
+      userId: session?.user?.id ? session.user.id : "",
     },
     {
       enabled: session != null && group != null,
