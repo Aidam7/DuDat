@@ -8,26 +8,24 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import { type Task } from "@prisma/client";
+import { type User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 
 type Props = {
-  rows: Task[];
+  rows: User[];
   loading: boolean;
 };
 export const TaskManageAssignments: FC<Props> = (props: Props) => {
   const router = useRouter();
   return (
     <Table
-      onRowAction={(key) => router.push(`/tasks/${key}`)}
+      onRowAction={(key) => router.push(`/users/${key}`)}
       isStriped
       selectionMode="single"
     >
       <TableHeader>
-        <TableColumn>Title</TableColumn>
-        <TableColumn>Description</TableColumn>
-        <TableColumn>Due Date</TableColumn>
+        <TableColumn>User</TableColumn>
         <TableColumn>{""}</TableColumn>
       </TableHeader>
       <TableBody
@@ -36,15 +34,9 @@ export const TaskManageAssignments: FC<Props> = (props: Props) => {
         loadingContent={<Spinner label="Loading..." />}
         emptyContent={"We couldn't find anything"}
       >
-        {(task) => (
+        {(user) => (
           <TableRow>
-            <TableCell>{task.title}</TableCell>
-            <TableCell>
-              {task.description != "" ? task.description : "—"}
-            </TableCell>
-            <TableCell>
-              {task.dueOn != null ? task.dueOn.toLocaleDateString() : "—"}
-            </TableCell>
+            <TableCell>{user.name}</TableCell>
             <TableCell>
               <Button>Add</Button>
             </TableCell>
