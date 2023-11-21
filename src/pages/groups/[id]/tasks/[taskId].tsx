@@ -4,8 +4,9 @@ import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
 export default function TaskDetail() {
   const router = useRouter();
-  const id = router.query.id as string;
+  const id = router.query.taskId as string;
   const { data: session } = useSession();
+  console.log(id);
   const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
     { id },
     { enabled: session != null },

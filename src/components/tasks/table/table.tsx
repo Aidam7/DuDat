@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { type ITaskWithGroup } from "~/utils/types";
 
@@ -17,13 +16,8 @@ type Props = {
   loading: boolean;
 };
 export const TaskTable: FC<Props> = (props: Props) => {
-  const router = useRouter();
   return (
-    <Table
-      onRowAction={(key) => router.push(`/tasks/${key}`)}
-      isStriped
-      selectionMode="single"
-    >
+    <Table isStriped selectionMode="single">
       <TableHeader>
         <TableColumn>Title</TableColumn>
         <TableColumn>Description</TableColumn>
@@ -38,7 +32,11 @@ export const TaskTable: FC<Props> = (props: Props) => {
       >
         {(task) => (
           <TableRow>
-            <TableCell>{task.title}</TableCell>
+            <TableCell>
+              <Link href={`/groups/${task.groupId}/tasks/${task.id}`}>
+                {task.title}
+              </Link>
+            </TableCell>
             <TableCell>
               {task.description != "" ? task.description : "—"}
             </TableCell>
