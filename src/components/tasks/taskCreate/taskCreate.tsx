@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { type FC, useState, type FormEvent } from "react";
+import { useState, type FC, type FormEvent } from "react";
 import { api } from "~/utils/api";
 interface Props {
   groupId: string;
@@ -17,15 +17,21 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
-    const task = await createTaskMutation.mutateAsync({
-      title: name,
-      desc: description,
-      parentGroupId: props.groupId,
-      authorId: session.user.id,
-      assigneeIDs: [session.user.id],
-      dueOn: null,
-    });
-    router.push(`/tasks/${task.id}`);
+    await createTaskMutation.mutateAsync(
+      {
+        title: name,
+        desc: description,
+        parentGroupId: props.groupId,
+        authorId: session.user.id,
+        assigneeIDs: [session.user.id],
+        dueOn: null,
+      },
+      {
+        onSuccess(task) {
+          router.push(`/groups/${task.groupId}/tasks/${task.id}`);
+        },
+      },
+    );
   };
 
   return (

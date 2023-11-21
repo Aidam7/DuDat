@@ -19,10 +19,11 @@ type Props = {
   task: Task;
 };
 export const TaskAddAssignments: FC<Props> = (props: Props) => {
-  //TODO: Add handling
   const router = useRouter();
   const unAssignedUsersQuery = api.tasks.getUnassignedMembers;
+  const addAssignmentMutation = api.tasks.assignUser.useMutation();
   const [query, setQuery] = useState("");
+  const apiUtils = api.useUtils();
   // eslint-disable-next-line prefer-const
   let { data: unAssignedUsers, isFetching: loading } =
     unAssignedUsersQuery.useQuery({
@@ -30,9 +31,19 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
       groupId: props.group.id,
     });
   if (!unAssignedUsers) unAssignedUsers = [];
+  function addAssignment(userId: string) {
+    addAssignmentMutation.mutate(
+      { taskId: props.task.id, userId },
+      {
+        onSuccess: () => {
+          void apiUtils.tasks.getUnassignedMembers.invalidate();
+        },
+      },
+    );
+  }
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-2xl font-bold">Manage members</h2>
+      <h2 className="text-2xl font-bold">Add assignees</h2>
       <input
         placeholder="Search for a member"
         className={"inner mb-5 h-10 rounded-md pl-2"}
@@ -71,7 +82,9 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
                 </div>
               </TableCell>
               <TableCell>
-                <Button>Add</Button>
+                <Button color="primary" onClick={() => addAssignment(user.id)}>
+                  Add
+                </Button>
               </TableCell>
             </TableRow>
           )}
