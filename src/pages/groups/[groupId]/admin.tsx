@@ -13,7 +13,7 @@ import { api } from "~/utils/api";
 export default function GroupAdminPanel() {
   //TODO: Remove onSuccess callbacks (issue #19)
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const groupId = router.query.groupId as string;
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
   const [authLoading, setAuthLoading] = useState(true);

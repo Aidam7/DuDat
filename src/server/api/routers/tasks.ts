@@ -111,4 +111,23 @@ export const tasksRouter = createTRPCRouter({
       });
       return taskAssignment ? true : false;
     }),
+  getUnassignedMembers: protectedProcedure
+    .input(z.object({ taskId: z.string(), groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const unassignedMembers = await ctx.prisma.user.findMany({
+        where: {
+          groupMembership: {
+            some: {
+              groupId: input.groupId,
+            },
+          },
+          taskAssignment: {
+            none: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
+      return unassignedMembers;
+    }),
 });

@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 
 export default function GroupDetail() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const groupId = router.query.groupId as string;
   const { data: session, status } = useSession();
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
@@ -57,7 +57,7 @@ export default function GroupDetail() {
       <div className="ml-auto flex flex-col">
         <Button
           color="primary"
-          onClick={() => router.push(`/tasks/create?groupId=${groupId}`)}
+          onClick={() => router.push(`/groups/${groupId}/tasks/create`)}
           className="mb-2"
         >
           Create a new task
