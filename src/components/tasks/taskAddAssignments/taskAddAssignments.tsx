@@ -37,6 +37,7 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
       {
         onSuccess: () => {
           void apiUtils.tasks.getUnassignedMembers.invalidate();
+          void apiUtils.tasks.getAssignedMembers.invalidate();
         },
       },
     );
