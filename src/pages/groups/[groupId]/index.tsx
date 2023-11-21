@@ -8,7 +8,7 @@ import { api } from "~/utils/api";
 
 export default function GroupDetail() {
   const router = useRouter();
-  const groupId = router.query.id as string;
+  const groupId = router.query.groupId as string;
   const { data: session, status } = useSession();
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
