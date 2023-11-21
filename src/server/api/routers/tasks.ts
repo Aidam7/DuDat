@@ -88,6 +88,17 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  isAuthor: protectedProcedure
+    .input(z.object({ taskId: z.string(), userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          authorId: input.userId,
+          id: input.taskId,
+        },
+      });
+      return task ? true : false;
+    }),
   assignUser: protectedProcedure
     .input(z.object({ userId: z.string(), taskId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -103,13 +114,33 @@ export const tasksRouter = createTRPCRouter({
       });
       if (!groupMembership)
         throw new Error("User is not a member of the group");
-      const taskAssignment = await ctx.prisma.taskAssignment.create({
+      const assignment = await ctx.prisma.taskAssignment.create({
         data: {
           userId: input.userId,
           taskId: input.taskId,
         },
       });
-      return taskAssignment ? true : false;
+      return assignment ? true : false;
+    }),
+  unassignUser: protectedProcedure
+    .input(z.object({ userId: z.string(), taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: { id: input.taskId },
+      });
+      if (!task) throw new Error("Task not found");
+      if (
+        task.authorId != ctx.session.user.id &&
+        input.userId != ctx.session.user.id
+      )
+        throw new Error("You are not authorized to unassign this user");
+      const assignment = await ctx.prisma.taskAssignment.deleteMany({
+        where: {
+          userId: input.userId,
+          taskId: input.taskId,
+        },
+      });
+      return assignment ? true : false;
     }),
   getUnassignedMembers: protectedProcedure
     .input(z.object({ taskId: z.string(), groupId: z.string() }))
@@ -129,5 +160,23 @@ export const tasksRouter = createTRPCRouter({
         },
       });
       return unassignedMembers;
+    }),
+  getAssignedMembers: protectedProcedure
+    .input(z.object({ taskId: z.string(), groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.user.findMany({
+        where: {
+          groupMembership: {
+            some: {
+              groupId: input.groupId,
+            },
+          },
+          taskAssignment: {
+            some: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
     }),
 });
