@@ -14,6 +14,7 @@ import { type ITaskWithGroup } from "~/utils/types";
 type Props = {
   rows: ITaskWithGroup[];
   loading: boolean;
+  doNotRenderGroup?: boolean;
 };
 export const TaskTable: FC<Props> = (props: Props) => {
   return (
@@ -22,7 +23,9 @@ export const TaskTable: FC<Props> = (props: Props) => {
         <TableColumn>Title</TableColumn>
         <TableColumn>Description</TableColumn>
         <TableColumn>Due Date</TableColumn>
-        <TableColumn>Group</TableColumn>
+        <TableColumn className={props.doNotRenderGroup ? "hidden" : ""}>
+          Group
+        </TableColumn>
       </TableHeader>
       <TableBody
         items={props.rows}
@@ -43,7 +46,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
             <TableCell>
               {task.dueOn != null ? task.dueOn.toLocaleDateString() : "—"}
             </TableCell>
-            <TableCell>
+            <TableCell className={props.doNotRenderGroup ? "hidden" : ""}>
               <Link href={`/groups/${task.groupId}`}>{task.group.name}</Link>
             </TableCell>
           </TableRow>
