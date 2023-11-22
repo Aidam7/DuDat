@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import GroupAddMembers from "~/components/groups/groupAddMembership/groupAddMembership";
+import GroupAddMembers from "~/components/groups/groupAddMembership";
 import GroupDelete from "~/components/groups/groupDelete";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
 import GroupRemoveMembers from "~/components/groups/groupRemoveMembership/";
