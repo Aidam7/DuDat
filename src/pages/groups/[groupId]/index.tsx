@@ -86,9 +86,19 @@ export default function GroupDetail() {
         <div className="w-[50%]">
           <h2 className="text-4xl">Tasks</h2>
           {tasks ? (
-            <TaskTable loading={loading} rows={tasks} doNotRenderGroup />
+            <TaskTable
+              loading={loading}
+              rows={tasks}
+              doNotRenderGroup
+              link={`/groups/${groupId}/tasks/`}
+            />
           ) : (
-            <TaskTable loading={loading} rows={[]} doNotRenderGroup />
+            <TaskTable
+              loading={loading}
+              rows={[]}
+              doNotRenderGroup
+              link={`/groups/${groupId}/tasks/`}
+            />
           )}
         </div>
         <div className="w-[50%]">

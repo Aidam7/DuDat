@@ -29,9 +29,9 @@ export default function Tasks() {
         }}
       ></input>
       {tasks ? (
-        <TaskTable loading={loading} rows={tasks} />
+        <TaskTable loading={loading} rows={tasks} link="/tasks/" />
       ) : (
-        <TaskTable loading={loading} rows={[]} />
+        <TaskTable loading={loading} rows={[]} link="/tasks/" />
       )}
     </>
   );
