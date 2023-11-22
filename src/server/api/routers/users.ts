@@ -76,7 +76,7 @@ export const usersRouter = createTRPCRouter({
       return false;
     }),
   getAllWhereNotMemberOfGroup: protectedProcedure
-    .input(z.object({ groupId: z.string() }))
+    .input(z.object({ groupId: z.string(), userName: z.string() }))
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findMany({
         where: {
@@ -85,8 +85,10 @@ export const usersRouter = createTRPCRouter({
               groupId: input.groupId,
             },
           },
+          name: {
+            contains: input.userName,
+          },
         },
       });
-      return;
     }),
 });
