@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
+import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 
 export default function GroupDetail() {
@@ -45,6 +46,16 @@ export default function GroupDetail() {
     name: "",
     groupId,
   });
+  const { data: members, isFetching: loadingMembers } =
+    api.users.locateByNameAndGroup.useQuery(
+      {
+        name: "",
+        groupId,
+      },
+      {
+        enabled: group != null,
+      },
+    );
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
@@ -71,11 +82,24 @@ export default function GroupDetail() {
           </Button>
         )}
       </div>
-      {tasks ? (
-        <TaskTable loading={loading} rows={tasks} />
-      ) : (
-        <TaskTable loading={loading} rows={[]} />
-      )}
+      <div className="flex space-x-4">
+        <div className="w-[50%]">
+          <h2 className="text-4xl">Tasks</h2>
+          {tasks ? (
+            <TaskTable loading={loading} rows={tasks} doNotRenderGroup />
+          ) : (
+            <TaskTable loading={loading} rows={[]} doNotRenderGroup />
+          )}
+        </div>
+        <div className="w-[50%]">
+          <h2 className="text-4xl">Members</h2>
+          {members ? (
+            <UserTable loading={loadingMembers} rows={members} />
+          ) : (
+            <UserTable loading={loadingMembers} rows={[]} />
+          )}
+        </div>
+      </div>
     </>
   );
 }
