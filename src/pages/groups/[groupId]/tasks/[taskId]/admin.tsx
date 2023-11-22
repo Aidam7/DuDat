@@ -5,7 +5,7 @@ import Code404 from "~/components/layout/errorCodes/404";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
 import TaskRemoveAssignments from "~/components/tasks/taskRemoveAssignments";
 import { api } from "~/utils/api";
-export default function TaskDetail() {
+export default function TaskAdminPanel() {
   const router = useRouter();
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
