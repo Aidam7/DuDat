@@ -23,6 +23,7 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
   let { data: nonMembers, isFetching: loading } = findNonMembersQuery.useQuery(
     {
       groupId: props.group.id,
+      userName: query,
     },
     { enabled: query != "" },
   );
