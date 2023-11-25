@@ -1,36 +1,14 @@
-import Link from "next/link";
-
 export default function Home() {
   return (
     <>
-      <main className=" flex min-h-screen flex-col items-center justify-center">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+      <main className=" flex flex-col items-center justify-center">
+        <div className="container flex flex-col items-center justify-center px-4 py-16 ">
           <h1 className="text-9xl font-extrabold tracking-tight sm:text-[5rem]">
             DuDat
           </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl "
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl "
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
+          <div className="flex flex-col items-center tracking-tight">
+            <p className="mb-5 text-6xl">A dead simple, easy to use TODO app</p>
+            <p className="text-3xl">For both individuals or groups</p>
           </div>
         </div>
       </main>
