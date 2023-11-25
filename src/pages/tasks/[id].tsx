@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter as useNavigation } from "next/navigation";
 import { useRouter } from "next/router";
+import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
 
 export default function TaskReroute() {
@@ -11,7 +12,7 @@ export default function TaskReroute() {
     taskId: id,
   });
   if (isFetching) return <>Loading...</>;
-  if (!groupId) return <>Error</>;
+  if (!groupId) return <Code404 />;
   navigation.replace(`/groups/${groupId.groupId}/tasks/${id}`);
   return (
     <>
