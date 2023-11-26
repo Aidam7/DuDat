@@ -16,6 +16,7 @@ type Props = {
   rows: ITaskWithGroup[];
   loading: boolean;
   doNotRenderGroup?: boolean;
+  renderFinishedOn?: boolean;
   link?: string;
 };
 
@@ -26,6 +27,9 @@ export const TaskTable: FC<Props> = (props: Props) => {
       <TableColumn>Title</TableColumn>
       <TableColumn>Description</TableColumn>
       <TableColumn>Due Date</TableColumn>
+      <TableColumn className={props.renderFinishedOn ? "" : "hidden"}>
+        Finished On
+      </TableColumn>
       <TableColumn className={props.doNotRenderGroup ? "hidden" : ""}>
         Group
       </TableColumn>
@@ -59,6 +63,11 @@ export const TaskTable: FC<Props> = (props: Props) => {
           </TableCell>
           <TableCell>
             {task.dueOn !== null ? task.dueOn.toLocaleDateString() : "—"}
+          </TableCell>
+          <TableCell className={props.renderFinishedOn ? "" : "hidden"}>
+            {task.finishedOn !== null
+              ? task.finishedOn.toLocaleDateString()
+              : "—"}
           </TableCell>
           <TableCell className={props.doNotRenderGroup ? "hidden" : ""}>
             <Link href={`/groups/${task.groupId}`}>{task.group.name}</Link>
