@@ -60,6 +60,7 @@ export const tasksRouter = createTRPCRouter({
         },
         include: {
           group: true,
+          taskAssignment: true,
         },
       });
     }),
