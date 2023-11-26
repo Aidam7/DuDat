@@ -155,6 +155,7 @@ export default function GroupDetail() {
               loading={loading}
               rows={finishedTasks}
               doNotRenderGroup
+              renderFinishedOn
               link={`/groups/${groupId}/tasks/`}
             />
           ) : (
@@ -162,6 +163,7 @@ export default function GroupDetail() {
               loading={loading}
               rows={[]}
               doNotRenderGroup
+              renderFinishedOn
               link={`/groups/${groupId}/tasks/`}
             />
           )}
