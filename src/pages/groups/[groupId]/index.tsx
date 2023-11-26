@@ -42,10 +42,12 @@ export default function GroupDetail() {
         enabled: session != null && group != null,
       },
     );
-  const { data: tasks, isFetching: loadingTasks } = findTasks.useQuery({
-    name: "",
-    groupId,
-  });
+  const { data: tasksAndWishes, isFetching: loadingTasks } = findTasks.useQuery(
+    {
+      name: "",
+      groupId,
+    },
+  );
   const { data: members, isFetching: loadingMembers } =
     api.users.locateByNameAndGroup.useQuery(
       {
@@ -62,6 +64,12 @@ export default function GroupDetail() {
   if (isMemberLoading || isOwnerLoading || loadingTasks)
     return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
+  const wishes = tasksAndWishes?.filter(
+    (task) => task.taskAssignment.length == 0,
+  );
+  const tasks = tasksAndWishes?.filter(
+    (task) => task.taskAssignment.length > 0,
+  );
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
@@ -82,8 +90,8 @@ export default function GroupDetail() {
           </Button>
         )}
       </div>
-      <div className="flex space-x-4">
-        <div className="w-[50%]">
+      <div className="flex max-md:flex-col md:space-x-4">
+        <div className="w-[50%] max-md:w-[100%]">
           <h2 className="text-4xl">Tasks</h2>
           {tasks ? (
             <TaskTable
@@ -101,15 +109,31 @@ export default function GroupDetail() {
             />
           )}
         </div>
-        <div className="w-[50%]">
-          <h2 className="text-4xl">Members</h2>
-          {members ? (
-            <UserTable loading={loadingMembers} rows={members} />
+        <div className="w-[50%] max-md:w-[100%]">
+          <h2 className="text-4xl">Wishes</h2>
+          {wishes ? (
+            <TaskTable
+              loading={loading}
+              rows={wishes}
+              doNotRenderGroup
+              link={`/groups/${groupId}/tasks/`}
+            />
           ) : (
-            <UserTable loading={loadingMembers} rows={[]} />
+            <TaskTable
+              loading={loading}
+              rows={[]}
+              doNotRenderGroup
+              link={`/groups/${groupId}/tasks/`}
+            />
           )}
         </div>
       </div>
+      <h2 className="text-4xl">Members</h2>
+      {members ? (
+        <UserTable loading={loadingMembers} rows={members} />
+      ) : (
+        <UserTable loading={loadingMembers} rows={[]} />
+      )}
     </>
   );
 }
