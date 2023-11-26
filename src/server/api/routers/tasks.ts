@@ -1,16 +1,12 @@
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const tasksRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.task.findMany();
   }),
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.task.findFirst({
@@ -19,7 +15,7 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         title: z.string(),
@@ -47,12 +43,12 @@ export const tasksRouter = createTRPCRouter({
       await ctx.prisma.taskAssignment.createMany({ data });
       return task;
     }),
-  deleteById: publicProcedure
+  deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.task.delete({ where: { id: input.id } });
     }),
-  locateByName: publicProcedure
+  locateByName: protectedProcedure
     .input(z.object({ name: z.string(), groupId: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.task.findMany({

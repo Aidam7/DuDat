@@ -7,19 +7,20 @@ import {
 } from "~/server/api/trpc";
 
 export const groupsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.group.findMany();
   }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.group.findFirst({
+      const group = await ctx.prisma.group.findFirst({
         where: {
           id: input.id,
         },
       });
+      return group;
     }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         name: z.string(),
@@ -43,9 +44,17 @@ export const groupsRouter = createTRPCRouter({
       await ctx.prisma.groupMembership.createMany({ data });
       return group;
     }),
-  deleteById: publicProcedure
+  deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!group) throw new Error("Group not found");
+      if (group.ownerId !== ctx.session.user.id)
+        throw new Error("You are not the owner of this group");
       await ctx.prisma.group.delete({
         where: {
           id: input.id,

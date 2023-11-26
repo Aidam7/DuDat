@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 export const usersRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.user.findMany();
   }),
   getById: publicProcedure
@@ -19,10 +19,16 @@ export const usersRouter = createTRPCRouter({
         },
       });
     }),
-  deleteById: publicProcedure
+  deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.user.delete({ where: { id: input.id } });
+      if (ctx.session.user.id !== input.id)
+        throw new Error("You can only delete yourself");
+      const deletedUser = await ctx.prisma.user.delete({
+        where: { id: input.id },
+      });
+      if (deletedUser) return true;
+      return false;
     }),
   locateByName: protectedProcedure
     .input(z.object({ name: z.string() }))
