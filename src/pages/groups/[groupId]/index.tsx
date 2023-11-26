@@ -90,9 +90,9 @@ export default function GroupDetail() {
           </Button>
         )}
       </div>
-      <div className="flex max-md:flex-col md:space-x-4">
+      <div className="flex pb-5 max-md:flex-col md:space-x-4">
         <div className="w-[50%] max-md:w-[100%]">
-          <h2 className="text-4xl">Tasks</h2>
+          <h2 className="pb-5 text-4xl">Tasks</h2>
           {tasks ? (
             <TaskTable
               loading={loading}
@@ -110,7 +110,7 @@ export default function GroupDetail() {
           )}
         </div>
         <div className="w-[50%] max-md:w-[100%]">
-          <h2 className="text-4xl">Wishes</h2>
+          <h2 className="pb-5 text-4xl">Wishes</h2>
           {wishes ? (
             <TaskTable
               loading={loading}
@@ -128,7 +128,7 @@ export default function GroupDetail() {
           )}
         </div>
       </div>
-      <h2 className="text-4xl">Members</h2>
+      <h2 className="pb-5 text-4xl">Members</h2>
       {members ? (
         <UserTable loading={loadingMembers} rows={members} />
       ) : (
