@@ -1,4 +1,4 @@
-import { Input } from "@nextui-org/react";
+import { Checkbox, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
@@ -9,6 +9,7 @@ interface Props {
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
   const router = useRouter();
@@ -23,7 +24,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         desc: description,
         parentGroupId: props.groupId,
         authorId: session.user.id,
-        assigneeIDs: [session.user.id],
+        assigneeIDs: isWish ? [] : [session.user.id],
         dueOn: null,
       },
       {
@@ -37,7 +38,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
   return (
     <>
       <form
-        className="flex flex-col items-center justify-center"
+        className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
         <h3 className="mb-4 text-3xl font-bold">Create a task</h3>
@@ -47,17 +48,17 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           isRequired
           value={name}
           onValueChange={setName}
-          className="mb-4"
         />
         <Input
           type="text"
           label="Description"
           value={description}
           onValueChange={setDescription}
-          className="mb-4"
         />
-
-        <input type="submit" value="Submit" />
+        <Checkbox isSelected={isWish} onValueChange={setIsWish}>
+          Is a wish?
+        </Checkbox>
+        <Input type="submit" value="Submit" />
       </form>
     </>
   );
