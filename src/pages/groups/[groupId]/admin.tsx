@@ -16,8 +16,6 @@ export default function GroupAdminPanel() {
   const groupId = router.query.groupId as string;
   const [loading, setLoading] = useState(true);
   const { data: session, status } = useSession();
-  const [authLoading, setAuthLoading] = useState(true);
-  const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
   const { data: group } = api.groups.getById.useQuery(
     { id: groupId },
     {
@@ -25,22 +23,11 @@ export default function GroupAdminPanel() {
       onSuccess: () => setLoading(false),
     },
   );
-  const { data: isOwner } = isOwnerOfGroupQuery.useQuery(
-    {
-      groupId,
-      userId: session?.user?.id ? session.user.id : "",
-    },
-    {
-      enabled: session != null && group != null,
-      onSuccess: () => setAuthLoading(false),
-    },
-  );
   if (status === "loading") return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
   if (!group) return <Code404 />;
-  if (authLoading) return <>Authenticating...</>;
-  if (!isOwner) return <Code401 />;
+  if (session.user.id != group.ownerId) return <Code401 />;
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>

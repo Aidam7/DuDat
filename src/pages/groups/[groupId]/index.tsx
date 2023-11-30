@@ -13,7 +13,6 @@ export default function GroupDetail() {
   const groupId = router.query.groupId as string;
   const { data: session, status } = useSession();
   const isMemberOfGroupQuery = api.users.isMemberOfGroup;
-  const isOwnerOfGroupQuery = api.users.isOwnerOfGroup;
   const findTasks = api.tasks.locateByName;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
   const { data: group, isFetching: loading } = api.groups.getById.useQuery(
@@ -26,16 +25,6 @@ export default function GroupDetail() {
   if (session) userId = session.user.id;
   const { data: isMember, isFetching: isMemberLoading } =
     isMemberOfGroupQuery.useQuery(
-      {
-        groupId,
-        userId,
-      },
-      {
-        enabled: session != null && group != null,
-      },
-    );
-  const { data: isOwner, isFetching: isOwnerLoading } =
-    isOwnerOfGroupQuery.useQuery(
       {
         groupId,
         userId,
@@ -63,9 +52,9 @@ export default function GroupDetail() {
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  if (isMemberLoading || isOwnerLoading || loadingTasks)
-    return <>Authenticating...</>;
+  if (isMemberLoading || loadingTasks) return <>Authenticating...</>;
   if (!isMember) return <Code401 />;
+  const isOwner = session.user.id == group.ownerId;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,
   );

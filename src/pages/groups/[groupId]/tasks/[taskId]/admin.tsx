@@ -27,14 +27,7 @@ export default function TaskAdminPanel() {
   if (!task || !group) return <Code404 />;
   return (
     <>
-      <h1>{task.id}</h1>
-      {task.description}
-      <br></br>
-      {task.authorId}
-      <br />
-      {session.user.id}
-      <br></br>
-      {task.title}
+      <h1 className="text-6xl">{task.title}</h1>
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
     </>
