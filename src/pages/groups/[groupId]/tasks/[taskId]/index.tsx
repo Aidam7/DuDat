@@ -35,6 +35,8 @@ export default function TaskDetail() {
     );
   const assignToTaskMutation = api.tasks.assignUser.useMutation();
   const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
+  const markTaskASFinishedMutation = api.tasks.finishTask.useMutation();
+  const resumeTaskMutation = api.tasks.resumeTask.useMutation();
   const apiUtils = api.useUtils();
   if (!session) return <>Please sign in</>;
   if (authenticating) return <>Authenticating...</>;
@@ -71,6 +73,32 @@ export default function TaskDetail() {
       },
     );
   }
+  function handleFinishTask() {
+    if (!session || !task) return;
+    return markTaskASFinishedMutation.mutate(
+      {
+        taskId: task.id,
+      },
+      {
+        onSuccess: () => {
+          void apiUtils.tasks.getById.invalidate();
+        },
+      },
+    );
+  }
+  function handleResumeTask() {
+    if (!session || !task) return;
+    return resumeTaskMutation.mutate(
+      {
+        taskId: task.id,
+      },
+      {
+        onSuccess: () => {
+          void apiUtils.tasks.getById.invalidate();
+        },
+      },
+    );
+  }
   return (
     <>
       <h1 className="text-6xl">{task.title}</h1>
@@ -81,17 +109,39 @@ export default function TaskDetail() {
           No description was provided
         </span>
       )}
-      <div className="ml-auto flex flex-col">
+      {task.finishedOn && (
+        <>
+          Task was finished on {task.finishedOn.toLocaleDateString()}
+          <br />{" "}
+          {task.confirmedAsFinished ? (
+            <span className="italic text-gray-600">
+              Confirmed by the author
+            </span>
+          ) : (
+            <span className="italic text-gray-600">
+              Not yet confirmed by the author
+            </span>
+          )}
+        </>
+      )}
+      <div className="flex-co ml-auto flex gap-2">
         {isAssigned ? (
-          <Button
-            color="danger"
-            className="mb-2"
-            onPress={handleUnassignFromTask}
-          >
-            Unassign from task
-          </Button>
+          <>
+            {task.finishedOn == null ? (
+              <Button color="success" onPress={handleFinishTask}>
+                Finish Task
+              </Button>
+            ) : (
+              <Button color="danger" onPress={handleResumeTask}>
+                Resume this task
+              </Button>
+            )}
+            <Button color="danger" onPress={handleUnassignFromTask}>
+              Unassign from task
+            </Button>
+          </>
         ) : (
-          <Button color="primary" className="mb-2" onPress={handleAssignToTask}>
+          <Button color="primary" onPress={handleAssignToTask}>
             Assign to task
           </Button>
         )}
