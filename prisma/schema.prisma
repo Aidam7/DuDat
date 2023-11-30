@@ -74,18 +74,19 @@ model VerificationToken {
 }
 
 model Task {
-  id             String               @id @default(cuid())
-  title          String
-  description    String               @default("")
-  createdOn      DateTime             @default(now())
-  dueOn          DateTime?
-  finishedOn     DateTime?
-  group          Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId        String
-  author         User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId       String
-  taskAssignment TaskAssignment[]
-  categories     CategoryAssignment[]
+  id                  String               @id @default(cuid())
+  title               String
+  description         String               @default("")
+  createdOn           DateTime             @default(now())
+  dueOn               DateTime?
+  finishedOn          DateTime?
+  group               Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId             String
+  author              User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId            String
+  taskAssignment      TaskAssignment[]
+  categories          CategoryAssignment[]
+  confirmedAsFinished Boolean              @default(false)
 
   @@index([authorId])
   @@index([groupId])
