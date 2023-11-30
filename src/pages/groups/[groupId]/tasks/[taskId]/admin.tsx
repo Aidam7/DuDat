@@ -1,3 +1,4 @@
+import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
@@ -20,14 +21,39 @@ export default function TaskAdminPanel() {
     { enabled: session != null && isMember },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
+  const confirmTaskAsFinishedMutation =
+    api.tasks.confirmTaskAsFinished.useMutation();
+  const apiUtils = api.useUtils();
   if (!session) return <>Please sign in</>;
   if (authenticating) return <>Authenticating...</>;
   if (!isMember || task?.authorId != session.user.id) return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
+  function handleConfirmTaskAsFinished() {
+    if (!session || !task) return;
+    return confirmTaskAsFinishedMutation.mutate(
+      {
+        taskId: task.id,
+      },
+      {
+        onSuccess: () => {
+          void apiUtils.tasks.getById.invalidate();
+        },
+      },
+    );
+  }
   return (
     <>
       <h1 className="text-6xl">{task.title}</h1>
+      {/*bruh*/}
+      <Button
+        color="success"
+        onPress={handleConfirmTaskAsFinished}
+        disabled={task.confirmedAsFinished ? true : false}
+        className="w-fit"
+      >
+        Confirm task as finished
+      </Button>
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
     </>
