@@ -176,7 +176,7 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
-  getGroupId: protectedProcedure
+  getTaskWithGroup: protectedProcedure
     .input(z.object({ taskId: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.task.findFirst({
@@ -185,6 +185,91 @@ export const tasksRouter = createTRPCRouter({
         },
         select: {
           groupId: true,
+        },
+      });
+    }),
+  finishTask: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+          taskAssignment: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      return await ctx.prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          finishedOn: new Date(),
+        },
+      });
+    }),
+  resumeTask: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+          taskAssignment: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      return await ctx.prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          finishedOn: null,
+          confirmedAsFinished: false,
+        },
+      });
+    }),
+  confirmTaskAsFinished: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+          taskAssignment: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      if (task.authorId != ctx.session.user.id)
+        throw new Error(
+          "You are not authorized to confirm this task as finished",
+        );
+      if (!task.finishedOn) {
+        return await ctx.prisma.task.update({
+          where: {
+            id: input.taskId,
+          },
+          data: {
+            finishedOn: new Date(),
+            confirmedAsFinished: true,
+          },
+        });
+      }
+      return await ctx.prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          confirmedAsFinished: true,
         },
       });
     }),
