@@ -8,7 +8,7 @@ export default function TaskReroute() {
   const router = useRouter();
   const navigation = useNavigation();
   const id = router.query.id as string;
-  const { data: groupId, isFetching } = api.tasks.getGroupId.useQuery({
+  const { data: groupId, isFetching } = api.tasks.getTaskWithGroupId.useQuery({
     taskId: id,
   });
   if (isFetching) return <>Loading...</>;

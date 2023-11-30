@@ -176,7 +176,7 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
-  getTaskWithGroup: protectedProcedure
+  getTaskWithGroupId: protectedProcedure
     .input(z.object({ taskId: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.task.findFirst({
