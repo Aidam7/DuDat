@@ -163,11 +163,6 @@ export const tasksRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.user.findMany({
         where: {
-          groupMembership: {
-            some: {
-              groupId: input.groupId,
-            },
-          },
           taskAssignment: {
             some: {
               taskId: input.taskId,
