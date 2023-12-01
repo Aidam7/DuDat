@@ -133,8 +133,16 @@ export const groupsRouter = createTRPCRouter({
           userId: input.userId,
         },
       });
-      if (deleted) return true;
-      return false;
+      if (!deleted) return false;
+      await ctx.prisma.taskAssignment.deleteMany({
+        where: {
+          userId: input.userId,
+          task: {
+            groupId: input.groupId,
+          },
+        },
+      });
+      return true;
     }),
   addMember: protectedProcedure
     .input(z.object({ userId: z.string(), groupId: z.string() }))
