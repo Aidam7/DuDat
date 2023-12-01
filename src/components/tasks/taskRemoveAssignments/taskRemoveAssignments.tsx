@@ -38,7 +38,6 @@ const TaskRemoveAssignments: FC<Props> = (props: Props) => {
   });
   const removeAssignmentMutation = api.tasks.unassignUser.useMutation();
   if (!users) users = [];
-  users = users.filter((user) => user.id !== props.group.ownerId);
   function removeAssignment(userId: string) {
     removeAssignmentMutation.mutate(
       { taskId: props.task.id, userId },
