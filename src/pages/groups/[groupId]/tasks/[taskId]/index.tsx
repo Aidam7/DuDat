@@ -81,7 +81,7 @@ export default function TaskDetail() {
       },
       {
         onSuccess: () => {
-          void apiUtils.tasks.getById.invalidate();
+          task.finishedOn = new Date();
         },
       },
     );
@@ -94,7 +94,8 @@ export default function TaskDetail() {
       },
       {
         onSuccess: () => {
-          void apiUtils.tasks.getById.invalidate();
+          task.finishedOn = null;
+          task.confirmedAsFinished = false;
         },
       },
     );

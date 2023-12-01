@@ -23,7 +23,6 @@ export default function TaskAdminPanel() {
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
   const confirmTaskAsFinishedMutation =
     api.tasks.confirmTaskAsFinished.useMutation();
-  const apiUtils = api.useUtils();
   if (!session) return <>Please sign in</>;
   if (authenticating) return <>Authenticating...</>;
   if (!isMember || task?.authorId != session.user.id) return <Code401 />;
@@ -37,14 +36,16 @@ export default function TaskAdminPanel() {
       },
       {
         onSuccess: () => {
-          void apiUtils.tasks.getById.invalidate();
+          task.confirmedAsFinished = true;
         },
       },
     );
   }
   return (
     <>
-      <h1 className="text-6xl">{task.title}</h1>
+      <h1 className="text-6xl">
+        <a href={`../${task.id}`}>{task.title}</a>
+      </h1>
       {/*bruh*/}
       <Button
         color={task.confirmedAsFinished ? "default" : "success"}
