@@ -30,7 +30,7 @@ export default function TaskAdminPanel() {
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
   function handleConfirmTaskAsFinished() {
-    if (!session || !task) return;
+    if (!session || !task || task.confirmedAsFinished) return;
     return confirmTaskAsFinishedMutation.mutate(
       {
         taskId: task.id,
@@ -47,12 +47,14 @@ export default function TaskAdminPanel() {
       <h1 className="text-6xl">{task.title}</h1>
       {/*bruh*/}
       <Button
-        color="success"
+        color={task.confirmedAsFinished ? "default" : "success"}
         onPress={handleConfirmTaskAsFinished}
         disabled={task.confirmedAsFinished ? true : false}
         className="w-fit"
       >
-        Confirm task as finished
+        {task.confirmedAsFinished
+          ? "Confirmed as finished"
+          : "Confirm as finished"}
       </Button>
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
