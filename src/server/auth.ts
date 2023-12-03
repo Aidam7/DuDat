@@ -6,6 +6,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -46,11 +47,46 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   },
+  events: {
+    createUser: async ({ user }) => {
+      //* For some reason TS doesn't recognize that name really does exist after the first check, so, whatever, we check twice
+      if (!user.name) return;
+      user = await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+          image: `https://api.dicebear.com/7.x/lorelei-neutral/svg?seed=${user.id}&backgroundColor=ffffff,b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
+        },
+      });
+      if (!user.name) return;
+      const group = await prisma.group.create({
+        data: {
+          name: user.name,
+          ownerId: user.id,
+          description: `You personal group, ${user.name}!`,
+        },
+      });
+      await prisma.groupMembership.create({
+        data: {
+          groupId: group.id,
+          userId: user.id,
+        },
+      });
+    },
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    GoogleProvider({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      //* For some reason it would throw an unsafe any assignment error even though it doesn't mind for the discord provider above ¯\_(ツ)_/¯
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     /**
      * ...add more providers here.
