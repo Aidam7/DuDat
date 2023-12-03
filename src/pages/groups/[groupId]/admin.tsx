@@ -33,9 +33,9 @@ export default function GroupAdminPanel() {
       <h1 className="text-6xl">{group.name} settings</h1>
       <div className="mb-5 w-full lg:w-[50%]">
         <div className="mb-5">
-          <GroupEdit groupId={groupId} />
+          <GroupEdit group={group} />
         </div>
-        <GroupDelete groupId={groupId} />
+        <GroupDelete group={group} />
       </div>
       <GroupTransferOwnership group={group} />
       <GroupRemoveMembers group={group} />

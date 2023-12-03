@@ -1,29 +1,18 @@
 import { Input } from "@nextui-org/react";
+import { type Group } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FC, type FormEvent } from "react";
-import Code404 from "~/components/layout/errorCodes/404";
+import { useState, type FC, type FormEvent } from "react";
 import { api } from "~/utils/api";
 interface Props {
-  groupId: string;
+  group: Group;
 }
 export const GroupEdit: FC<Props> = (props: Props) => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState(props.group.name);
+  const [description, setDescription] = useState(props.group.description);
   const editGroupMutation = api.groups.edit.useMutation();
   const { data: session } = useSession();
   const router = useRouter();
-  const { data: group } = api.groups.getById.useQuery(
-    { id: props.groupId },
-    { enabled: session !== null },
-  );
-  useEffect(() => {
-    if (group) {
-      setName(group.name);
-      setDescription(group.description);
-    }
-  }, [group]);
-  if (!group) return <Code404 />;
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
@@ -33,9 +22,9 @@ export const GroupEdit: FC<Props> = (props: Props) => {
         name,
         description,
         ownerId: session.user.id,
-        groupId: group.id,
+        groupId: props.group.id,
       },
-      { onSuccess: () => router.push(`/groups/${group.id}`) },
+      { onSuccess: () => router.push(`/groups/${props.group.id}`) },
     );
   };
 

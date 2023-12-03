@@ -7,33 +7,22 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
+import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 
 type Props = {
-  groupId: string;
+  group: Group;
 };
 
 const GroupDelete: React.FC<Props> = (props: Props) => {
-  const { data: session } = useSession();
-  const { data: isOwner } = api.users.isOwnerOfGroup.useQuery(
-    {
-      groupId: props.groupId,
-      userId: session!.user.id,
-    },
-    {
-      enabled: session !== null,
-    },
-  );
   const groupDeleteMutation = api.groups.deleteById.useMutation();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   const handleDelete = async () => {
-    await groupDeleteMutation.mutateAsync({ id: props.groupId });
+    await groupDeleteMutation.mutateAsync({ id: props.group.id });
     router.push("/groups");
   };
-  if (!isOwner) return null;
   return (
     <>
       <Button onPress={onOpen} color="danger" className="w-full">
