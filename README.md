@@ -1,15 +1,4 @@
 # DuDat
-## Do that:
-* Pick a database
-* Group system
-* Tasks
-* Calendar
-* Task categories
-* Wishes (Tasks without a specific account to fulfill them)
-* Summaries
-* Move all this onto some trello or something (supporting rivals smh)­
-
-# Create T3 App
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
