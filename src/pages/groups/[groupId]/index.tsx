@@ -2,6 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import GroupLeave from "~/components/groups/groupLeave";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
@@ -67,6 +68,13 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
+      {group.description != "" ? (
+        <span>{group.description}</span>
+      ) : (
+        <span className="italic text-gray-600">
+          No description was provided
+        </span>
+      )}
       <div className="ml-auto flex flex-col">
         <Button
           color="primary"
@@ -75,13 +83,15 @@ export default function GroupDetail() {
         >
           Create a new task
         </Button>
-        {isOwner && (
+        {isOwner ? (
           <Button
             color="warning"
             onClick={() => router.push(`${groupId}/admin`)}
           >
             Settings
           </Button>
+        ) : (
+          <GroupLeave groupId={groupId} />
         )}
       </div>
       <div className="flex pb-5 max-md:flex-col md:space-x-4">
