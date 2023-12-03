@@ -268,4 +268,33 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        desc: z.string(),
+        dueOn: z.date().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      if (task.authorId != ctx.session.user.id)
+        throw new Error("You are not authorized to edit this task");
+      return await ctx.prisma.task.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          title: input.title,
+          description: input.desc,
+          dueOn: input.dueOn,
+        },
+      });
+    }),
 });
