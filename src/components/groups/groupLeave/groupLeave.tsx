@@ -7,46 +7,48 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { type FC } from "react";
 import { api } from "~/utils/api";
-
-type Props = {
-  group: Group;
-};
-
-const GroupDelete: React.FC<Props> = (props: Props) => {
-  const groupDeleteMutation = api.groups.deleteById.useMutation();
+interface Props {
+  groupId: string;
+}
+export const GroupLeave: FC<Props> = (props: Props) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const leaveGroupMutation = api.groups.leave.useMutation();
   const router = useRouter();
-  const handleDelete = async () => {
-    await groupDeleteMutation.mutateAsync({ id: props.group.id });
-    router.push("/groups");
+  const handleLeave = () => {
+    leaveGroupMutation.mutate(
+      { groupId: props.groupId },
+      {
+        onSuccess: () => {
+          router.push("/groups");
+        },
+      },
+    );
   };
   return (
     <>
       <Button onPress={onOpen} color="danger" className="w-full">
-        Delete this group
+        Leave this group
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h4>Are you sure you want to delete this group?</h4>
+                <h4>Are you sure you want to leave this group?</h4>
               </ModalHeader>
               <ModalBody>
                 <span>
-                  This process is{" "}
-                  <span className="font-bold text-red-500">irreversible</span>.
-                  All tasks will be deleted too.
+                  You will need to be invited again to join this group.
                 </span>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="danger" variant="flat" onPress={handleDelete}>
+                <Button color="danger" variant="flat" onPress={handleLeave}>
                   Delete
                 </Button>
               </ModalFooter>
@@ -57,5 +59,3 @@ const GroupDelete: React.FC<Props> = (props: Props) => {
     </>
   );
 };
-
-export default GroupDelete;
