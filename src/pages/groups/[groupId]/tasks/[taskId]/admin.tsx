@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
+import TaskEdit from "~/components/tasks/taskEdit";
 import TaskRemoveAssignments from "~/components/tasks/taskRemoveAssignments";
 import { api } from "~/utils/api";
 export default function TaskAdminPanel() {
@@ -56,6 +57,7 @@ export default function TaskAdminPanel() {
           ? "Confirmed as finished"
           : "Confirm as finished"}
       </Button>
+      <TaskEdit task={task} />
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
     </>
