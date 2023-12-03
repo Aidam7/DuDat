@@ -9,6 +9,7 @@ interface Props {
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
@@ -18,6 +19,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
+    const dueDate = new Date(selectedDate);
     await createTaskMutation.mutateAsync(
       {
         title: name,
@@ -25,7 +27,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         parentGroupId: props.groupId,
         authorId: session.user.id,
         assigneeIDs: isWish ? [] : [session.user.id],
-        dueOn: null,
+        dueOn: dueDate,
       },
       {
         onSuccess(task) {
@@ -54,6 +56,13 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           label="Description"
           value={description}
           onValueChange={setDescription}
+        />
+        <Input
+          type="datetime-local"
+          label="Due Date"
+          value={selectedDate}
+          onValueChange={setSelectedDate}
+          labelPlacement="outside-left"
         />
         <Checkbox isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
