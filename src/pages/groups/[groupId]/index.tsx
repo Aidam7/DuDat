@@ -67,6 +67,13 @@ export default function GroupDetail() {
   return (
     <>
       <h1 className="text-6xl">{group.name}</h1>
+      {group.description != "" ? (
+        <span>{group.description}</span>
+      ) : (
+        <span className="italic text-gray-600">
+          No description was provided
+        </span>
+      )}
       <div className="ml-auto flex flex-col">
         <Button
           color="primary"
