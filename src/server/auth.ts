@@ -5,7 +5,6 @@ import {
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env.mjs";
@@ -78,10 +77,6 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
     GoogleProvider({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       //* For some reason it would throw an unsafe any assignment error even though it doesn't mind for the discord provider above ¯\_(ツ)_/¯
