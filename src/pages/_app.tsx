@@ -34,7 +34,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <NextUIProvider className="break-words bg-black font-mono text-white dark">
         {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment*/}
         <SessionProvider session={session}>
-          <Analytics />
           <Wrapper>
             <Head>
               <title>DuDat</title>
@@ -44,6 +43,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <DuDatNavbar />
             <main className=" flex min-h-screen flex-col px-8">
               <Component {...pageProps} />
+              <Analytics />
             </main>
           </Wrapper>
         </SessionProvider>
