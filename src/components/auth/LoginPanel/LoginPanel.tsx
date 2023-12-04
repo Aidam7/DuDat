@@ -8,10 +8,10 @@ const LoginButton: React.FC = () => {
 
   return (
     <>
-      <div className="flex items-center">
+      <div className="flex items-center break-words">
         <Link
           href={`/users/${sessionData?.user.id}`}
-          className="flex items-center"
+          className="flex items-center break-words"
         >
           {sessionData?.user.image && (
             <>
@@ -31,13 +31,15 @@ const LoginButton: React.FC = () => {
                 src={sessionData.user.image}
                 alt={`${sessionData.user.name}'s avatar`}
                 className="mr-2 rounded-full md:hidden"
-                height={24}
-                width={24}
+                height={36}
+                width={36}
               />
             </>
           )}
           {sessionData?.user.name && (
-            <span className="pl-2 pr-4">{sessionData.user.name}</span>
+            <span className="pl-2 pr-4 max-md:hidden">
+              {sessionData.user.name}
+            </span>
           )}
         </Link>
         <Button
