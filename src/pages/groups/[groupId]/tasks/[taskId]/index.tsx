@@ -110,6 +110,29 @@ export default function TaskDetail() {
           No description was provided
         </span>
       )}
+      {task.dueOn ? (
+        <>
+          {task.finishedOn ? (
+            <span className="italic text-gray-600">
+              This task was due on {task.dueOn.toLocaleDateString()}
+            </span>
+          ) : (
+            <>Finish this task before: {task.dueOn.toLocaleDateString()}</>
+          )}
+        </>
+      ) : (
+        <>
+          {task.finishedOn ? (
+            <span className="italic text-gray-600">
+              This task could have been finished at any time
+            </span>
+          ) : (
+            <span className="italic text-gray-600">
+              You can finish this task anytime you want
+            </span>
+          )}
+        </>
+      )}
       {task.finishedOn && (
         <>
           Task was finished on {task.finishedOn.toLocaleDateString()}

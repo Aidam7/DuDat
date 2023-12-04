@@ -130,6 +130,11 @@ export const groupsRouter = createTRPCRouter({
       const deleted = await ctx.prisma.groupMembership.deleteMany({
         where: {
           groupId: input.groupId,
+          group: {
+            isNot: {
+              ownerId: ctx.session.user.id,
+            },
+          },
           userId: input.userId,
         },
       });
@@ -165,5 +170,30 @@ export const groupsRouter = createTRPCRouter({
       });
       if (membership) return true;
       return false;
+    }),
+  leave: protectedProcedure
+    .input(z.object({ groupId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const deleted = await ctx.prisma.groupMembership.deleteMany({
+        where: {
+          groupId: input.groupId,
+          group: {
+            isNot: {
+              ownerId: ctx.session.user.id,
+            },
+          },
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!deleted) return false;
+      await ctx.prisma.taskAssignment.deleteMany({
+        where: {
+          userId: ctx.session.user.id,
+          task: {
+            groupId: input.groupId,
+          },
+        },
+      });
+      return true;
     }),
 });

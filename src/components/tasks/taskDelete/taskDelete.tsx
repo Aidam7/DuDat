@@ -7,39 +7,38 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { type Group } from "@prisma/client";
+import { type Task } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { api } from "~/utils/api";
 
 type Props = {
-  group: Group;
+  task: Task;
 };
 
-const GroupDelete: React.FC<Props> = (props: Props) => {
-  const groupDeleteMutation = api.groups.deleteById.useMutation();
+const TaskDelete: React.FC<Props> = (props: Props) => {
+  const taskDeleteMutation = api.tasks.deleteById.useMutation();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const router = useRouter();
   const handleDelete = async () => {
-    await groupDeleteMutation.mutateAsync({ id: props.group.id });
-    router.push("/groups");
+    await taskDeleteMutation.mutateAsync({ id: props.task.id });
+    router.push(`/groups/${props.task.groupId}`);
   };
   return (
     <>
       <Button onPress={onOpen} color="danger" className="w-full">
-        Delete this group
+        Delete this task
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h4>Are you sure you want to delete this group?</h4>
+                <h4>Are you sure you want to delete this task?</h4>
               </ModalHeader>
               <ModalBody>
                 <span>
                   This process is{" "}
                   <span className="font-bold text-red-500">irreversible</span>.
-                  All tasks will be deleted too.
                 </span>
               </ModalBody>
               <ModalFooter>
@@ -58,4 +57,4 @@ const GroupDelete: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default GroupDelete;
+export default TaskDelete;

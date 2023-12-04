@@ -7,7 +7,6 @@ import { api } from "~/utils/api";
 import { NextUIProvider } from "@nextui-org/react";
 import { type NextPage } from "next";
 import Head from "next/head";
-import Footer from "~/components/layout/footer";
 import DuDatNavbar from "~/components/layout/navbar/";
 import "~/styles/globals.css";
 
@@ -44,7 +43,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <main className=" flex min-h-screen flex-col px-8">
               <Component {...pageProps} />
             </main>
-            <Footer />
           </Wrapper>
         </SessionProvider>
       </NextUIProvider>
