@@ -7,8 +7,12 @@ export default function Home() {
             DuDat
           </h1>
           <div className="flex flex-col items-center tracking-tight">
-            <p className="mb-5 text-6xl">A dead simple, easy to use TODO app</p>
-            <p className="text-3xl">For both individuals or groups</p>
+            <p className="mb-5 text-6xl max-md:text-3xl">
+              A dead simple, easy to use TODO app
+            </p>
+            <p className="text-3xl max-md:text-xl">
+              For both individuals or groups
+            </p>
           </div>
         </div>
       </main>
