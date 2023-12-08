@@ -127,14 +127,11 @@ export const groupsRouter = createTRPCRouter({
       if (!group) throw new Error("Group not found");
       if (group.ownerId !== ctx.session.user.id)
         throw new Error("You are not the owner of this group");
+      if (group.ownerId === input.userId)
+        throw new Error("The Dutchman must have a captain!");
       const deleted = await ctx.prisma.groupMembership.deleteMany({
         where: {
           groupId: input.groupId,
-          group: {
-            isNot: {
-              ownerId: ctx.session.user.id,
-            },
-          },
           userId: input.userId,
         },
       });
