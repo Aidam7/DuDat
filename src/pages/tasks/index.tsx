@@ -19,7 +19,12 @@ export default function Tasks() {
     { enabled: session != null },
   );
   if (!session) return <>Please sign in</>;
-  const finishedTasks = tasks?.filter((task) => task.finishedOn != null);
+  const unConfirmedTasks = tasks?.filter(
+    (task) => task.finishedOn != null && task.confirmedAsFinished == false,
+  );
+  const finishedTasks = tasks?.filter(
+    (task) => task.finishedOn != null && task.confirmedAsFinished == true,
+  );
   const ongoingTasks = tasks?.filter((task) => task.finishedOn == null);
   return (
     <>
@@ -34,6 +39,12 @@ export default function Tasks() {
       ></input>
       {ongoingTasks ? (
         <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
+      ) : (
+        <TaskTable loading={loading} rows={[]} link="/tasks/" />
+      )}
+      <h2 className="pb-5 text-4xl">Unconfirmed tasks</h2>
+      {unConfirmedTasks ? (
+        <TaskTable loading={loading} rows={unConfirmedTasks} link="/tasks/" />
       ) : (
         <TaskTable loading={loading} rows={[]} link="/tasks/" />
       )}
