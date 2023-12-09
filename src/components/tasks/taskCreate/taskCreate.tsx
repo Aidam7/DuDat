@@ -9,7 +9,8 @@ interface Props {
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDueDate, setSelectedDueDate] = useState("");
+  const [selectedStartDate, setSelectedStartDate] = useState("");
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
@@ -19,7 +20,8 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
-    const dueDate = new Date(selectedDate);
+    const dueDate = new Date(selectedDueDate);
+    const startDate = new Date(selectedStartDate);
     await createTaskMutation.mutateAsync(
       {
         title: name,
@@ -28,6 +30,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         authorId: session.user.id,
         assigneeIDs: isWish ? [] : [session.user.id],
         dueOn: dueDate,
+        startOn: startDate,
       },
       {
         onSuccess(task) {
@@ -59,9 +62,16 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         />
         <Input
           type="datetime-local"
+          label="Start Date"
+          value={selectedStartDate}
+          onValueChange={setSelectedStartDate}
+          labelPlacement="outside-left"
+        />
+        <Input
+          type="datetime-local"
           label="Due Date"
-          value={selectedDate}
-          onValueChange={setSelectedDate}
+          value={selectedDueDate}
+          onValueChange={setSelectedDueDate}
           labelPlacement="outside-left"
         />
         <Checkbox isSelected={isWish} onValueChange={setIsWish}>

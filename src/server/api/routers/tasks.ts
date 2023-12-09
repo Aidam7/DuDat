@@ -24,6 +24,7 @@ export const tasksRouter = createTRPCRouter({
         authorId: z.string(),
         assigneeIDs: z.array(z.string()),
         dueOn: z.date().nullable(),
+        startOn: z.date().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -34,6 +35,7 @@ export const tasksRouter = createTRPCRouter({
           groupId: input.parentGroupId,
           authorId: input.authorId,
           dueOn: input.dueOn,
+          startOn: input.startOn,
         },
       });
       const data = input.assigneeIDs.map((id) => ({
