@@ -277,6 +277,7 @@ export const tasksRouter = createTRPCRouter({
         title: z.string(),
         desc: z.string(),
         dueOn: z.date().nullable(),
+        startOn: z.date().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -296,6 +297,7 @@ export const tasksRouter = createTRPCRouter({
           title: input.title,
           description: input.desc,
           dueOn: input.dueOn,
+          startOn: input.startOn,
         },
       });
     }),
