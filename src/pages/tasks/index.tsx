@@ -12,7 +12,7 @@ export default function Tasks() {
   const [query, setQuery] = useState("");
   if (session) assigneeId = session.user.id;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
-  const [displayCalendar, setDisplayCalendar] = useState(false);
+  const [displayCalendar, setDisplayCalendar] = useState(true);
   const { data: tasks, isFetching: loading } = findTasksQuery.useQuery(
     {
       title: query,
