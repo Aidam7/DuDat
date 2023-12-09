@@ -14,9 +14,15 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     date.setMinutes(roundedMinutes);
     return date;
   };
+
+  const roundToEndOfDay = (date: Date): Date => {
+    date.setHours(23, 59, 59, 999);
+    return date;
+  };
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [endDate, setEndDate] = useState(roundToHalfHour(new Date()));
+  const [endDate, setEndDate] = useState(roundToEndOfDay(new Date()));
   const [startDate, setStartDate] = useState(roundToHalfHour(new Date()));
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
