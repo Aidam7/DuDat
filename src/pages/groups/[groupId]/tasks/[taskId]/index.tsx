@@ -5,6 +5,7 @@ import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
+import { formatDateToString } from "~/utils/func";
 export default function TaskDetail() {
   const router = useRouter();
   const taskId = router.query.taskId as string;
@@ -114,10 +115,10 @@ export default function TaskDetail() {
         <>
           {task.finishedOn ? (
             <span className="italic text-gray-600">
-              This task was due on {task.dueOn.toLocaleDateString()}
+              This task was due on {formatDateToString(task.dueOn)}
             </span>
           ) : (
-            <>Finish this task before: {task.dueOn.toLocaleDateString()}</>
+            <>Finish this task before: {formatDateToString(task.dueOn)}</>
           )}
         </>
       ) : (
