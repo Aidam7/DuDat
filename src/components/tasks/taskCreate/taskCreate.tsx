@@ -2,6 +2,8 @@ import { Checkbox, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
 interface Props {
   groupId: string;
@@ -9,19 +11,16 @@ interface Props {
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedDueDate, setSelectedDueDate] = useState("");
-  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
   const router = useRouter();
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
-    const dueDate = new Date(selectedDueDate);
-    const startDate = new Date(selectedStartDate);
     await createTaskMutation.mutateAsync(
       {
         title: name,
@@ -29,7 +28,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         parentGroupId: props.groupId,
         authorId: session.user.id,
         assigneeIDs: isWish ? [] : [session.user.id],
-        dueOn: dueDate,
+        dueOn: endDate,
         startOn: startDate,
       },
       {
@@ -60,20 +59,36 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           value={description}
           onValueChange={setDescription}
         />
-        <Input
-          type="datetime-local"
-          label="Start Date"
-          value={selectedStartDate}
-          onValueChange={setSelectedStartDate}
-          labelPlacement="outside-left"
-        />
-        <Input
-          type="datetime-local"
-          label="Due Date"
-          value={selectedDueDate}
-          onValueChange={setSelectedDueDate}
-          labelPlacement="outside-left"
-        />
+        <div>
+          <label>Start On</label>
+          <br />
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date ?? new Date())}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            showTimeSelect
+            timeIntervals={60}
+            timeFormat="p"
+            dateFormat="Pp"
+          />
+          <br />
+          <label>Due On</label>
+          <br />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date ?? new Date())}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            showTimeSelect
+            timeIntervals={60}
+            timeFormat="p"
+            dateFormat="Pp"
+          />
+        </div>
         <Checkbox isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
         </Checkbox>
