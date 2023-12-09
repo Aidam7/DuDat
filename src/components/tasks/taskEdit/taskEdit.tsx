@@ -3,6 +3,8 @@ import { type Task } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
 interface Props {
   task: Task;
@@ -10,11 +12,8 @@ interface Props {
 export const TaskEdit: FC<Props> = (props: Props) => {
   const [title, setTitle] = useState(props.task.title);
   const [description, setDescription] = useState(props.task.description);
-  // const [selectedDate, setSelectedDate] = useState(
-  //   props.task.dueOn
-  //     ? `${props.task.dueOn.getUTCFullYear()}-${props.task.dueOn.getUTCMonth()}-${props.task.dueOn.getUTCDay()}T${props.task.dueOn.getUTCHours()}:${props.task.dueOn.getUTCMinutes()}`
-  //     : "",
-  // );
+  const [endDate, setEndDate] = useState(props.task.dueOn);
+  const [startDate, setStartDate] = useState(props.task.startOn);
   const { data: session } = useSession();
   const editTaskMutation = api.tasks.edit.useMutation();
   const router = useRouter();
@@ -28,7 +27,8 @@ export const TaskEdit: FC<Props> = (props: Props) => {
         id: props.task.id,
         title: title,
         desc: description,
-        dueOn: props.task.dueOn,
+        dueOn: endDate,
+        startOn: startDate,
       },
       {
         onSuccess(task) {
@@ -57,13 +57,34 @@ export const TaskEdit: FC<Props> = (props: Props) => {
           value={description}
           onValueChange={setDescription}
         />
-        {/* <Input
-          type="datetime-local"
-          label="Due Date"
-          value={selectedDate}
-          onValueChange={setSelectedDate}
-          labelPlacement="outside-left"
-        /> */}
+        <div>
+          <label>Start On</label>
+          <br />
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date ?? new Date())}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            showTimeSelect
+            timeFormat="p"
+            dateFormat="Pp"
+          />
+          <br />
+          <label>Due On</label>
+          <br />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date ?? new Date())}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            showTimeSelect
+            timeFormat="p"
+            dateFormat="Pp"
+          />
+        </div>
         <Input type="submit" value="Submit" />
       </form>
     </>
