@@ -9,10 +9,15 @@ interface Props {
   groupId: string;
 }
 export const TaskCreate: FC<Props> = (props: Props) => {
+  const roundToHalfHour = (date: Date): Date => {
+    const roundedMinutes = Math.ceil(date.getMinutes() / 30) * 30;
+    date.setMinutes(roundedMinutes);
+    return date;
+  };
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [endDate, setEndDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(roundToHalfHour(new Date()));
+  const [startDate, setStartDate] = useState(roundToHalfHour(new Date()));
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
@@ -69,7 +74,6 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             startDate={startDate}
             endDate={endDate}
             showTimeSelect
-            timeIntervals={60}
             timeFormat="p"
             dateFormat="Pp"
           />
@@ -84,7 +88,6 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             endDate={endDate}
             minDate={startDate}
             showTimeSelect
-            timeIntervals={60}
             timeFormat="p"
             dateFormat="Pp"
           />
