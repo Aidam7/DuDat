@@ -5,21 +5,11 @@ import { useState, type FC, type FormEvent } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
+import { roundToEndOfDay, roundToHalfHour } from "~/utils/func";
 interface Props {
   groupId: string;
 }
 export const TaskCreate: FC<Props> = (props: Props) => {
-  const roundToHalfHour = (date: Date): Date => {
-    const roundedMinutes = Math.ceil(date.getMinutes() / 30) * 30;
-    date.setMinutes(roundedMinutes);
-    return date;
-  };
-
-  const roundToEndOfDay = (date: Date): Date => {
-    date.setHours(23, 59, 59, 999);
-    return date;
-  };
-
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [endDate, setEndDate] = useState(roundToEndOfDay(new Date()));
