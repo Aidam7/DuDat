@@ -4,6 +4,6 @@
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
-  "cSpell.words": ["nextui", "trpc"],
+  "cSpell.words": ["datepicker", "nextui", "trpc"],
   "editor.tabSize": 2
 }
