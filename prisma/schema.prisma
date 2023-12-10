@@ -95,6 +95,7 @@ model Group {
   owner           User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   ownerId         String
   description     String            @default("")
+  categories      Category[]
 
   @@index([name])
   @@index([ownerId])
@@ -107,9 +108,12 @@ model Category {
   authorId           String
   author             User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
   categoryAssignment CategoryAssignment[]
+  groupId            String
+  group              Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@index([name])
   @@index([authorId])
+  @@index([groupId])
 }
 
 model GroupMembership {
