@@ -2,7 +2,12 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useCallback, type FC } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
-import { roundToEndOfDay, roundToStartOfDay } from "~/utils/func";
+import {
+  roundToEndOfDay,
+  roundToNextHour,
+  roundToPreviousHour,
+  roundToStartOfDay,
+} from "~/utils/func";
 import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
   tasks: ITaskWithGroup[];
@@ -13,14 +18,14 @@ const TaskCalendar: FC<Props> = (props: Props) => {
       task.startOn
         ? task.startOn
         : task.dueOn
-          ? roundToStartOfDay(task.dueOn)
+          ? roundToPreviousHour(task.dueOn)
           : roundToStartOfDay(task.createdOn),
     ),
     end: new Date(
       task.dueOn
         ? task.dueOn
         : task.startOn
-          ? roundToEndOfDay(task.startOn)
+          ? roundToNextHour(task.startOn)
           : roundToEndOfDay(task.createdOn),
     ),
     title: `${task.title} — ${task.group.name}`,
