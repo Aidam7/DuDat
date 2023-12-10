@@ -12,8 +12,8 @@ interface Props {
 export const TaskEdit: FC<Props> = (props: Props) => {
   const [title, setTitle] = useState(props.task.title);
   const [description, setDescription] = useState(props.task.description);
-  const [endDate, setEndDate] = useState(props.task.dueOn);
-  const [startDate, setStartDate] = useState(props.task.startOn);
+  const [endDate, setEndDate] = useState<Date | null>(props.task.dueOn);
+  const [startDate, setStartDate] = useState<Date | null>(props.task.startOn);
   const { data: session } = useSession();
   const editTaskMutation = api.tasks.edit.useMutation();
   const router = useRouter();
@@ -62,7 +62,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
           <br />
           <DatePicker
             selected={startDate}
-            onChange={(date) => setStartDate(date ?? new Date())}
+            onChange={(date) => setStartDate(date)}
             selectsStart
             startDate={startDate}
             endDate={endDate}
@@ -75,7 +75,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
           <br />
           <DatePicker
             selected={endDate}
-            onChange={(date) => setEndDate(date ?? new Date())}
+            onChange={(date) => setEndDate(date)}
             selectsEnd
             startDate={startDate}
             endDate={endDate}

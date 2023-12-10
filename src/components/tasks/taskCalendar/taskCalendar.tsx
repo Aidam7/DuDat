@@ -7,15 +7,17 @@ interface Props {
   tasks: ITaskWithGroup[];
 }
 const TaskCalendar: FC<Props> = (props: Props) => {
-  const events = props.tasks
-    .filter((task) => task.dueOn !== null)
-    .map((task) => ({
-      start: new Date(task.startOn ? task.startOn : task.createdOn),
-      end: new Date(task.dueOn ? task.dueOn : task.createdOn),
-      title: `${task.title} — ${task.group.name}`,
-      taskId: task.id,
-      groupId: task.groupId,
-    }));
+  const events = props.tasks.map((task) => ({
+    start: new Date(
+      task.startOn ? task.startOn : task.dueOn ? task.dueOn : task.createdOn,
+    ),
+    end: new Date(
+      task.dueOn ? task.dueOn : task.startOn ? task.startOn : task.createdOn,
+    ),
+    title: `${task.title} — ${task.group.name}`,
+    taskId: task.id,
+    groupId: task.groupId,
+  }));
   const router = useRouter();
   const localizer = dayjsLocalizer(dayjs);
   const onSelectEvent = useCallback(

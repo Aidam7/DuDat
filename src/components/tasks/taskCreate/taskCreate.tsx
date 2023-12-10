@@ -12,8 +12,12 @@ interface Props {
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [endDate, setEndDate] = useState(roundToEndOfDay(new Date()));
-  const [startDate, setStartDate] = useState(roundToHalfHour(new Date()));
+  const [endDate, setEndDate] = useState<Date | null>(
+    roundToEndOfDay(new Date()),
+  );
+  const [startDate, setStartDate] = useState<Date | null>(
+    roundToHalfHour(new Date()),
+  );
   const [isWish, setIsWish] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
@@ -65,20 +69,21 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           <br />
           <DatePicker
             selected={startDate}
-            onChange={(date) => setStartDate(date ?? new Date())}
+            onChange={(date) => setStartDate(date)}
             selectsStart
             startDate={startDate}
             endDate={endDate}
             showTimeSelect
             timeFormat="p"
             dateFormat="Pp"
+            isClearable
           />
           <br />
           <label>Due On</label>
           <br />
           <DatePicker
             selected={endDate}
-            onChange={(date) => setEndDate(date ?? new Date())}
+            onChange={(date) => setEndDate(date)}
             selectsEnd
             startDate={startDate}
             endDate={endDate}
@@ -86,6 +91,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             showTimeSelect
             timeFormat="p"
             dateFormat="Pp"
+            isClearable
           />
         </div>
         <Checkbox isSelected={isWish} onValueChange={setIsWish}>
