@@ -1,10 +1,10 @@
-import { type Task } from "@prisma/client";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useCallback, type FC } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
-  tasks: Task[];
+  tasks: ITaskWithGroup[];
 }
 const TaskCalendar: FC<Props> = (props: Props) => {
   const events = props.tasks
@@ -12,7 +12,7 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     .map((task) => ({
       start: new Date(task.startOn ? task.startOn : task.createdOn),
       end: new Date(task.dueOn ? task.dueOn : task.createdOn),
-      title: task.title,
+      title: `${task.title} — ${task.group.name}`,
       taskId: task.id,
       groupId: task.groupId,
     }));
