@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useCallback, type FC } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { roundToEndOfDay, roundToStartOfDay } from "~/utils/func";
 import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
   tasks: ITaskWithGroup[];
@@ -9,10 +10,18 @@ interface Props {
 const TaskCalendar: FC<Props> = (props: Props) => {
   const events = props.tasks.map((task) => ({
     start: new Date(
-      task.startOn ? task.startOn : task.dueOn ? task.dueOn : task.createdOn,
+      task.startOn
+        ? task.startOn
+        : task.dueOn
+          ? roundToStartOfDay(task.dueOn)
+          : roundToStartOfDay(task.createdOn),
     ),
     end: new Date(
-      task.dueOn ? task.dueOn : task.startOn ? task.startOn : task.createdOn,
+      task.dueOn
+        ? task.dueOn
+        : task.startOn
+          ? roundToEndOfDay(task.startOn)
+          : roundToEndOfDay(task.createdOn),
     ),
     title: `${task.title} — ${task.group.name}`,
     taskId: task.id,
