@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import GroupLeave from "~/components/groups/groupLeave";
-import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
 import UserTable from "~/components/users/table";
@@ -13,7 +12,6 @@ export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
   const { data: session, status } = useSession();
-  const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const findTasks = api.tasks.locateByName;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
   const { data: group, isFetching: loading } = api.groups.getById.useQuery(
@@ -22,24 +20,10 @@ export default function GroupDetail() {
       enabled: session != null,
     },
   );
-  let userId = "";
-  if (session) userId = session.user.id;
-  const { data: isMember, isFetching: isMemberLoading } =
-    isMemberOfGroupQuery.useQuery(
-      {
-        groupId,
-        userId,
-      },
-      {
-        enabled: session != null && group != null,
-      },
-    );
-  const { data: tasksAndWishes, isFetching: loadingTasks } = findTasks.useQuery(
-    {
-      name: "",
-      groupId,
-    },
-  );
+  const { data: tasksAndWishes } = findTasks.useQuery({
+    name: "",
+    groupId,
+  });
   const { data: members, isFetching: loadingMembers } =
     api.users.locateByNameAndGroup.useQuery(
       {
@@ -53,8 +37,6 @@ export default function GroupDetail() {
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  if (isMemberLoading || loadingTasks) return <>Authenticating...</>;
-  if (!isMember) return <Code401 />;
   const isOwner = session.user.id == group.ownerId;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,

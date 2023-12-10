@@ -10,12 +10,17 @@ export const groupsRouter = createTRPCRouter({
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.group.findMany();
   }),
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const group = await ctx.prisma.group.findFirst({
         where: {
           id: input.id,
+          groupMembership: {
+            some: {
+              userId: ctx.session.user.id,
+            },
+          },
         },
       });
       return group;

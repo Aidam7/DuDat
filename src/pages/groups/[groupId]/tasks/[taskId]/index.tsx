@@ -1,7 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -11,14 +10,9 @@ export default function TaskDetail() {
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: isMember, isFetching: authenticating } =
-    api.users.isMemberOfGroup.useQuery(
-      { groupId: groupId, userId: session?.user?.id ?? "" },
-      { enabled: session != null },
-    );
   const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
     { id: taskId },
-    { enabled: session != null && isMember },
+    { enabled: session != null },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
   const { data: assignees, isFetching: loadingAssignees } =
@@ -30,7 +24,6 @@ export default function TaskDetail() {
       {
         enabled:
           (task != null || task != undefined) &&
-          isMember &&
           (group != null || group != undefined),
       },
     );
@@ -40,8 +33,6 @@ export default function TaskDetail() {
   const resumeTaskMutation = api.tasks.resumeTask.useMutation();
   const apiUtils = api.useUtils();
   if (!session) return <>Please sign in</>;
-  if (authenticating) return <>Authenticating...</>;
-  if (!isMember) return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
   const isAuthor = task.authorId === session.user.id;

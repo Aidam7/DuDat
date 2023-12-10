@@ -12,6 +12,13 @@ export const tasksRouter = createTRPCRouter({
       return await ctx.prisma.task.findFirst({
         where: {
           id: input.id,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
         },
       });
     }),
@@ -48,7 +55,9 @@ export const tasksRouter = createTRPCRouter({
   deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.task.delete({ where: { id: input.id } });
+      await ctx.prisma.task.delete({
+        where: { id: input.id, authorId: ctx.session.user.id },
+      });
     }),
   locateByName: protectedProcedure
     .input(z.object({ name: z.string(), groupId: z.string() }))
@@ -59,6 +68,13 @@ export const tasksRouter = createTRPCRouter({
             contains: input.name,
           },
           groupId: input.groupId,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
         },
         include: {
           group: true,
@@ -179,6 +195,13 @@ export const tasksRouter = createTRPCRouter({
       return await ctx.prisma.task.findFirst({
         where: {
           id: input.taskId,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
         },
         select: {
           groupId: true,
