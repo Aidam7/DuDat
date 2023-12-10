@@ -136,6 +136,15 @@ export const groupsRouter = createTRPCRouter({
         },
       });
       if (!deleted) return false;
+      await ctx.prisma.task.updateMany({
+        where: {
+          groupId: input.groupId,
+          authorId: input.userId,
+        },
+        data: {
+          authorId: group.ownerId,
+        },
+      });
       await ctx.prisma.taskAssignment.deleteMany({
         where: {
           userId: input.userId,
