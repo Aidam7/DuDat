@@ -41,13 +41,13 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     [router],
   );
   return (
-    <div className="flex flex-col items-center rounded-xl bg-white">
+    <div className="flex flex-col items-center rounded-xl bg-white p-5">
       <Calendar
         localizer={localizer}
         startAccessor="start"
         endAccessor="end"
         events={events}
-        className="min-h-[600px] w-[97.5%] bg-white text-black max-md:w-[90%]"
+        className="min-h-[600px] w-full bg-white text-black"
         onSelectEvent={onSelectEvent}
       />
     </div>
