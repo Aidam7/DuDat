@@ -74,9 +74,8 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             startDate={startDate}
             endDate={endDate}
             showTimeSelect
-            timeFormat="p"
-            dateFormat="Pp"
             isClearable
+            dateFormat="dd/MM/yyyy, h:mm"
           />
           <br />
           <label>Due On</label>
@@ -89,8 +88,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             endDate={endDate}
             minDate={startDate}
             showTimeSelect
-            timeFormat="p"
-            dateFormat="Pp"
+            dateFormat="dd/MM/yyyy, h:mm"
             isClearable
           />
         </div>

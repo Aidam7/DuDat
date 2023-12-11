@@ -67,8 +67,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
             startDate={startDate}
             endDate={endDate}
             showTimeSelect
-            timeFormat="p"
-            dateFormat="Pp"
+            dateFormat="dd/MM/yyyy, h:mm"
           />
           <br />
           <label>Due On</label>
@@ -81,8 +80,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
             endDate={endDate}
             minDate={startDate}
             showTimeSelect
-            timeFormat="p"
-            dateFormat="Pp"
+            dateFormat="dd/MM/yyyy, h:mm"
           />
         </div>
         <Input type="submit" value="Submit" />
