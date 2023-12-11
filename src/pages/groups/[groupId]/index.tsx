@@ -2,6 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { CategoryTable } from "~/components/categories/categoryTable/categoryTable";
 import GroupLeave from "~/components/groups/groupLeave";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
@@ -34,6 +35,8 @@ export default function GroupDetail() {
         enabled: group != null,
       },
     );
+  const { data: categories, isFetching: loadingCategories } =
+    api.categories.getByGroup.useQuery({ groupId }, { enabled: group != null });
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
@@ -113,6 +116,22 @@ export default function GroupDetail() {
             />
           )}
         </div>
+      </div>
+      <div className="pb-5">
+        <h2 className="pb-5 text-4xl">Task Categories</h2>
+        {categories ? (
+          <CategoryTable
+            loading={loadingCategories}
+            rows={categories}
+            link={`/groups/${groupId}/categories/`}
+          />
+        ) : (
+          <CategoryTable
+            loading={loadingCategories}
+            rows={[]}
+            link={`/groups/${groupId}/categories/`}
+          />
+        )}
       </div>
       <div className="pb-5">
         <h2 className="pb-5 text-4xl">Members</h2>

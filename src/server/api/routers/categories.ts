@@ -116,4 +116,46 @@ export const categoriesRouter = createTRPCRouter({
         },
       });
     }),
+  getTasks: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findMany({
+        where: {
+          categories: {
+            some: {
+              categoryId: input.id,
+            },
+          },
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        include: {
+          group: true,
+        },
+      });
+    }),
+  getByGroup: protectedProcedure
+    .input(z.object({ groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.category.findMany({
+        where: {
+          group: {
+            id: input.groupId,
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        include: {
+          group: true,
+        },
+      });
+    }),
 });
