@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CategoryDelete from "~/components/categories/categoryDelete";
+import CategoryEdit from "~/components/categories/categoryEdit";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import { api } from "~/utils/api";
@@ -26,7 +27,10 @@ export default function CategoryAdminPanel() {
       <h1 className="text-6xl">
         <a href={`../${category.id}`}>{category.name}</a>
       </h1>
-      <CategoryDelete category={category} />
+      <div className="flex flex-col gap-5">
+        <CategoryEdit category={category} />
+        <CategoryDelete category={category} />
+      </div>
     </>
   );
 }
