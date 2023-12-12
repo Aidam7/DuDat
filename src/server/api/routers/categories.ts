@@ -16,6 +16,9 @@ export const categoriesRouter = createTRPCRouter({
             },
           },
         },
+        include: {
+          group: true,
+        },
       });
     }),
   create: protectedProcedure
