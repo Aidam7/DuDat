@@ -273,8 +273,9 @@ export const tasksRouter = createTRPCRouter({
         throw new Error(
           "You are not authorized to confirm this task as finished",
         );
+      let updatedTask;
       if (!task.finishedOn) {
-        return await ctx.prisma.task.update({
+        updatedTask = await ctx.prisma.task.update({
           where: {
             id: input.taskId,
           },
@@ -283,15 +284,50 @@ export const tasksRouter = createTRPCRouter({
             confirmedAsFinished: true,
           },
         });
+      } else {
+        updatedTask = await ctx.prisma.task.update({
+          where: {
+            id: input.taskId,
+          },
+          data: {
+            confirmedAsFinished: true,
+          },
+        });
       }
-      return await ctx.prisma.task.update({
-        where: {
-          id: input.taskId,
-        },
-        data: {
-          confirmedAsFinished: true,
-        },
-      });
+      if (!updatedTask.dueOn) {
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+          },
+          data: {
+            finishedTasksCount: {
+              increment: 1,
+            },
+          },
+        });
+      } else {
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+          },
+          data: {
+            [new Date() > updatedTask.dueOn
+              ? "finishedTasksLateCount"
+              : "finishedTasksCount"]: {
+              increment: 1,
+            },
+          },
+        });
+      }
+      return updatedTask;
     }),
   edit: protectedProcedure
     .input(
