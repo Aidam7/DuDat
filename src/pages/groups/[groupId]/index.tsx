@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { CategoryTable } from "~/components/categories/categoryTable/categoryTable";
+import CategoryTable from "~/components/categories/categoryTable";
 import GroupActionPanel from "~/components/groups/actionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
