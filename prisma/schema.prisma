@@ -86,6 +86,8 @@ model Task {
 
   @@index([authorId])
   @@index([groupId])
+  @@index([title])
+  @@index([confirmedAsFinished])
 }
 
 model Group {
