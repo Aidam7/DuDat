@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { CategoryTable } from "~/components/categories/categoryTable/categoryTable";
-import GroupLeave from "~/components/groups/groupLeave";
+import GroupActionPanel from "~/components/groups/actionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
 import UserTable from "~/components/users/table";
@@ -40,7 +40,6 @@ export default function GroupDetail() {
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  const isOwner = session.user.id == group.ownerId;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,
   );
@@ -60,25 +59,7 @@ export default function GroupDetail() {
           No description was provided
         </span>
       )}
-      <div className="ml-auto flex flex-col">
-        <Button
-          color="primary"
-          onClick={() => router.push(`/groups/${groupId}/tasks/create`)}
-          className="mb-2"
-        >
-          Create a new task
-        </Button>
-        {isOwner ? (
-          <Button
-            color="warning"
-            onClick={() => router.push(`${groupId}/admin`)}
-          >
-            Settings
-          </Button>
-        ) : (
-          <GroupLeave groupId={groupId} />
-        )}
-      </div>
+      <GroupActionPanel group={group} />
       <div className="flex pb-5 max-md:flex-col md:space-x-4">
         <div className="w-[50%] max-md:w-[100%]">
           <h2 className="pb-5 text-4xl">Tasks</h2>
