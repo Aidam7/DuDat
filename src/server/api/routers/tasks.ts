@@ -35,6 +35,13 @@ export const tasksRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const groupMembership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          groupId: input.parentGroupId,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!groupMembership) throw new Error("Not a member of the group");
       const task = await ctx.prisma.task.create({
         data: {
           title: input.title,
@@ -55,7 +62,18 @@ export const tasksRouter = createTRPCRouter({
   deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.task.delete({
+      const task = await ctx.prisma.task.findFirst({
+        where: { id: input.id, authorId: ctx.session.user.id },
+      });
+      if (!task) throw new Error("Task not found");
+      const groupMembership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          groupId: task.groupId,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!groupMembership) throw new Error("Not a member of the group");
+      return await ctx.prisma.task.delete({
         where: { id: input.id, authorId: ctx.session.user.id },
       });
     }),
