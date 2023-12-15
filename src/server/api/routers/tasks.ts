@@ -360,4 +360,17 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  getCategories: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.category.findMany({
+        where: {
+          categoryAssignment: {
+            some: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
+    }),
 });

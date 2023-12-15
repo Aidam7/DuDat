@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -23,9 +24,16 @@ export default function TaskDetail() {
       },
       {
         enabled:
-          (task != null || task != undefined) &&
-          (group != null || group != undefined),
+          task != null &&
+          task != undefined &&
+          group != null &&
+          group != undefined,
       },
+    );
+  const { data: categories, isFetching: loadingCategories } =
+    api.tasks.getCategories.useQuery(
+      { taskId: taskId },
+      { enabled: task != null && task != undefined },
     );
   const assignToTaskMutation = api.tasks.assignUser.useMutation();
   const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
@@ -94,7 +102,11 @@ export default function TaskDetail() {
   }
   return (
     <>
-      <h1 className="text-6xl">{task.title}</h1>
+      <h1 className="mb-5 text-6xl">{task.title}</h1>
+      <CategoryChipDisplay
+        categories={categories}
+        loading={loadingCategories}
+      />
       {task.description != "" ? (
         <span>{task.description}</span>
       ) : (
