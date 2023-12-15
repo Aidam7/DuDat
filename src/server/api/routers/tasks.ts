@@ -373,4 +373,62 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  assignCategory: protectedProcedure
+    .input(z.object({ taskId: z.string(), categoryId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      const category = await ctx.prisma.category.findFirst({
+        where: {
+          id: input.categoryId,
+        },
+      });
+      if (!category) throw new Error("Category not found");
+      const isMember = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          groupId: category.groupId,
+        },
+      });
+      if (!isMember) throw new Error("Must be a member of group");
+      return await ctx.prisma.categoryAssignment.create({
+        data: {
+          taskId: input.taskId,
+          categoryId: input.categoryId,
+        },
+      });
+    }),
+  unassignCategory: protectedProcedure
+    .input(z.object({ taskId: z.string(), categoryId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      const category = await ctx.prisma.category.findFirst({
+        where: {
+          id: input.categoryId,
+        },
+      });
+      if (!category) throw new Error("Category not found");
+      const isMember = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          groupId: category.groupId,
+        },
+      });
+      if (!isMember) throw new Error("Must be a member of group");
+      return await ctx.prisma.categoryAssignment.deleteMany({
+        where: {
+          taskId: input.taskId,
+          categoryId: input.categoryId,
+        },
+      });
+    }),
 });
