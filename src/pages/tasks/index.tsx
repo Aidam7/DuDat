@@ -40,9 +40,9 @@ export default function Tasks() {
       </Button>
       {displayCalendar ? (
         <>
-          {ongoingTasks ? (
+          {tasks ? (
             <>
-              <TaskCalendar tasks={ongoingTasks} />
+              <TaskCalendar tasks={tasks} />
             </>
           ) : (
             <TaskCalendar tasks={[]} />
