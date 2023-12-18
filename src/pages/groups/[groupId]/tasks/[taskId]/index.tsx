@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
+import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 import { formatDateToString } from "~/utils/func";
@@ -190,6 +191,11 @@ export default function TaskDetail() {
       ) : (
         <UserTable rows={[]} loading={loadingAssignees} />
       )}
+      <h2 className="text-4xl">Categories</h2>
+      <TaskManageCategories
+        task={task}
+        link={`/groups/${groupId}/categories/`}
+      />
     </>
   );
 }
