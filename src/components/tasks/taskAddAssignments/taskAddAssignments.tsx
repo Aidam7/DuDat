@@ -24,13 +24,11 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
   const addAssignmentMutation = api.tasks.assignUser.useMutation();
   const [query, setQuery] = useState("");
   const apiUtils = api.useUtils();
-  // eslint-disable-next-line prefer-const
-  let { data: unAssignedUsers, isFetching: loading } =
+  const { data: unAssignedUsers, isFetching: loading } =
     unAssignedUsersQuery.useQuery({
       taskId: props.task.id,
       groupId: props.group.id,
     });
-  if (!unAssignedUsers) unAssignedUsers = [];
   function addAssignment(userId: string) {
     addAssignmentMutation.mutate(
       { taskId: props.task.id, userId },
