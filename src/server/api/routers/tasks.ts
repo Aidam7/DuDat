@@ -391,6 +391,19 @@ export const tasksRouter = createTRPCRouter({
         },
       });
     }),
+  getUnassignedCategories: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.category.findMany({
+        where: {
+          categoryAssignment: {
+            none: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
+    }),
   assignCategory: protectedProcedure
     .input(z.object({ taskId: z.string(), categoryId: z.string() }))
     .mutation(async ({ ctx, input }) => {
