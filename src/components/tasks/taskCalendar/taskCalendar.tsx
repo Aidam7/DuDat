@@ -31,6 +31,7 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     title: `${task.title} — ${task.group.name}`,
     taskId: task.id,
     groupId: task.groupId,
+    finished: task.finishedOn != null,
   }));
   const router = useRouter();
   const localizer = dayjsLocalizer(dayjs);
@@ -40,6 +41,21 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     },
     [router],
   );
+  const eventStyleGetter = (event: { finished: boolean; end: Date }) => {
+    let backgroundColor = "#3174ad";
+    if (event.finished) {
+      backgroundColor = "#3f7806";
+    }
+    if (event.end < new Date()) {
+      backgroundColor = "#ad3131";
+    }
+    const style = {
+      backgroundColor: backgroundColor,
+    };
+    return {
+      style: style,
+    };
+  };
   return (
     <div className="flex flex-col items-center rounded-xl bg-white p-5">
       <Calendar
@@ -49,6 +65,7 @@ const TaskCalendar: FC<Props> = (props: Props) => {
         events={events}
         className="min-h-[600px] w-full bg-white text-black"
         onSelectEvent={onSelectEvent}
+        eventPropGetter={eventStyleGetter}
       />
     </div>
   );
