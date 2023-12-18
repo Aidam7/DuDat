@@ -33,11 +33,10 @@ export default function TaskDetail() {
           group != undefined,
       },
     );
-  const { data: categories, isFetching: loadingCategories } =
-    api.tasks.getCategories.useQuery(
-      { taskId: taskId },
-      { enabled: task != null && task != undefined },
-    );
+  const { data: categories } = api.tasks.getCategories.useQuery(
+    { taskId: taskId },
+    { enabled: task != null && task != undefined },
+  );
   const assignToTaskMutation = api.tasks.assignUser.useMutation();
   const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
   const markTaskASFinishedMutation = api.tasks.finishTask.useMutation();
@@ -106,10 +105,7 @@ export default function TaskDetail() {
   return (
     <>
       <h1 className="mb-5 text-6xl">{task.title}</h1>
-      <CategoryChipDisplay
-        categories={categories}
-        loading={loadingCategories}
-      />
+      <CategoryChipDisplay categories={categories} />
       {task.description != "" ? (
         <span>{task.description}</span>
       ) : (
@@ -156,14 +152,6 @@ export default function TaskDetail() {
         </>
       )}
       <div className="flex-co ml-auto flex gap-2">
-        <Button
-          color="primary"
-          onClick={() => setDisplayCategoryManage(!displayCategoryManage)}
-        >
-          {displayCategoryManage
-            ? "Close category panel"
-            : "Open category panel"}
-        </Button>
         {isAssigned ? (
           <>
             {task.finishedOn == null ? (
@@ -195,12 +183,24 @@ export default function TaskDetail() {
           </Button>
         )}
       </div>
-      <h2 className="text-4xl">Assignees</h2>
-      {assignees ? (
-        <UserTable rows={assignees} loading={loadingAssignees} />
-      ) : (
-        <UserTable rows={[]} loading={loadingAssignees} />
-      )}
+      <div className="mb-5">
+        <h2 className="text-4xl">Assignees</h2>
+        {assignees ? (
+          <UserTable rows={assignees} loading={loadingAssignees} />
+        ) : (
+          <UserTable rows={[]} loading={loadingAssignees} />
+        )}
+      </div>
+      <div className="flex-co ml-auto flex gap-2">
+        <Button
+          color="warning"
+          onClick={() => setDisplayCategoryManage(!displayCategoryManage)}
+        >
+          {displayCategoryManage
+            ? "Close category panel"
+            : "Open category panel"}
+        </Button>
+      </div>
       {displayCategoryManage && (
         <>
           <h2 className="text-4xl">Categories</h2>
