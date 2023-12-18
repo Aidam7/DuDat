@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
@@ -8,6 +9,7 @@ import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 import { formatDateToString } from "~/utils/func";
 export default function TaskDetail() {
+  const [displayCategoryManage, setDisplayCategoryManage] = useState(false);
   const router = useRouter();
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
@@ -154,6 +156,14 @@ export default function TaskDetail() {
         </>
       )}
       <div className="flex-co ml-auto flex gap-2">
+        <Button
+          color="primary"
+          onClick={() => setDisplayCategoryManage(!displayCategoryManage)}
+        >
+          {displayCategoryManage
+            ? "Close category panel"
+            : "Open category panel"}
+        </Button>
         {isAssigned ? (
           <>
             {task.finishedOn == null ? (
@@ -191,11 +201,15 @@ export default function TaskDetail() {
       ) : (
         <UserTable rows={[]} loading={loadingAssignees} />
       )}
-      <h2 className="text-4xl">Categories</h2>
-      <TaskManageCategories
-        task={task}
-        link={`/groups/${groupId}/categories/`}
-      />
+      {displayCategoryManage && (
+        <>
+          <h2 className="text-4xl">Categories</h2>
+          <TaskManageCategories
+            task={task}
+            link={`/groups/${groupId}/categories/`}
+          />
+        </>
+      )}
     </>
   );
 }
