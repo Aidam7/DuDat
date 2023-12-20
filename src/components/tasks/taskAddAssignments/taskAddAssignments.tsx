@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Spinner,
   Table,
   TableBody,
@@ -43,14 +44,12 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Add assignees</h2>
-      <input
+      <Input
         placeholder="Search for a member"
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      />
       <Table
         onRowAction={(key) => router.push(`/users/${key}`)}
         isStriped

@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
   useDisclosure,
+  Input,
 } from "@nextui-org/react";
 import { type Group, type Task } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -52,14 +53,12 @@ const TaskRemoveAssignments: FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Remove assignees</h2>
-      <input
+      <Input
         placeholder="Search for a member"
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      />
       <Table
         selectionMode="single"
         aria-label="Member table"
