@@ -59,10 +59,11 @@ export default function TaskAdminPanel() {
           ? "Confirmed as finished"
           : "Confirm as finished"}
       </Button>
-      <TaskEdit task={task} />
-      <TaskDelete task={task} />
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
+      <TaskEdit task={task} />
+      <div className="mb-2" />
+      <TaskDelete task={task} />
     </>
   );
 }
