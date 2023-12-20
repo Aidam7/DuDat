@@ -40,12 +40,12 @@ const GroupActionPanel: FC<Props> = (props: Props) => {
   return (
     <>
       <div className="ml-auto flex flex-row gap-2 max-sm:hidden">{actions}</div>
-      <div className="sm:hidden">
+      <div className="ml-auto sm:hidden">
         <Button onClick={() => setOpenActions(!openActions)} className="mb-2">
           {openActions ? "▲ Close panel" : "▼ Open panel"}
         </Button>
-        {openActions && <div className="flex flex-col gap-2">{actions}</div>}
       </div>
+      {openActions && <div className="flex flex-col gap-2">{actions}</div>}
     </>
   );
 };

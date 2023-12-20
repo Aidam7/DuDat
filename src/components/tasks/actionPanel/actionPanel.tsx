@@ -27,38 +27,36 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   const taskId = task.id;
   const actions = (
     <>
-      <div className="ml-auto flex flex-col gap-2 md:flex-row">
-        {isAssigned ? (
-          <>
-            {task.finishedOn == null ? (
-              <Button color="success" onPress={handleFinishTask}>
-                Finish Task
-              </Button>
-            ) : (
-              <Button color="danger" onPress={handleResumeTask}>
-                Resume this task
-              </Button>
-            )}
-            <Button color="danger" onPress={handleUnassignFromTask}>
-              Unassign from task
+      {isAssigned ? (
+        <>
+          {task.finishedOn == null ? (
+            <Button color="success" onPress={handleFinishTask}>
+              Finish Task
             </Button>
-          </>
-        ) : (
-          <Button color="primary" onPress={handleAssignToTask}>
-            Assign to task
+          ) : (
+            <Button color="danger" onPress={handleResumeTask}>
+              Resume this task
+            </Button>
+          )}
+          <Button color="danger" onPress={handleUnassignFromTask}>
+            Unassign from task
           </Button>
-        )}
-        {hasPerm && (
-          <Button
-            color="warning"
-            onClick={() =>
-              router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
-            }
-          >
-            Settings
-          </Button>
-        )}
-      </div>
+        </>
+      ) : (
+        <Button color="primary" onPress={handleAssignToTask}>
+          Assign to task
+        </Button>
+      )}
+      {hasPerm && (
+        <Button
+          color="warning"
+          onClick={() =>
+            router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
+          }
+        >
+          Settings
+        </Button>
+      )}
     </>
   );
   function handleAssignToTask() {
@@ -118,7 +116,7 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   }
   return (
     <>
-      <div className="ml-auto gap-2 max-sm:hidden">{actions}</div>
+      <div className="ml-auto flex-row gap-2 max-sm:hidden">{actions}</div>
       <div className="ml-auto sm:hidden">
         <Button onClick={() => setOpenActions(!openActions)} className="mb-2">
           {openActions ? "▲ Close panel" : "▼ Open panel"}
