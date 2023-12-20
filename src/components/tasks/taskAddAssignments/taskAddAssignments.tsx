@@ -61,7 +61,7 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
           <TableColumn>{""}</TableColumn>
         </TableHeader>
         <TableBody
-          items={unAssignedUsers}
+          items={unAssignedUsers ?? []}
           isLoading={loading}
           loadingContent={<Spinner label="Loading..." />}
           emptyContent={"We couldn't find anything"}
