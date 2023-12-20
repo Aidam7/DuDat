@@ -21,7 +21,6 @@ export const TaskEdit: FC<Props> = (props: Props) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
-    // const dueDate = new Date(selectedDate);
     await editTaskMutation.mutateAsync(
       {
         id: props.task.id,
@@ -43,7 +42,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
         className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Create a task</h3>
+        <h3 className="mb-4 text-3xl font-bold">Edit this task</h3>
         <Input
           type="text"
           label="Task Title"
