@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
+import TaskActionPanel from "~/components/tasks/actionPanel/actionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -37,71 +38,9 @@ export default function TaskDetail() {
     { taskId: taskId },
     { enabled: task != null && task != undefined },
   );
-  const assignToTaskMutation = api.tasks.assignUser.useMutation();
-  const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
-  const markTaskASFinishedMutation = api.tasks.finishTask.useMutation();
-  const resumeTaskMutation = api.tasks.resumeTask.useMutation();
-  const apiUtils = api.useUtils();
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
-  const isAuthor = task.authorId === session.user.id;
-  const isAssigned = assignees?.some((u) => u.id === session.user.id);
-  function handleAssignToTask() {
-    if (!session || !task) return;
-    return assignToTaskMutation.mutate(
-      {
-        taskId: task.id,
-        userId: session.user.id,
-      },
-      {
-        onSuccess: () => {
-          void apiUtils.tasks.getAssignedMembers.invalidate();
-        },
-      },
-    );
-  }
-  function handleUnassignFromTask() {
-    if (!session || !task) return;
-    return unassignFromTaskMutation.mutate(
-      {
-        taskId: task.id,
-        userId: session.user.id,
-      },
-      {
-        onSuccess: () => {
-          void apiUtils.tasks.getAssignedMembers.invalidate();
-        },
-      },
-    );
-  }
-  function handleFinishTask() {
-    if (!session || !task) return;
-    return markTaskASFinishedMutation.mutate(
-      {
-        taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          task.finishedOn = new Date();
-        },
-      },
-    );
-  }
-  function handleResumeTask() {
-    if (!session || !task) return;
-    return resumeTaskMutation.mutate(
-      {
-        taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          task.finishedOn = null;
-          task.confirmedAsFinished = false;
-        },
-      },
-    );
-  }
   return (
     <>
       <h1 className="mb-5 text-6xl">{task.title}</h1>
@@ -151,38 +90,7 @@ export default function TaskDetail() {
           )}
         </>
       )}
-      <div className="flex-co ml-auto flex gap-2">
-        {isAssigned ? (
-          <>
-            {task.finishedOn == null ? (
-              <Button color="success" onPress={handleFinishTask}>
-                Finish Task
-              </Button>
-            ) : (
-              <Button color="danger" onPress={handleResumeTask}>
-                Resume this task
-              </Button>
-            )}
-            <Button color="danger" onPress={handleUnassignFromTask}>
-              Unassign from task
-            </Button>
-          </>
-        ) : (
-          <Button color="primary" onPress={handleAssignToTask}>
-            Assign to task
-          </Button>
-        )}
-        {isAuthor && (
-          <Button
-            color="warning"
-            onClick={() =>
-              router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
-            }
-          >
-            Settings
-          </Button>
-        )}
-      </div>
+      <TaskActionPanel task={task} group={group} assignees={assignees ?? []} />
       <div className="mb-5">
         <h2 className="text-4xl">Assignees</h2>
         {assignees ? (
