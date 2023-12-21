@@ -27,7 +27,12 @@ export default function TaskAdminPanel() {
     api.tasks.confirmTaskAsFinished.useMutation();
   if (!session) return <>Please sign in</>;
   if (authenticating) return <>Authenticating...</>;
-  if (!isMember || task?.authorId != session.user.id) return <Code401 />;
+  if (
+    !isMember ||
+    (task?.authorId != session.user.id &&
+      task?.group.ownerId != session.user.id)
+  )
+    return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
   function handleConfirmTaskAsFinished() {
