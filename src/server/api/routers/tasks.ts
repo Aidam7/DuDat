@@ -85,7 +85,7 @@ export const tasksRouter = createTRPCRouter({
       });
       if (!groupMembership) throw new Error("Not a member of the group");
       return await ctx.prisma.task.delete({
-        where: { id: input.id, authorId: ctx.session.user.id },
+        where: { id: input.id},
       });
     }),
   locateByName: protectedProcedure
