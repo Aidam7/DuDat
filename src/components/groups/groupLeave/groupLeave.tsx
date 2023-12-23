@@ -29,7 +29,7 @@ export const GroupLeave: FC<Props> = (props: Props) => {
   };
   return (
     <>
-      <Button onPress={onOpen} color="danger" className="w-full">
+      <Button onPress={onOpen} color="danger">
         Leave this group
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -49,7 +49,7 @@ export const GroupLeave: FC<Props> = (props: Props) => {
                   Close
                 </Button>
                 <Button color="danger" variant="flat" onPress={handleLeave}>
-                  Delete
+                  Leave
                 </Button>
               </ModalFooter>
             </>
