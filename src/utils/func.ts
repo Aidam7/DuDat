@@ -12,13 +12,13 @@ export const roundToHalfHour = (date: Date): Date => {
   return date;
 };
 
-export const roundToEndOfDay = (date: Date): Date => {
+export const roundToZero = (date: Date): Date => {
   date.setHours(0, 0, 0, 0);
   return date;
 };
 
-export const roundToStartOfDay = (date: Date): Date => {
-  date.setHours(0, 0, 0, 0);
+export const roundToEndOfDay = (date: Date): Date => {
+  date.setHours(23, 59, 59, 999);
   return date;
 };
 export const roundToNextHour = (date: Date): Date => {

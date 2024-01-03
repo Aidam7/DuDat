@@ -3,10 +3,9 @@ import { useRouter } from "next/navigation";
 import { useCallback, type FC } from "react";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import {
-  roundToEndOfDay,
   roundToNextHour,
   roundToPreviousHour,
-  roundToStartOfDay,
+  roundToZero,
 } from "~/utils/func";
 import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
@@ -19,14 +18,14 @@ const TaskCalendar: FC<Props> = (props: Props) => {
         ? task.startOn
         : task.dueOn
           ? roundToPreviousHour(task.dueOn)
-          : roundToStartOfDay(task.createdOn),
+          : roundToZero(task.createdOn),
     ),
     end: new Date(
       task.dueOn
         ? task.dueOn
         : task.startOn
           ? roundToNextHour(task.startOn)
-          : roundToEndOfDay(task.createdOn),
+          : roundToZero(task.createdOn),
     ),
     title: `${task.title} — ${task.group.name}`,
     taskId: task.id,
@@ -43,14 +42,16 @@ const TaskCalendar: FC<Props> = (props: Props) => {
   );
   const eventStyleGetter = (event: { finished: boolean; end: Date }) => {
     let backgroundColor = "#3174ad";
-    if (event.finished) {
+    const endIsZero = event.end == roundToZero(new Date());
+    if (event.finished && !endIsZero) {
       backgroundColor = "#3f7806";
     }
-    if (event.end < new Date()) {
+    if (event.end < new Date() && !event.finished) {
       backgroundColor = "#ad3131";
     }
     const style = {
       backgroundColor: backgroundColor,
+      color: "#ffffff",
     };
     return {
       style: style,
