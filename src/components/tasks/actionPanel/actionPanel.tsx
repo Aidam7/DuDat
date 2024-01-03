@@ -116,7 +116,7 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   }
   return (
     <>
-      <div className="ml-auto flex-row gap-2 max-sm:hidden">{actions}</div>
+      <div className="ml-auto flex flex-row gap-2 max-sm:hidden">{actions}</div>
       <div className="ml-auto sm:hidden">
         <Button onClick={() => setOpenActions(!openActions)} className="mb-2">
           {openActions ? "▲ Close panel" : "▼ Open panel"}
