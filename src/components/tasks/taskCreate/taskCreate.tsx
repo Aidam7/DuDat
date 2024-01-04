@@ -1,11 +1,20 @@
-import { Checkbox, Input } from "@nextui-org/react";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Switch,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
-import { roundToEndOfDay, roundToHalfHour } from "~/utils/func";
+import { roundToEndOfDay, roundToHalfHour, roundToZero } from "~/utils/func";
 interface Props {
   groupId: string;
 }
@@ -19,13 +28,23 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     roundToHalfHour(new Date()),
   );
   const [isWish, setIsWish] = useState(false);
+  const [isAllDay, setIsAllDay] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
   const router = useRouter();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
+    if (startDate && endDate && endDate < startDate) {
+      onOpen();
+      return null;
+    }
+    if (isAllDay && startDate && endDate) {
+      setStartDate(roundToZero(startDate));
+      setEndDate(roundToZero(endDate));
+    }
     await createTaskMutation.mutateAsync(
       {
         title: name,
@@ -65,6 +84,10 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           onValueChange={setDescription}
         />
         <div>
+          <Switch isSelected={isAllDay} onValueChange={setIsAllDay}>
+            All day?
+          </Switch>
+          <br />
           <label>Start On</label>
           <br />
           <DatePicker
@@ -73,9 +96,9 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             selectsStart
             startDate={startDate}
             endDate={endDate}
-            showTimeSelect
+            showTimeSelect={!isAllDay}
             isClearable
-            dateFormat="dd/MM/yyyy, HH:mm"
+            dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
           />
           <br />
           <label>Due On</label>
@@ -87,16 +110,32 @@ export const TaskCreate: FC<Props> = (props: Props) => {
             startDate={startDate}
             endDate={endDate}
             minDate={startDate}
-            showTimeSelect
-            dateFormat="dd/MM/yyyy, HH:mm"
+            showTimeSelect={!isAllDay}
+            dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
             isClearable
           />
         </div>
-        <Checkbox isSelected={isWish} onValueChange={setIsWish}>
+        <Switch isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
-        </Checkbox>
+        </Switch>
         <Input type="submit" value="Submit" />
       </form>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent className="bg-black font-mono text-white">
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h4>Due date cannot take place before the start date</h4>
+              </ModalHeader>
+              <ModalFooter>
+                <Button color="primary" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
