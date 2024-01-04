@@ -1,7 +1,16 @@
 export const formatDateToString = (date: Date, cutSeconds = true) => {
-  let formattedDate = `${date.toLocaleDateString()}, ${date.toLocaleTimeString()}`;
-  if (cutSeconds) {
-    formattedDate = formattedDate.slice(0, -3);
+  let formattedDate = `${date.toLocaleDateString()}`;
+  if (
+    !(
+      date.getHours() === 0 &&
+      date.getMinutes() === 0 &&
+      date.getSeconds() === 0
+    )
+  ) {
+    formattedDate += `, ${date.toLocaleTimeString()}`;
+    if (cutSeconds) {
+      formattedDate = formattedDate.slice(0, -3);
+    }
   }
   return formattedDate;
 };
