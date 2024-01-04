@@ -42,11 +42,15 @@ const TaskCalendar: FC<Props> = (props: Props) => {
   );
   const eventStyleGetter = (event: { finished: boolean; end: Date }) => {
     let backgroundColor = "#3174ad";
-    const endIsZero = event.end == roundToZero(new Date());
-    if (event.finished && !endIsZero) {
+    if (event.finished) {
       backgroundColor = "#3f7806";
     }
-    if (event.end < new Date() && !event.finished) {
+    if (
+      event.end < new Date() &&
+      !event.finished &&
+      event.end.getHours() !== 0 &&
+      event.end.getMinutes() !== 0
+    ) {
       backgroundColor = "#ad3131";
     }
     const style = {
