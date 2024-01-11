@@ -24,13 +24,18 @@ export const TaskTable: FC<Props> = (props: Props) => {
   const router = useRouter();
   const tableHeader = (
     <TableHeader>
-      <TableColumn>Title</TableColumn>
-      <TableColumn>Description</TableColumn>
-      <TableColumn>Due Date</TableColumn>
+      <TableColumn>
+        <div className="max-md:hidden">Title</div>
+        <div className="md:hidden">Task</div>
+      </TableColumn>
+      <TableColumn className="max-md:hidden">Description</TableColumn>
+      <TableColumn className="max-mad: hidden">Due Date</TableColumn>
       <TableColumn className={props.renderFinishedOn ? "" : "hidden"}>
         Finished On
       </TableColumn>
-      <TableColumn className={props.doNotRenderGroup ? "hidden" : ""}>
+      <TableColumn
+        className={`${props.doNotRenderGroup ? "hidden" : ""} max-md:hidden`}
+      >
         Group
       </TableColumn>
     </TableHeader>
@@ -45,23 +50,35 @@ export const TaskTable: FC<Props> = (props: Props) => {
     >
       {(task) => (
         <TableRow className="group">
-          {props.link ? (
-            <TableCell>{task.title}</TableCell>
-          ) : (
-            <TableCell>
+          <TableCell>
+            {props.link ? (
+              <span className="text-lg">{task.title}</span>
+            ) : (
               <Link
                 href={`groups/${task.groupId}/tasks/${task.id}`}
                 className="paren group-hover:underline"
               >
-                {task.title}
+                <span className="text-lg">{task.title}</span>
               </Link>
-            </TableCell>
-          )}
+            )}
+            {task.description !== "" && (
+              <p>
+                <span className="font-semibold">Description:</span>{" "}
+                {task.description}
+              </p>
+            )}
+            {task.dueOn !== null && (
+              <p>
+                <span className="font-semibold">Due on:</span>{" "}
+                {task.dueOn.toLocaleDateString()}
+              </p>
+            )}
+          </TableCell>
 
-          <TableCell>
+          <TableCell className="max-md:hidden">
             {task.description !== "" ? task.description : "—"}
           </TableCell>
-          <TableCell>
+          <TableCell className="max-md: hidden">
             {task.dueOn !== null ? task.dueOn.toLocaleDateString() : "—"}
           </TableCell>
           <TableCell className={props.renderFinishedOn ? "" : "hidden"}>
@@ -69,7 +86,11 @@ export const TaskTable: FC<Props> = (props: Props) => {
               ? task.finishedOn.toLocaleDateString()
               : "—"}
           </TableCell>
-          <TableCell className={props.doNotRenderGroup ? "hidden" : ""}>
+          <TableCell
+            className={`${
+              props.doNotRenderGroup ? "hidden" : ""
+            } max-md:hidden`}
+          >
             <Link href={`/groups/${task.groupId}`}>{task.group.name}</Link>
           </TableCell>
         </TableRow>
