@@ -1,18 +1,18 @@
 import {
   Navbar,
-  NavbarContent,
-  NavbarMenuToggle,
   NavbarBrand,
+  NavbarContent,
   NavbarItem,
   NavbarMenu,
   NavbarMenuItem,
+  NavbarMenuToggle,
 } from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
+import { useState, type FC } from "react";
 import LoginPanel from "~/components/auth/LoginPanel";
 
-const DuDatNavbar: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+const DuDatNavbar: FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   interface NavItem {
     label: string;
@@ -25,7 +25,11 @@ const DuDatNavbar: React.FC = () => {
   ];
   return (
     <>
-      <Navbar onMenuOpenChange={setIsMenuOpen} className="mb-5 bg-blue">
+      <Navbar
+        onMenuOpenChange={setIsMenuOpen}
+        isMenuOpen={isMenuOpen}
+        className="mb-5 bg-blue"
+      >
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -52,7 +56,10 @@ const DuDatNavbar: React.FC = () => {
         </NavbarContent>
         <NavbarMenu className="font-mono">
           {navItems.map((item) => (
-            <NavbarMenuItem key={item.href}>
+            <NavbarMenuItem
+              key={item.href}
+              onClick={() => setIsMenuOpen(false)}
+            >
               <Link href={item.href}>{item.label}</Link>
             </NavbarMenuItem>
           ))}

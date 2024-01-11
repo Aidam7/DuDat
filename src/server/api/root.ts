@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import { tasksRouter } from "./routers/tasks";
+import { categoriesRouter } from "./routers/categories";
 import { groupsRouter } from "./routers/groups";
+import { tasksRouter } from "./routers/tasks";
 import { usersRouter } from "./routers/users";
 
 /**
@@ -11,7 +12,8 @@ import { usersRouter } from "./routers/users";
 export const appRouter = createTRPCRouter({
   tasks: tasksRouter,
   groups: groupsRouter,
-  users: usersRouter
+  users: usersRouter,
+  categories: categoriesRouter,
 });
 
 // export type definition of API

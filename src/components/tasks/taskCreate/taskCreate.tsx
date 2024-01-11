@@ -1,25 +1,50 @@
-import { Checkbox, Input } from "@nextui-org/react";
+import {
+  Button,
+  Input,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Switch,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
+import { roundToEndOfDay, roundToHalfHour, roundToZero } from "~/utils/func";
 interface Props {
   groupId: string;
 }
 export const TaskCreate: FC<Props> = (props: Props) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [endDate, setEndDate] = useState<Date | null>(
+    roundToEndOfDay(new Date()),
+  );
+  const [startDate, setStartDate] = useState<Date | null>(
+    roundToHalfHour(new Date()),
+  );
   const [isWish, setIsWish] = useState(false);
+  const [isAllDay, setIsAllDay] = useState(false);
   const createTaskMutation = api.tasks.create.useMutation();
   const { data: session } = useSession();
   const router = useRouter();
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     //*This is the only way I could find that prevents a redirect on the same page
     event.preventDefault();
     if (!session) return null;
-    const dueDate = new Date(selectedDate);
+    if (startDate && endDate && endDate < startDate) {
+      onOpen();
+      return null;
+    }
+    if (isAllDay && startDate && endDate) {
+      setStartDate(roundToZero(startDate));
+      setEndDate(roundToZero(endDate));
+    }
     await createTaskMutation.mutateAsync(
       {
         title: name,
@@ -27,7 +52,8 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         parentGroupId: props.groupId,
         authorId: session.user.id,
         assigneeIDs: isWish ? [] : [session.user.id],
-        dueOn: dueDate,
+        dueOn: endDate,
+        startOn: startDate,
       },
       {
         onSuccess(task) {
@@ -57,18 +83,59 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           value={description}
           onValueChange={setDescription}
         />
-        <Input
-          type="datetime-local"
-          label="Due Date"
-          value={selectedDate}
-          onValueChange={setSelectedDate}
-          labelPlacement="outside-left"
-        />
-        <Checkbox isSelected={isWish} onValueChange={setIsWish}>
+        <div>
+          <Switch isSelected={isAllDay} onValueChange={setIsAllDay}>
+            All day?
+          </Switch>
+          <br />
+          <label>Start On</label>
+          <br />
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            showTimeSelect={!isAllDay}
+            isClearable
+            dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
+          />
+          <br />
+          <label>Due On</label>
+          <br />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            showTimeSelect={!isAllDay}
+            dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
+            isClearable
+          />
+        </div>
+        <Switch isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
-        </Checkbox>
+        </Switch>
         <Input type="submit" value="Submit" />
       </form>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent className="bg-black font-mono text-white">
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                <h4>Due date cannot take place before the start date</h4>
+              </ModalHeader>
+              <ModalFooter>
+                <Button color="primary" onPress={onClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };

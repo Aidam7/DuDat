@@ -2,8 +2,8 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import GroupLeave from "~/components/groups/groupLeave";
-import Code401 from "~/components/layout/errorCodes/401";
+import CategoryTable from "~/components/categories/categoryTable";
+import GroupActionPanel from "~/components/groups/actionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/table";
 import UserTable from "~/components/users/table";
@@ -13,7 +13,6 @@ export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
   const { data: session, status } = useSession();
-  const isMemberOfGroupQuery = api.users.isMemberOfGroup;
   const findTasks = api.tasks.locateByName;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
   const { data: group, isFetching: loading } = api.groups.getById.useQuery(
@@ -22,24 +21,10 @@ export default function GroupDetail() {
       enabled: session != null,
     },
   );
-  let userId = "";
-  if (session) userId = session.user.id;
-  const { data: isMember, isFetching: isMemberLoading } =
-    isMemberOfGroupQuery.useQuery(
-      {
-        groupId,
-        userId,
-      },
-      {
-        enabled: session != null && group != null,
-      },
-    );
-  const { data: tasksAndWishes, isFetching: loadingTasks } = findTasks.useQuery(
-    {
-      name: "",
-      groupId,
-    },
-  );
+  const { data: tasksAndWishes } = findTasks.useQuery({
+    name: "",
+    groupId,
+  });
   const { data: members, isFetching: loadingMembers } =
     api.users.locateByNameAndGroup.useQuery(
       {
@@ -50,12 +35,11 @@ export default function GroupDetail() {
         enabled: group != null,
       },
     );
+  const { data: categories, isFetching: loadingCategories } =
+    api.categories.getByGroup.useQuery({ groupId }, { enabled: group != null });
   if (status === "loading" || loading) return <>Loading...</>;
   if (!session) return <>Please sign in</>;
   if (!group) return <Code404 />;
-  if (isMemberLoading || loadingTasks) return <>Authenticating...</>;
-  if (!isMember) return <Code401 />;
-  const isOwner = session.user.id == group.ownerId;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,
   );
@@ -75,25 +59,7 @@ export default function GroupDetail() {
           No description was provided
         </span>
       )}
-      <div className="ml-auto flex flex-col">
-        <Button
-          color="primary"
-          onClick={() => router.push(`/groups/${groupId}/tasks/create`)}
-          className="mb-2"
-        >
-          Create a new task
-        </Button>
-        {isOwner ? (
-          <Button
-            color="warning"
-            onClick={() => router.push(`${groupId}/admin`)}
-          >
-            Settings
-          </Button>
-        ) : (
-          <GroupLeave groupId={groupId} />
-        )}
-      </div>
+      <GroupActionPanel group={group} />
       <div className="flex pb-5 max-md:flex-col md:space-x-4">
         <div className="w-[50%] max-md:w-[100%]">
           <h2 className="pb-5 text-4xl">Tasks</h2>
@@ -131,6 +97,22 @@ export default function GroupDetail() {
             />
           )}
         </div>
+      </div>
+      <div className="pb-5">
+        <h2 className="pb-5 text-4xl">Task Categories</h2>
+        {categories ? (
+          <CategoryTable
+            loading={loadingCategories}
+            rows={categories}
+            link={`/groups/${groupId}/categories/`}
+          />
+        ) : (
+          <CategoryTable
+            loading={loadingCategories}
+            rows={[]}
+            link={`/groups/${groupId}/categories/`}
+          />
+        )}
       </div>
       <div className="pb-5">
         <h2 className="pb-5 text-4xl">Members</h2>
