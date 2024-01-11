@@ -12,6 +12,16 @@ export const tasksRouter = createTRPCRouter({
       return await ctx.prisma.task.findFirst({
         where: {
           id: input.id,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
+        },
+        include: {
+          group: true,
         },
       });
     }),
@@ -28,6 +38,13 @@ export const tasksRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const groupMembership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          groupId: input.parentGroupId,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!groupMembership) throw new Error("Not a member of the group");
       const task = await ctx.prisma.task.create({
         data: {
           title: input.title,
@@ -48,7 +65,28 @@ export const tasksRouter = createTRPCRouter({
   deleteById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.task.delete({ where: { id: input.id } });
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.id,
+          AND: {
+            OR: [
+              { authorId: ctx.session.user.id },
+              { group: { ownerId: ctx.session.user.id } },
+            ],
+          },
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      const groupMembership = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          groupId: task.groupId,
+          userId: ctx.session.user.id,
+        },
+      });
+      if (!groupMembership) throw new Error("Not a member of the group");
+      return await ctx.prisma.task.delete({
+        where: { id: input.id},
+      });
     }),
   locateByName: protectedProcedure
     .input(z.object({ name: z.string(), groupId: z.string() }))
@@ -59,10 +97,18 @@ export const tasksRouter = createTRPCRouter({
             contains: input.name,
           },
           groupId: input.groupId,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
         },
         include: {
           group: true,
           taskAssignment: true,
+          categories: true,
         },
       });
     }),
@@ -84,18 +130,29 @@ export const tasksRouter = createTRPCRouter({
         },
         include: {
           group: true,
+          categories: true,
+          taskAssignment: true,
         },
       });
     }),
-  isAuthor: protectedProcedure
+  isAuthorOrGroupOwner: protectedProcedure
     .input(z.object({ taskId: z.string(), userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const task = await ctx.prisma.task.findFirst({
         where: {
-          authorId: input.userId,
           id: input.taskId,
         },
+        include: {
+          group: true,
+        },
       });
+      if (!task) throw new Error("Task not found");
+      if (
+        task.authorId != ctx.session.user.id &&
+        task.group.ownerId != ctx.session.user.id &&
+        input.userId != ctx.session.user.id
+      )
+        throw new Error("You are not authorized to perform this action");
       return task ? true : false;
     }),
   assignUser: protectedProcedure
@@ -126,10 +183,12 @@ export const tasksRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const task = await ctx.prisma.task.findFirst({
         where: { id: input.taskId },
+        include: { group: true },
       });
       if (!task) throw new Error("Task not found");
       if (
         task.authorId != ctx.session.user.id &&
+        task.group.ownerId != ctx.session.user.id &&
         input.userId != ctx.session.user.id
       )
         throw new Error("You are not authorized to unassign this user");
@@ -179,6 +238,13 @@ export const tasksRouter = createTRPCRouter({
       return await ctx.prisma.task.findFirst({
         where: {
           id: input.taskId,
+          group: {
+            groupMembership: {
+              some: {
+                userId: ctx.session.user.id,
+              },
+            },
+          },
         },
         select: {
           groupId: true,
@@ -238,20 +304,22 @@ export const tasksRouter = createTRPCRouter({
       const task = await ctx.prisma.task.findFirst({
         where: {
           id: input.taskId,
-          taskAssignment: {
-            some: {
-              userId: ctx.session.user.id,
-            },
-          },
+        },
+        include: {
+          group: true,
         },
       });
       if (!task) throw new Error("Task not found");
-      if (task.authorId != ctx.session.user.id)
+      if (
+        task.authorId != ctx.session.user.id &&
+        task.group.ownerId != ctx.session.user.id
+      )
         throw new Error(
           "You are not authorized to confirm this task as finished",
         );
+      let updatedTask;
       if (!task.finishedOn) {
-        return await ctx.prisma.task.update({
+        updatedTask = await ctx.prisma.task.update({
           where: {
             id: input.taskId,
           },
@@ -260,15 +328,50 @@ export const tasksRouter = createTRPCRouter({
             confirmedAsFinished: true,
           },
         });
+      } else {
+        updatedTask = await ctx.prisma.task.update({
+          where: {
+            id: input.taskId,
+          },
+          data: {
+            confirmedAsFinished: true,
+          },
+        });
       }
-      return await ctx.prisma.task.update({
-        where: {
-          id: input.taskId,
-        },
-        data: {
-          confirmedAsFinished: true,
-        },
-      });
+      if (!updatedTask.dueOn) {
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+          },
+          data: {
+            finishedTasksCount: {
+              increment: 1,
+            },
+          },
+        });
+      } else {
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+          },
+          data: {
+            [new Date() > updatedTask.dueOn
+              ? "finishedTasksLateCount"
+              : "finishedTasksCount"]: {
+              increment: 1,
+            },
+          },
+        });
+      }
+      return updatedTask;
     }),
   edit: protectedProcedure
     .input(
@@ -285,9 +388,15 @@ export const tasksRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          group: true,
+        },
       });
       if (!task) throw new Error("Task not found");
-      if (task.authorId != ctx.session.user.id)
+      if (
+        task.authorId != ctx.session.user.id &&
+        task.group.ownerId != ctx.session.user.id
+      )
         throw new Error("You are not authorized to edit this task");
       return await ctx.prisma.task.update({
         where: {
@@ -298,6 +407,90 @@ export const tasksRouter = createTRPCRouter({
           description: input.desc,
           dueOn: input.dueOn,
           startOn: input.startOn,
+        },
+      });
+    }),
+  getCategories: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.category.findMany({
+        where: {
+          categoryAssignment: {
+            some: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
+    }),
+  getUnassignedCategories: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.category.findMany({
+        where: {
+          categoryAssignment: {
+            none: {
+              taskId: input.taskId,
+            },
+          },
+        },
+      });
+    }),
+  assignCategory: protectedProcedure
+    .input(z.object({ taskId: z.string(), categoryId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      const category = await ctx.prisma.category.findFirst({
+        where: {
+          id: input.categoryId,
+        },
+      });
+      if (!category) throw new Error("Category not found");
+      const isMember = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          groupId: category.groupId,
+        },
+      });
+      if (!isMember) throw new Error("Must be a member of group");
+      return await ctx.prisma.categoryAssignment.create({
+        data: {
+          taskId: input.taskId,
+          categoryId: input.categoryId,
+        },
+      });
+    }),
+  unassignCategory: protectedProcedure
+    .input(z.object({ taskId: z.string(), categoryId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const task = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+        },
+      });
+      if (!task) throw new Error("Task not found");
+      const category = await ctx.prisma.category.findFirst({
+        where: {
+          id: input.categoryId,
+        },
+      });
+      if (!category) throw new Error("Category not found");
+      const isMember = await ctx.prisma.groupMembership.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          groupId: category.groupId,
+        },
+      });
+      if (!isMember) throw new Error("Must be a member of group");
+      return await ctx.prisma.categoryAssignment.deleteMany({
+        where: {
+          taskId: input.taskId,
+          categoryId: input.categoryId,
         },
       });
     }),

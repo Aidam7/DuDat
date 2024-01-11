@@ -1,24 +1,23 @@
 import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Code401 from "~/components/layout/errorCodes/401";
+import { useState } from "react";
+import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
+import TaskActionPanel from "~/components/tasks/actionPanel/actionPanel";
+import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 import { formatDateToString } from "~/utils/func";
 export default function TaskDetail() {
+  const [displayCategoryManage, setDisplayCategoryManage] = useState(false);
   const router = useRouter();
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: isMember, isFetching: authenticating } =
-    api.users.isMemberOfGroup.useQuery(
-      { groupId: groupId, userId: session?.user?.id ?? "" },
-      { enabled: session != null },
-    );
   const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
     { id: taskId },
-    { enabled: session != null && isMember },
+    { enabled: session != null },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
   const { data: assignees, isFetching: loadingAssignees } =
@@ -29,81 +28,23 @@ export default function TaskDetail() {
       },
       {
         enabled:
-          (task != null || task != undefined) &&
-          isMember &&
-          (group != null || group != undefined),
+          task != null &&
+          task != undefined &&
+          group != null &&
+          group != undefined,
       },
     );
-  const assignToTaskMutation = api.tasks.assignUser.useMutation();
-  const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
-  const markTaskASFinishedMutation = api.tasks.finishTask.useMutation();
-  const resumeTaskMutation = api.tasks.resumeTask.useMutation();
-  const apiUtils = api.useUtils();
+  const { data: categories } = api.tasks.getCategories.useQuery(
+    { taskId: taskId },
+    { enabled: task != null && task != undefined },
+  );
   if (!session) return <>Please sign in</>;
-  if (authenticating) return <>Authenticating...</>;
-  if (!isMember) return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
-  const isAuthor = task.authorId === session.user.id;
-  const isAssigned = assignees?.some((u) => u.id === session.user.id);
-  function handleAssignToTask() {
-    if (!session || !task) return;
-    return assignToTaskMutation.mutate(
-      {
-        taskId: task.id,
-        userId: session.user.id,
-      },
-      {
-        onSuccess: () => {
-          void apiUtils.tasks.getAssignedMembers.invalidate();
-        },
-      },
-    );
-  }
-  function handleUnassignFromTask() {
-    if (!session || !task) return;
-    return unassignFromTaskMutation.mutate(
-      {
-        taskId: task.id,
-        userId: session.user.id,
-      },
-      {
-        onSuccess: () => {
-          void apiUtils.tasks.getAssignedMembers.invalidate();
-        },
-      },
-    );
-  }
-  function handleFinishTask() {
-    if (!session || !task) return;
-    return markTaskASFinishedMutation.mutate(
-      {
-        taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          task.finishedOn = new Date();
-        },
-      },
-    );
-  }
-  function handleResumeTask() {
-    if (!session || !task) return;
-    return resumeTaskMutation.mutate(
-      {
-        taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          task.finishedOn = null;
-          task.confirmedAsFinished = false;
-        },
-      },
-    );
-  }
   return (
     <>
-      <h1 className="text-6xl">{task.title}</h1>
+      <h1 className="mb-5 text-6xl">{task.title}</h1>
+      <CategoryChipDisplay categories={categories} />
       {task.description != "" ? (
         <span>{task.description}</span>
       ) : (
@@ -149,43 +90,33 @@ export default function TaskDetail() {
           )}
         </>
       )}
-      <div className="flex-co ml-auto flex gap-2">
-        {isAssigned ? (
-          <>
-            {task.finishedOn == null ? (
-              <Button color="success" onPress={handleFinishTask}>
-                Finish Task
-              </Button>
-            ) : (
-              <Button color="danger" onPress={handleResumeTask}>
-                Resume this task
-              </Button>
-            )}
-            <Button color="danger" onPress={handleUnassignFromTask}>
-              Unassign from task
-            </Button>
-          </>
+      <TaskActionPanel task={task} group={group} assignees={assignees ?? []} />
+      <div className="mb-5">
+        <h2 className="text-4xl">Assignees</h2>
+        {assignees ? (
+          <UserTable rows={assignees} loading={loadingAssignees} />
         ) : (
-          <Button color="primary" onPress={handleAssignToTask}>
-            Assign to task
-          </Button>
-        )}
-        {isAuthor && (
-          <Button
-            color="warning"
-            onClick={() =>
-              router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
-            }
-          >
-            Settings
-          </Button>
+          <UserTable rows={[]} loading={loadingAssignees} />
         )}
       </div>
-      <h2 className="text-4xl">Assignees</h2>
-      {assignees ? (
-        <UserTable rows={assignees} loading={loadingAssignees} />
-      ) : (
-        <UserTable rows={[]} loading={loadingAssignees} />
+      <div className="flex-co ml-auto flex gap-2">
+        <Button
+          color="warning"
+          onClick={() => setDisplayCategoryManage(!displayCategoryManage)}
+        >
+          {displayCategoryManage
+            ? "Close category panel"
+            : "Open category panel"}
+        </Button>
+      </div>
+      {displayCategoryManage && (
+        <>
+          <h2 className="text-4xl">Categories</h2>
+          <TaskManageCategories
+            task={task}
+            link={`/groups/${groupId}/categories/`}
+          />
+        </>
       )}
     </>
   );

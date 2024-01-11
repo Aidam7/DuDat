@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Spinner,
   Table,
   TableBody,
@@ -24,13 +25,11 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
   const addAssignmentMutation = api.tasks.assignUser.useMutation();
   const [query, setQuery] = useState("");
   const apiUtils = api.useUtils();
-  // eslint-disable-next-line prefer-const
-  let { data: unAssignedUsers, isFetching: loading } =
+  const { data: unAssignedUsers, isFetching: loading } =
     unAssignedUsersQuery.useQuery({
       taskId: props.task.id,
       groupId: props.group.id,
     });
-  if (!unAssignedUsers) unAssignedUsers = [];
   function addAssignment(userId: string) {
     addAssignmentMutation.mutate(
       { taskId: props.task.id, userId },
@@ -45,14 +44,12 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Add assignees</h2>
-      <input
+      <Input
         placeholder="Search for a member"
         className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      />
       <Table
         onRowAction={(key) => router.push(`/users/${key}`)}
         isStriped
@@ -63,7 +60,7 @@ export const TaskAddAssignments: FC<Props> = (props: Props) => {
           <TableColumn>{""}</TableColumn>
         </TableHeader>
         <TableBody
-          items={unAssignedUsers}
+          items={unAssignedUsers ?? []}
           isLoading={loading}
           loadingContent={<Spinner label="Loading..." />}
           emptyContent={"We couldn't find anything"}

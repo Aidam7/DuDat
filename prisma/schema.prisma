@@ -41,19 +41,20 @@ model Session {
 }
 
 model User {
-  id                String            @id @default(cuid())
-  name              String?
-  email             String?           @unique
-  emailVerified     DateTime?
-  image             String            @default("")
-  accounts          Account[]
-  sessions          Session[]
-  groupMembership   GroupMembership[]
-  groupOwnership    Group[]
-  taskAssignment    TaskAssignment[]
-  taskOwnership     Task[]
-  categoryOwnership Category[]
-  selectedGroupId   String?
+  id                     String            @id @default(cuid())
+  name                   String?
+  email                  String?           @unique
+  emailVerified          DateTime?
+  image                  String            @default("")
+  accounts               Account[]
+  sessions               Session[]
+  groupMembership        GroupMembership[]
+  groupOwnership         Group[]
+  taskAssignment         TaskAssignment[]
+  taskOwnership          Task[]
+  categoryOwnership      Category[]
+  finishedTasksCount     Int               @default(0)
+  finishedTasksLateCount Int               @default(0)
 
   @@index([name])
   @@index([id])
@@ -85,6 +86,8 @@ model Task {
 
   @@index([authorId])
   @@index([groupId])
+  @@index([title])
+  @@index([confirmedAsFinished])
 }
 
 model Group {
@@ -95,6 +98,7 @@ model Group {
   owner           User              @relation(fields: [ownerId], references: [id], onDelete: Restrict)
   ownerId         String
   description     String            @default("")
+  categories      Category[]
 
   @@index([name])
   @@index([ownerId])
@@ -107,9 +111,12 @@ model Category {
   authorId           String
   author             User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
   categoryAssignment CategoryAssignment[]
+  groupId            String
+  group              Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@index([name])
   @@index([authorId])
+  @@index([groupId])
 }
 
 model GroupMembership {

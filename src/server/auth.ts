@@ -78,8 +78,6 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      //* For some reason it would throw an unsafe any assignment error even though it doesn't mind for the discord provider above ¯\_(ツ)_/¯
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
