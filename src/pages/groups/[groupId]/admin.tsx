@@ -31,15 +31,13 @@ export default function GroupAdminPanel() {
   return (
     <>
       <h1 className="text-6xl">{group.name} settings</h1>
-      <div className="mb-5 w-full lg:w-[50%]">
-        <div className="mb-5">
-          <GroupEdit group={group} />
-        </div>
+      <div className="flex flex-col gap-10">
+        <GroupEdit group={group} />
+        <GroupTransferOwnership group={group} />
+        <GroupRemoveMembers group={group} />
+        <GroupAddMembers group={group} />
         <GroupDelete group={group} />
       </div>
-      <GroupTransferOwnership group={group} />
-      <GroupRemoveMembers group={group} />
-      <GroupAddMembers group={group} />
     </>
   );
 }
