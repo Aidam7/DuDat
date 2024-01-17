@@ -63,6 +63,15 @@ export const TaskCreate: FC<Props> = (props: Props) => {
     );
   };
 
+  const handleStartDateChange = (date: Date | null) => {
+    setStartDate(date);
+    if (date && endDate && date > endDate) {
+      const newEndDate = new Date(date);
+      newEndDate.setDate(newEndDate.getDate() + 1);
+      setEndDate(newEndDate);
+    }
+  };
+
   return (
     <>
       <form
@@ -92,7 +101,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
           <br />
           <DatePicker
             selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            onChange={handleStartDateChange}
             selectsStart
             startDate={startDate}
             endDate={endDate}
