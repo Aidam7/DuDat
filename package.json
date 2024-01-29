@@ -1,10 +1,9 @@
 {
-  "name": "DuDat",
+  "name": "dudat",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "next build",
-    "setup": "npm i && docker compose up -d && prisma db push",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
