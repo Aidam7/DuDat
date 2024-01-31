@@ -9,9 +9,10 @@ import {
 } from "~/utils/func";
 import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
-  tasks: ITaskWithGroup[];
+  tasks: ITaskWithGroup[] | undefined | null;
 }
 const TaskCalendar: FC<Props> = (props: Props) => {
+  if (!props.tasks) props.tasks = [];
   const events = props.tasks.map((task) => ({
     start: new Date(
       task.startOn
