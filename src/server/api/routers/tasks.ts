@@ -85,7 +85,7 @@ export const tasksRouter = createTRPCRouter({
       });
       if (!groupMembership) throw new Error("Not a member of the group");
       return await ctx.prisma.task.delete({
-        where: { id: input.id},
+        where: { id: input.id },
       });
     }),
   locateByName: protectedProcedure
@@ -120,6 +120,26 @@ export const tasksRouter = createTRPCRouter({
           title: {
             contains: input.title,
           },
+          taskAssignment: {
+            some: {
+              userId: {
+                equals: input.assigneeId,
+              },
+            },
+          },
+        },
+        include: {
+          group: true,
+          categories: true,
+          taskAssignment: true,
+        },
+      });
+    }),
+  locateByAssignee: protectedProcedure
+    .input(z.object({ assigneeId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findMany({
+        where: {
           taskAssignment: {
             some: {
               userId: {
