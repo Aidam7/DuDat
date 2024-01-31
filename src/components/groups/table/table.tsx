@@ -6,7 +6,6 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  getKeyValue,
 } from "@nextui-org/react";
 import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
