@@ -37,7 +37,7 @@ const LoginButton: React.FC = () => {
             </>
           )}
           {sessionData?.user.name && (
-            <span className="pl-2 pr-4 max-md:hidden">
+            <span className="pl-2 pr-4 text-xl max-md:hidden">
               {sessionData.user.name}
             </span>
           )}

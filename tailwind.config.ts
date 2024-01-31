@@ -1,5 +1,4 @@
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
 import { nextui } from "@nextui-org/react";
 
 export default {
@@ -9,9 +8,6 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-      },
       colors: {
         black: "#0B191E",
         cobalt: "#1D5B72",
