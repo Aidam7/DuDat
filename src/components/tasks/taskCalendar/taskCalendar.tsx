@@ -62,17 +62,15 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     };
   };
   return (
-    <div className="flex flex-col items-center rounded-xl bg-white p-5">
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        events={events}
-        className="min-h-[600px] w-full bg-white text-black"
-        onSelectEvent={onSelectEvent}
-        eventPropGetter={eventStyleGetter}
-      />
-    </div>
+    <Calendar
+      localizer={localizer}
+      startAccessor="start"
+      endAccessor="end"
+      events={events}
+      className="min-h-[600px] w-full bg-white text-black"
+      onSelectEvent={onSelectEvent}
+      eventPropGetter={eventStyleGetter}
+    />
   );
 };
 
