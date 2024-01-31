@@ -21,6 +21,7 @@ const DuDatNavbar: FC = () => {
 
   const navItems: NavItem[] = [
     { label: "My Groups", href: "/groups" },
+    { label: "Calendar", href: "/tasks/calendar" },
     { label: "My Tasks", href: "/tasks" },
   ];
   return (
@@ -54,7 +55,7 @@ const DuDatNavbar: FC = () => {
             <LoginPanel />
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu className="font-mono">
+        <NavbarMenu className="font-sans">
           {navItems.map((item) => (
             <NavbarMenuItem
               key={item.href}
