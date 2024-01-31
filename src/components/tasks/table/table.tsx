@@ -13,7 +13,7 @@ import { type FC } from "react";
 import { type ITaskWithGroup } from "~/utils/types";
 
 type Props = {
-  rows: ITaskWithGroup[];
+  rows: ITaskWithGroup[] | null | undefined;
   loading: boolean;
   doNotRenderGroup?: boolean;
   renderFinishedOn?: boolean;
@@ -22,6 +22,7 @@ type Props = {
 
 export const TaskTable: FC<Props> = (props: Props) => {
   const router = useRouter();
+  if (!props.rows) props.rows = [];
   const tableHeader = (
     <TableHeader>
       <TableColumn>
