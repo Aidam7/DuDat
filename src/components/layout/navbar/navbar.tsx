@@ -28,7 +28,7 @@ const DuDatNavbar: FC = () => {
       <Navbar
         onMenuOpenChange={setIsMenuOpen}
         isMenuOpen={isMenuOpen}
-        className="mb-5 bg-blue"
+        className="mb-5 bg-blue text-white"
       >
         <NavbarContent>
           <NavbarMenuToggle
@@ -37,14 +37,14 @@ const DuDatNavbar: FC = () => {
           />
           <NavbarBrand>
             <Link href="/">
-              <span className="text-2xl font-bold">DuDat</span>
+              <span className="text-4xl font-bold">DuDat</span>
             </Link>
           </NavbarBrand>
         </NavbarContent>
 
         <NavbarContent className="hidden gap-4 sm:flex" justify="center">
           {navItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} className="text-2xl font-semibold">
               <Link href={item.href}>{item.label}</Link>
             </NavbarItem>
           ))}
