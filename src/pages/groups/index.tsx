@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,27 +27,23 @@ export default function Groups() {
   ];
   return (
     <>
-      <h1 className="pb-5 text-6xl">Groups</h1>
-      <Button
-        color="primary"
-        className="mb-5 ml-auto w-min"
-        onClick={() => router.push("/groups/create")}
-      >
-        Create a new group
-      </Button>
-      <input
+      <div className="flex flex-row items-center">
+        <h1 className="mb-5 text-6xl font-semibold">Groups</h1>
+        <Button
+          color="primary"
+          className="mb-5 ml-auto w-min font-semibold"
+          onClick={() => router.push("/groups/create")}
+        >
+          Create a new group
+        </Button>
+      </div>
+      <Input
         placeholder="Search for a group"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
+        className="mb-5"
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
-      {groups ? (
-        <GroupTable columns={columns} loading={loading} rows={groups} />
-      ) : (
-        <GroupTable columns={columns} loading={loading} rows={[]} />
-      )}
+        onValueChange={setQuery}
+      />
+      <GroupTable columns={columns} loading={loading} rows={groups} />
     </>
   );
 }
