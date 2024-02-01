@@ -2,7 +2,7 @@ import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import GroupTable from "~/components/groups/table";
+import GroupTable from "~/components/groups/groupTable";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
 
