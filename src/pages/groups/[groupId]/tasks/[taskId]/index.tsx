@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
-import TaskActionPanel from "~/components/tasks/actionPanel/actionPanel";
+import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
