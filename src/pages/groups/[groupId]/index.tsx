@@ -5,7 +5,7 @@ import { useState } from "react";
 import CategoryTable from "~/components/categories/categoryTable";
 import GroupActionPanel from "~/components/groups/actionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
-import TaskTable from "~/components/tasks/table";
+import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 

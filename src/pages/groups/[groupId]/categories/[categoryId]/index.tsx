@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
-import TaskTable from "~/components/tasks/table";
+import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
 export default function CategoryDetail() {

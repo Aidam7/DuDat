@@ -1,7 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import TaskTable from "~/components/tasks/table";
+import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
 export default function Tasks() {
