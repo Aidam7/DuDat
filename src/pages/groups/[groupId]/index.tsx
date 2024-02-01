@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CategoryTable from "~/components/categories/categoryTable";
-import GroupActionPanel from "~/components/groups/actionPanel";
+import GroupActionPanel from "~/components/groups/groupActionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
