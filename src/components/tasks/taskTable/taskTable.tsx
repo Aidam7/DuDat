@@ -22,7 +22,7 @@ type Props = {
 
 export const TaskTable: FC<Props> = (props: Props) => {
   const router = useRouter();
-  if (!props.rows) props.rows = [];
+  const rows = props.rows ?? [];
   const tableHeader = (
     <TableHeader>
       <TableColumn>
@@ -44,7 +44,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
 
   const tableBody = (
     <TableBody
-      items={props.rows}
+      items={rows}
       isLoading={props.loading}
       loadingContent={<Spinner label="Loading..." />}
       emptyContent={"We couldn't find anything"}
