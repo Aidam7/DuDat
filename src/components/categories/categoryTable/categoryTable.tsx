@@ -12,12 +12,13 @@ import { useRouter } from "next/navigation";
 import { type FC } from "react";
 
 type Props = {
-  rows: Category[];
+  rows: Category[] | null | undefined;
   loading: boolean;
   link: string;
 };
 export const CategoryTable: FC<Props> = (props: Props) => {
   const router = useRouter();
+  if (!props.rows) props.rows = [];
   const tableHeader = (
     <TableHeader>
       <TableColumn>Title</TableColumn>
