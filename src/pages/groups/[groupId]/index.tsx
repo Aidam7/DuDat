@@ -51,87 +51,54 @@ export default function GroupDetail() {
   );
   return (
     <>
-      <h1 className="text-6xl">{group.name}</h1>
-      {group.description != "" ? (
-        <span>{group.description}</span>
-      ) : (
-        <span className="italic text-gray-600">
-          No description was provided
-        </span>
-      )}
-      <GroupActionPanel group={group} />
-      <div className="flex pb-5 max-md:flex-col md:space-x-4">
-        <div className="w-[50%] max-md:w-[100%]">
-          <h2 className="pb-5 text-4xl">Tasks</h2>
-          {tasks ? (
-            <TaskTable
-              loading={loading}
-              rows={tasks}
-              doNotRenderGroup
-              link={`/groups/${groupId}/tasks/`}
-            />
-          ) : (
-            <TaskTable
-              loading={loading}
-              rows={[]}
-              doNotRenderGroup
-              link={`/groups/${groupId}/tasks/`}
-            />
-          )}
-        </div>
-        <div className="w-[50%] max-md:w-[100%]">
-          <h2 className="pb-5 text-4xl">Wishes</h2>
-          {wishes ? (
-            <TaskTable
-              loading={loading}
-              rows={wishes}
-              doNotRenderGroup
-              link={`/groups/${groupId}/tasks/`}
-            />
-          ) : (
-            <TaskTable
-              loading={loading}
-              rows={[]}
-              doNotRenderGroup
-              link={`/groups/${groupId}/tasks/`}
-            />
-          )}
-        </div>
+      <div className="flex items-center">
+        <h1 className="text-6xl font-semibold">{group.name}</h1>
+        <GroupActionPanel group={group} />
       </div>
-      <div className="pb-5">
-        <h2 className="pb-5 text-4xl">Task Categories</h2>
-        {categories ? (
+
+      <span className="ml-5 text-3xl font-semibold italic">
+        {group.description}
+      </span>
+      <div className="flex flex-col gap-5 pb-5">
+        <div>
+          <h2 className="pb-5 text-4xl">Tasks</h2>
+          <TaskTable
+            loading={loading}
+            rows={tasks}
+            doNotRenderGroup
+            link={`/groups/${groupId}/tasks/`}
+          />
+        </div>
+        <div>
+          <h2 className="pb-5 text-4xl">Wishes</h2>
+          <TaskTable
+            loading={loading}
+            rows={wishes}
+            doNotRenderGroup
+            link={`/groups/${groupId}/tasks/`}
+          />
+        </div>
+        <div>
+          <h2 className="pb-5 text-4xl">Task Categories</h2>
           <CategoryTable
             loading={loadingCategories}
             rows={categories}
             link={`/groups/${groupId}/categories/`}
           />
-        ) : (
-          <CategoryTable
-            loading={loadingCategories}
-            rows={[]}
-            link={`/groups/${groupId}/categories/`}
-          />
-        )}
-      </div>
-      <div className="pb-5">
-        <h2 className="pb-5 text-4xl">Members</h2>
-        {members ? (
+        </div>
+        <div>
+          <h2 className="pb-5 text-4xl">Members</h2>
           <UserTable loading={loadingMembers} rows={members} />
-        ) : (
-          <UserTable loading={loadingMembers} rows={[]} />
-        )}
-      </div>
-      <Button
-        onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
-        color="primary"
-        className="w-1/4 max-md:w-full"
-      >
-        {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
-      </Button>
-      {finishedTasksOpen && (
-        <div className="pt-5">
-          {finishedTasks ? (
+        </div>
+        <Button
+          onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
+          color="primary"
+          className="w-1/4 max-md:w-full"
+        >
+          {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
+        </Button>
+        {finishedTasksOpen && (
+          <div className="pt-5">
             <TaskTable
               loading={loading}
               rows={finishedTasks}
@@ -139,17 +106,9 @@ export default function GroupDetail() {
               renderFinishedOn
               link={`/groups/${groupId}/tasks/`}
             />
-          ) : (
-            <TaskTable
-              loading={loading}
-              rows={[]}
-              doNotRenderGroup
-              renderFinishedOn
-              link={`/groups/${groupId}/tasks/`}
-            />
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </>
   );
 }
