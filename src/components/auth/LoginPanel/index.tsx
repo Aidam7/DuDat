@@ -1,3 +1,3 @@
-import LoginButton from "./LoginPanel";
+import LoginButton from "./loginPanel";
 
 export default LoginButton;

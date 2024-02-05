@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import Link from "next/link";
 import { useState, type FC } from "react";
-import LoginPanel from "~/components/auth/LoginPanel";
+import LoginPanel from "~/components/auth/loginPanel";
 
 const DuDatNavbar: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
