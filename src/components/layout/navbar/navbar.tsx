@@ -34,7 +34,7 @@ const DuDatNavbar: FC = () => {
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            className="sm:hidden"
+            className="md:hidden"
           />
           <NavbarBrand>
             <Link href="/">
@@ -43,7 +43,7 @@ const DuDatNavbar: FC = () => {
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent className="hidden gap-4 sm:flex" justify="center">
+        <NavbarContent className="hidden gap-4 md:flex" justify="center">
           {navItems.map((item) => (
             <NavbarItem key={item.href} className="text-2xl font-semibold">
               <Link href={item.href}>{item.label}</Link>

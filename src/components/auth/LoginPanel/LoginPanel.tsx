@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
@@ -14,12 +14,12 @@ const LoginButton: React.FC = () => {
           className="flex items-center break-words"
         >
           {sessionData?.user.image && (
-            <>
+            <div className="pr-2">
               {/* Due to using the google provider we need to use the img tag
               instead of next/image as the google profile picture sometimes had
               trouble loading */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={sessionData.user.image}
                 alt={`${sessionData.user.name}'s avatar`}
                 className="mr-2 rounded-full max-md:hidden"
@@ -27,17 +27,17 @@ const LoginButton: React.FC = () => {
                 width={48}
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={sessionData.user.image}
                 alt={`${sessionData.user.name}'s avatar`}
                 className="mr-2 rounded-full md:hidden"
                 height={36}
                 width={36}
               />
-            </>
+            </div>
           )}
           {sessionData?.user.name && (
-            <span className="pl-2 pr-4 text-xl max-md:hidden">
+            <span className="pl-2 pr-4 text-xl max-lg:hidden">
               {sessionData.user.name}
             </span>
           )}
