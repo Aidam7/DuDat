@@ -1,9 +1,7 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppProps, type AppType } from "next/app";
-
 import { api } from "~/utils/api";
-
 import { NextUIProvider } from "@nextui-org/react";
 import { Analytics } from "@vercel/analytics/react";
 import { type NextPage } from "next";
@@ -11,6 +9,7 @@ import Head from "next/head";
 import DuDatNavbar from "~/components/layout/navbar/";
 import "~/styles/globals.css";
 import "../components/tasks/taskCalendar/calendar.scss";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   // getLayout?: (page: ReactElement) => ReactNode,
@@ -45,6 +44,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <main className="flex min-h-screen flex-col px-8 md:px-16 lg:px-32 xl:px-64">
               <Component {...pageProps} />
               <Analytics />
+              <SpeedInsights />
             </main>
           </Wrapper>
         </SessionProvider>
