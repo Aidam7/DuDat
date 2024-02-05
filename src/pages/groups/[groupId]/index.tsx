@@ -51,14 +51,15 @@ export default function GroupDetail() {
   );
   return (
     <>
-      <div className="flex items-center">
-        <h1 className="text-6xl font-semibold">{group.name}</h1>
+      <div className="flex flex-row items-center max-sm:flex-col">
+        <div className="grid-col-1">
+          <h1 className="mb-1 text-6xl font-semibold">{group.name}</h1>
+          <span className="text-3xl font-semibold italic lg:ml-5">
+            {group.description}
+          </span>
+        </div>
         <GroupActionPanel group={group} />
       </div>
-
-      <span className="ml-5 text-3xl font-semibold italic">
-        {group.description}
-      </span>
       <div className="flex flex-col gap-5 pb-5">
         <div>
           <h2 className="pb-5 text-4xl">Tasks</h2>
