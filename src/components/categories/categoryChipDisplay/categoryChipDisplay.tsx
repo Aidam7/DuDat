@@ -14,11 +14,9 @@ const CategoryChipDisplay: FC<Props> = (props: Props) => {
     <>
       {props.displayHeader && <h2 className="pb-5 text-4xl">Categories</h2>}
       <div
-        className={
-          props.displayWrapper
-            ? "flex flex-wrap gap-4 overflow-auto rounded-2xl bg-content1 p-4 shadow-small"
-            : ""
-        }
+        className={`flex flex-wrap gap-4 overflow-auto ${
+          props.displayWrapper && "rounded-2xl bg-content1 p-4 shadow-small"
+        }`}
       >
         {props.categories.map((category) => (
           <Link
