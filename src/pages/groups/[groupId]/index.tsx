@@ -99,7 +99,7 @@ export default function GroupDetail() {
           {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
         </Button>
         {finishedTasksOpen && (
-          <div className="pt-5">
+          <div>
             <TaskTable
               loading={loading}
               rows={finishedTasks}
