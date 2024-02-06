@@ -43,15 +43,20 @@ export default function TaskDetail() {
   if (!task || !group) return <Code404 />;
   return (
     <>
-      <h1 className="mb-5 text-6xl">{task.title}</h1>
+      <div className="flex flex-row items-center max-sm:flex-col">
+        <div className="grid-col-1">
+          <h1 className="mb-1 text-6xl font-semibold">{task.title}</h1>
+          <span className="text-3xl font-semibold italic lg:ml-5">
+            {task.description}
+          </span>
+        </div>
+        <TaskActionPanel
+          task={task}
+          group={group}
+          assignees={assignees ?? []}
+        />
+      </div>
       <CategoryChipDisplay categories={categories} />
-      {task.description != "" ? (
-        <span>{task.description}</span>
-      ) : (
-        <span className="italic text-gray-600">
-          No description was provided
-        </span>
-      )}
       {task.dueOn ? (
         <>
           {task.finishedOn ? (
@@ -90,7 +95,6 @@ export default function TaskDetail() {
           )}
         </>
       )}
-      <TaskActionPanel task={task} group={group} assignees={assignees ?? []} />
       <div className="mb-5">
         <h2 className="text-4xl">Assignees</h2>
         {assignees ? (
