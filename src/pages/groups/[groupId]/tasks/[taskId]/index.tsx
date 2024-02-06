@@ -6,6 +6,7 @@ import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
+import TaskProgressBar from "~/components/tasks/taskProgressBar";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
 import { formatDateToString } from "~/utils/func";
@@ -43,7 +44,7 @@ export default function TaskDetail() {
   if (!task || !group) return <Code404 />;
   return (
     <>
-      <div className="flex flex-row items-center max-sm:flex-col">
+      <div className="mb-2 flex flex-row items-center max-sm:flex-col">
         <div className="grid-col-1">
           <h1 className="mb-1 text-6xl font-semibold">{task.title}</h1>
           <span className="text-3xl font-semibold italic lg:ml-5">
@@ -56,7 +57,8 @@ export default function TaskDetail() {
           assignees={assignees ?? []}
         />
       </div>
-      <CategoryChipDisplay categories={categories} />
+      <CategoryChipDisplay categories={categories} displayWrapper />
+      <TaskProgressBar task={task} />
       {task.dueOn ? (
         <>
           {task.finishedOn ? (
@@ -97,11 +99,7 @@ export default function TaskDetail() {
       )}
       <div className="mb-5">
         <h2 className="text-4xl">Assignees</h2>
-        {assignees ? (
-          <UserTable rows={assignees} loading={loadingAssignees} />
-        ) : (
-          <UserTable rows={[]} loading={loadingAssignees} />
-        )}
+        <UserTable rows={assignees} loading={loadingAssignees} />
       </div>
       <div className="flex-co ml-auto flex gap-2">
         <Button
