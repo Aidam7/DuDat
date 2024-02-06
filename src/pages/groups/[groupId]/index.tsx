@@ -2,7 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import CategoryTable from "~/components/categories/categoryTable";
+import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import GroupActionPanel from "~/components/groups/groupActionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import TaskTable from "~/components/tasks/taskTable";
@@ -80,11 +80,11 @@ export default function GroupDetail() {
           />
         </div>
         <div>
-          <h2 className="pb-5 text-4xl">Task Categories</h2>
-          <CategoryTable
+          <CategoryChipDisplay
             loading={loadingCategories}
-            rows={categories}
-            link={`/groups/${groupId}/categories/`}
+            categories={categories}
+            displayHeader
+            displayWrapper
           />
         </div>
         <div>
