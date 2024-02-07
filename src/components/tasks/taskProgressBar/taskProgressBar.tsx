@@ -9,18 +9,28 @@ interface Props {
 
 const TaskProgressBar: React.FC<Props> = (props: Props) => {
   if (props.task.dueOn == null || props.task.startOn == null) return null;
-  const isLate = props.task.dueOn < new Date();
+  const isLate = props.task.dueOn < new Date() && !props.task.finishedOn;
   const isNearingEnd =
-    props.task.dueOn.getTime() - Date.now() < 24 * 60 * 60 * 1000;
+    props.task.dueOn.getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
+    !props.task.finishedOn;
   const timeBetween = props.task.dueOn.getTime() - props.task.startOn.getTime();
   const timeSinceStart = Date.now() - props.task.startOn.getTime();
-  const color = isLate ? "danger" : isNearingEnd ? "warning" : "primary";
+  const color = isLate
+    ? "danger"
+    : isNearingEnd
+      ? "warning"
+      : props.task.confirmedAsFinished
+        ? "success"
+        : "primary";
+  const value = props.task.finishedOn
+    ? props.task.finishedOn.getTime() - props.task.startOn.getTime()
+    : timeSinceStart;
 
   return (
     <div>
       <Progress
         maxValue={timeBetween}
-        value={timeSinceStart}
+        value={value}
         color={color}
         size="lg"
         isStriped={props.task.confirmedAsFinished}
