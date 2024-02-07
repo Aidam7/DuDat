@@ -33,7 +33,7 @@ export const GroupLeave: FC<Props> = (props: Props) => {
         Leave this group
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="bg-black font-mono text-white">
+        <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">

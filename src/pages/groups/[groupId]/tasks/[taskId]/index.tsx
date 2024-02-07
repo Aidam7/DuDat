@@ -9,7 +9,6 @@ import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import TaskProgressBar from "~/components/tasks/taskProgressBar";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
-import { formatDateToString } from "~/utils/func";
 export default function TaskDetail() {
   const [displayCategoryManage, setDisplayCategoryManage] = useState(false);
   const router = useRouter();
@@ -59,44 +58,6 @@ export default function TaskDetail() {
       </div>
       <CategoryChipDisplay categories={categories} displayWrapper />
       <TaskProgressBar task={task} />
-      {task.dueOn ? (
-        <>
-          {task.finishedOn ? (
-            <span className="italic text-gray-600">
-              This task was due on {formatDateToString(task.dueOn)}
-            </span>
-          ) : (
-            <>Finish this task before: {formatDateToString(task.dueOn)}</>
-          )}
-        </>
-      ) : (
-        <>
-          {task.finishedOn ? (
-            <span className="italic text-gray-600">
-              This task could have been finished at any time
-            </span>
-          ) : (
-            <span className="italic text-gray-600">
-              You can finish this task anytime you want
-            </span>
-          )}
-        </>
-      )}
-      {task.finishedOn && (
-        <>
-          Task was finished on {task.finishedOn.toLocaleDateString()}
-          <br />{" "}
-          {task.confirmedAsFinished ? (
-            <span className="italic text-gray-600">
-              Confirmed by the author
-            </span>
-          ) : (
-            <span className="italic text-gray-600">
-              Not yet confirmed by the author
-            </span>
-          )}
-        </>
-      )}
       <div className="mb-5">
         <h2 className="text-4xl">Assignees</h2>
         <UserTable rows={assignees} loading={loadingAssignees} />

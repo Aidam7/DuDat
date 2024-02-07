@@ -29,7 +29,7 @@ const GroupDelete: React.FC<Props> = (props: Props) => {
         Delete this group
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="bg-black font-mono text-white">
+        <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
