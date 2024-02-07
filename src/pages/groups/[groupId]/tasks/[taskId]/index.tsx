@@ -43,7 +43,7 @@ export default function TaskDetail() {
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <div className="mb-2 flex flex-row items-center max-sm:flex-col">
         <div className="grid-col-1">
           <h1 className="mb-1 text-6xl font-semibold">{task.title}</h1>
@@ -120,6 +120,6 @@ export default function TaskDetail() {
           />
         </>
       )}
-    </>
+    </div>
   );
 }
