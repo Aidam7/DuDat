@@ -13,7 +13,8 @@ const TaskProgressBar: React.FC<Props> = (props: Props) => {
   const wasLate =
     props.task.finishedOn && props.task.dueOn < props.task.finishedOn;
   const isNearingEnd =
-    props.task.dueOn.getTime() - Date.now() < 24 * 60 * 60 * 1000 &&
+    props.task.dueOn.getTime() - props.task.startOn.getTime() <
+      (props.task.dueOn.getTime() - props.task.startOn.getTime()) / 5 &&
     !props.task.finishedOn;
   const timeBetween = props.task.dueOn.getTime() - props.task.startOn.getTime();
   const timeSinceStart = Date.now() - props.task.startOn.getTime();
