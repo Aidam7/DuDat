@@ -27,11 +27,11 @@ export default function Groups() {
   ];
   return (
     <>
-      <div className="flex flex-row items-center">
-        <h1 className="mb-5 text-6xl font-semibold">Groups</h1>
+      <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
+        <h1 className="text-6xl font-semibold">Groups</h1>
         <Button
           color="primary"
-          className="mb-5 ml-auto w-min font-semibold"
+          className="ml-auto font-semibold max-sm:w-full"
           onClick={() => router.push("/groups/create")}
         >
           Create a new group
