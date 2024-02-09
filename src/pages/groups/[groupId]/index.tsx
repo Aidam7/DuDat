@@ -5,6 +5,7 @@ import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import GroupActionPanel from "~/components/groups/groupActionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -52,12 +53,7 @@ export default function GroupDetail() {
   return (
     <>
       <div className="flex flex-row items-center max-sm:flex-col">
-        <div className="grid-col-1">
-          <h1 className="mb-1 text-6xl font-semibold">{group.name}</h1>
-          <span className="text-3xl font-semibold italic lg:ml-5">
-            {group.description}
-          </span>
-        </div>
+        <PageHeader name={group.name} description={group.description} />
         <GroupActionPanel group={group} />
       </div>
       <div className="flex flex-col gap-5 pb-5">

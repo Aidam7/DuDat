@@ -1,6 +1,5 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
 import GroupAddMembers from "~/components/groups/groupAddMembership";
 import GroupDelete from "~/components/groups/groupDelete";
 import { GroupEdit } from "~/components/groups/groupEdit/groupEdit";
@@ -8,6 +7,7 @@ import GroupRemoveMembers from "~/components/groups/groupRemoveMembership/";
 import GroupTransferOwnership from "~/components/groups/groupTransferOwnership/";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
 
 export default function GroupAdminPanel() {
@@ -27,7 +27,9 @@ export default function GroupAdminPanel() {
   if (session.user.id != group.ownerId) return <Code401 />;
   return (
     <>
-      <h1 className="text-6xl">{group.name} settings</h1>
+      <a href={`../`} className="mb-5">
+        <PageHeader name={group.name} description={group.description} />
+      </a>
       <div className="flex flex-col gap-10">
         <GroupEdit group={group} />
         <GroupTransferOwnership group={group} />

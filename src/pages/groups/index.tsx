@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import GroupTable from "~/components/groups/groupTable";
+import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
 
@@ -28,7 +29,7 @@ export default function Groups() {
   return (
     <>
       <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
-        <h1 className="text-6xl font-semibold">Groups</h1>
+        <PageHeader name="Groups" description="" />
         <Button
           color="primary"
           className="ml-auto font-semibold max-sm:w-full"

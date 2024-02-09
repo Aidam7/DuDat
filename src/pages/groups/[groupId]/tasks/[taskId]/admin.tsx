@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
 import TaskDelete from "~/components/tasks/taskDelete";
 import TaskEdit from "~/components/tasks/taskEdit";
@@ -50,10 +51,9 @@ export default function TaskAdminPanel() {
   }
   return (
     <>
-      <h1 className="text-6xl">
-        <a href={`../${task.id}`}>{task.title}</a>
-      </h1>
-      {/*bruh*/}
+      <a href={`../${task.id}`} className="mb-5">
+        <PageHeader name={task.title} description={task.description} />
+      </a>
       <Button
         color={task.confirmedAsFinished ? "default" : "success"}
         onPress={handleConfirmTaskAsFinished}

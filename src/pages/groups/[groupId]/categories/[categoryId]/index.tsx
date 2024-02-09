@@ -2,6 +2,7 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
@@ -22,14 +23,7 @@ export default function CategoryDetail() {
     category.group.ownerId == session.user.id;
   return (
     <>
-      <h1 className="text-6xl">{category.name}</h1>
-      {category.description != "" ? (
-        <span>{category.description}</span>
-      ) : (
-        <span className="italic text-gray-600">
-          No description was provided
-        </span>
-      )}
+      <PageHeader name={category.name} description={category.description} />
       <div className="flex-co ml-auto flex gap-2">
         {isAuthor && (
           <Button

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import TaskProgressBar from "~/components/tasks/taskProgressBar";
@@ -44,12 +45,7 @@ export default function TaskDetail() {
   return (
     <div className="flex flex-col gap-5">
       <div className="mb-2 flex flex-row items-center max-sm:flex-col">
-        <div className="grid-col-1">
-          <h1 className="mb-1 text-6xl font-semibold">{task.title}</h1>
-          <span className="text-3xl font-semibold italic lg:ml-5">
-            {task.description}
-          </span>
-        </div>
+        <PageHeader name={task.title} description={task.description} />
         <TaskActionPanel
           task={task}
           group={group}

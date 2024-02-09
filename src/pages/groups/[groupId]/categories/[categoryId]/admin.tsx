@@ -4,6 +4,7 @@ import CategoryDelete from "~/components/categories/categoryDelete";
 import CategoryEdit from "~/components/categories/categoryEdit";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
 export default function CategoryAdminPanel() {
   const router = useRouter();
@@ -24,9 +25,9 @@ export default function CategoryAdminPanel() {
     return <Code401 />;
   return (
     <>
-      <h1 className="text-6xl">
-        <a href={`../${category.id}`}>{category.name}</a>
-      </h1>
+      <a href={`../${category.id}`}>
+        <PageHeader name={category.name} description={category.description} />
+      </a>
       <div className="flex flex-col gap-5">
         <CategoryEdit category={category} />
         <CategoryDelete category={category} />
