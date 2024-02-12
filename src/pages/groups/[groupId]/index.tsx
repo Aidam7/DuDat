@@ -9,6 +9,7 @@ import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
+import { IBreadcrumb } from "~/utils/types";
 
 export default function GroupDetail() {
   const router = useRouter();
@@ -50,10 +51,18 @@ export default function GroupDetail() {
   const tasks = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length > 0 && task.finishedOn == null,
   );
+  const breadcrumbs: IBreadcrumb[] = [
+    { name: "Groups", link: "./" },
+    { name: `${group.name}`, link: "." },
+  ];
   return (
     <>
       <div className="flex flex-row items-center max-sm:flex-col">
-        <PageHeader name={group.name} description={group.description} />
+        <PageHeader
+          name={group.name}
+          description={group.description}
+          breadcrumbs={breadcrumbs}
+        />
         <GroupActionPanel group={group} />
       </div>
       <div className="flex flex-col gap-5 pb-5">

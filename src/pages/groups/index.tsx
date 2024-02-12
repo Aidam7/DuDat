@@ -5,7 +5,7 @@ import { useState } from "react";
 import GroupTable from "~/components/groups/groupTable";
 import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
-import { type ITableColumns } from "~/utils/types";
+import { IBreadcrumb, type ITableColumns } from "~/utils/types";
 
 export default function Groups() {
   const { data: session } = useSession();
@@ -29,7 +29,7 @@ export default function Groups() {
   return (
     <>
       <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
-        <PageHeader name="Groups" description="" />
+        <PageHeader name="Groups" description="" breadcrumbs={[]} />
         <Button
           color="primary"
           className="ml-auto font-semibold max-sm:w-full"
