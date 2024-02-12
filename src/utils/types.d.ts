@@ -7,7 +7,7 @@ export interface ITableColumns {
 export interface ITaskWithGroup extends Task {
   group: Group;
 }
-export interface breadcrumb {
+export interface IBreadcrumb {
   name: string;
   link: string;
 }

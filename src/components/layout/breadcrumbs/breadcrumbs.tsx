@@ -1,9 +1,9 @@
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import React, { type FC } from "react";
-import { type breadcrumb } from "~/utils/types";
+import { type IBreadcrumb } from "~/utils/types";
 
 interface Props {
-  breadcrumbs: breadcrumb[];
+  breadcrumbs: IBreadcrumb[];
 }
 
 const BreadcrumbDisplay: FC<Props> = (props: Props) => {
