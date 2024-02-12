@@ -1,10 +1,10 @@
-import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import PageHeader from "~/components/layout/pageHeader";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
+import TaskConfirmFinished from "~/components/tasks/taskConfirmFinished";
 import TaskDelete from "~/components/tasks/taskDelete";
 import TaskEdit from "~/components/tasks/taskEdit";
 import TaskRemoveAssignments from "~/components/tasks/taskRemoveAssignments";
@@ -24,8 +24,6 @@ export default function TaskAdminPanel() {
     { enabled: session != null && isMember },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
-  const confirmTaskAsFinishedMutation =
-    api.tasks.confirmTaskAsFinished.useMutation();
   if (!session) return <>Please sign in</>;
   if (authenticating) return <>Authenticating...</>;
   if (
@@ -36,34 +34,12 @@ export default function TaskAdminPanel() {
     return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
-  function handleConfirmTaskAsFinished() {
-    if (!session || !task || task.confirmedAsFinished) return;
-    return confirmTaskAsFinishedMutation.mutate(
-      {
-        taskId: task.id,
-      },
-      {
-        onSuccess: () => {
-          task.confirmedAsFinished = true;
-        },
-      },
-    );
-  }
   return (
     <>
       <a href={`../${task.id}`} className="mb-5">
         <PageHeader name={task.title} description={task.description} />
       </a>
-      <Button
-        color={task.confirmedAsFinished ? "default" : "success"}
-        onPress={handleConfirmTaskAsFinished}
-        disabled={task.confirmedAsFinished ? true : false}
-        className="w-fit"
-      >
-        {task.confirmedAsFinished
-          ? "Confirmed as finished"
-          : "Confirm as finished"}
-      </Button>
+      <TaskConfirmFinished task={task} />
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
       <TaskEdit task={task} />
