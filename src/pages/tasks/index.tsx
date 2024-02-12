@@ -1,6 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
@@ -27,20 +28,15 @@ export default function Tasks() {
   );
   const ongoingTasks = tasks?.filter((task) => task.finishedOn == null);
   return (
-    <>
-      <h1 className="pb-5 text-6xl">Tasks</h1>
+    <div className="flex flex-col gap-5">
+      <PageHeader name="Tasks" />
       <Input
         placeholder="Search for a task"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onValueChange={setQuery}
       />
-      {ongoingTasks ? (
-        <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
-      ) : (
-        <TaskTable loading={loading} rows={[]} link="/tasks/" />
-      )}
-      <h2 className="pb-5 text-4xl">Unconfirmed tasks</h2>
+      <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
+      <h2 className="pb-5 text-4xl font-semibold">Unconfirmed tasks</h2>
       <TaskTable loading={loading} rows={unConfirmedTasks} link="/tasks/" />
       <Button
         onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
@@ -50,24 +46,16 @@ export default function Tasks() {
         {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
       </Button>
       {finishedTasksOpen && (
-        <div className="pt-5">
-          {finishedTasks ? (
-            <TaskTable
-              loading={loading}
-              rows={finishedTasks}
-              renderFinishedOn
-              link={`/tasks/`}
-            />
-          ) : (
-            <TaskTable
-              loading={loading}
-              rows={[]}
-              renderFinishedOn
-              link={`/tasks/`}
-            />
-          )}
+        <div>
+          <h2 className="pb-5 text-4xl font-semibold">Finished tasks</h2>
+          <TaskTable
+            loading={loading}
+            rows={finishedTasks}
+            renderFinishedOn
+            link={`/tasks/`}
+          />
         </div>
       )}
-    </>
+    </div>
   );
 }
