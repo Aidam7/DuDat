@@ -1,4 +1,4 @@
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, breadcrumbs } from "@nextui-org/react";
 import React, { type FC } from "react";
 import { type IBreadcrumb } from "~/utils/types";
 
@@ -7,6 +7,7 @@ interface Props {
 }
 
 const BreadcrumbDisplay: FC<Props> = (props: Props) => {
+  if (props.breadcrumbs.length < 2) return;
   return (
     <Breadcrumbs variant="bordered">
       {props.breadcrumbs.map((breadcrumb) => (
