@@ -5,5 +5,9 @@ export interface ITableColumns {
   label: string;
 }
 export interface ITaskWithGroup extends Task {
-  group: Group
+  group: Group;
+}
+export interface breadcrumb {
+  name: string;
+  link: string;
 }
