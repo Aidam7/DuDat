@@ -1,5 +1,6 @@
-import { Image } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Pie } from "react-chartjs-2";
 import Code404 from "~/components/layout/errorCodes/404";
@@ -8,6 +9,7 @@ import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 export default function UserDetail() {
+  const { data: sessionData } = useSession();
   ChartJS.register(ArcElement, Tooltip, Legend);
   const router = useRouter();
   const id = router.query.id as string;
@@ -30,10 +32,19 @@ export default function UserDetail() {
     { name: "Users", link: "/" },
     { name: user.name, link: `.` },
   ];
+  const isSelf = sessionData?.user.id === user.id;
   return (
     <>
       <PageHeader name={user.name} breadcrumbs={breadcrumbs} />
-      <Image src={user.image} alt={`Users image`} width={200} height={200} />
+      <div className="flex flex-row items-center gap-5">
+        <Image src={user.image} alt={`Users image`} width={200} height={200} />{" "}
+        {isSelf && (
+          <Button color="primary" onClick={() => void signOut()}>
+            {sessionData ? "Sign out" : "Sign in"}
+          </Button>
+        )}
+      </div>
+
       <div className="w-full max-md:w-[50%] sm:w-[25%]">
         <Pie data={data} />
       </div>
