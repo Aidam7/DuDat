@@ -1,6 +1,8 @@
+import CenteredLayout from "~/components/layout/centeredLayout";
+
 export default function Home() {
   return (
-    <>
+    <CenteredLayout>
       <div className="container flex flex-col items-center justify-center px-4 py-16 ">
         <h1 className="text-9xl font-extrabold tracking-tight sm:text-[5rem]">
           DuDat
@@ -14,6 +16,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-    </>
+    </CenteredLayout>
   );
 }

@@ -1,11 +1,12 @@
 import { Spinner } from "@nextui-org/react";
 import React from "react";
+import CenteredLayout from "../centeredLayout";
 
 const Loading: React.FC = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center">
+    <CenteredLayout>
       <Spinner>Loading...</Spinner>
-    </div>
+    </CenteredLayout>
   );
 };
 
