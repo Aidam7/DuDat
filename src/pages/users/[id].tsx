@@ -4,6 +4,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Pie } from "react-chartjs-2";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 export default function UserDetail() {
   ChartJS.register(ArcElement, Tooltip, Legend);
@@ -14,8 +16,8 @@ export default function UserDetail() {
     { id },
     { enabled: session != null },
   );
-  if (!session) return <>Please sign in</>;
-  if (loading) return <>Loading...</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   if (!user) return <Code404 />;
   const data = {
     labels: ["Finished Tasks", "Finished Tasks Late"],

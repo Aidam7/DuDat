@@ -1,8 +1,10 @@
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import TaskTable from "~/components/tasks/table";
-import TaskCalendar from "~/components/tasks/taskCalendar";
+import Loading from "~/components/layout/loading";
+import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
+import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
 export default function Tasks() {
@@ -12,7 +14,6 @@ export default function Tasks() {
   const [query, setQuery] = useState("");
   if (session) assigneeId = session.user.id;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
-  const [displayCalendar, setDisplayCalendar] = useState(true);
   const { data: tasks, isFetching: loading } = findTasksQuery.useQuery(
     {
       title: query,
@@ -20,7 +21,8 @@ export default function Tasks() {
     },
     { enabled: session != null },
   );
-  if (!session) return <>Please sign in</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   const unConfirmedTasks = tasks?.filter(
     (task) => task.finishedOn != null && task.confirmedAsFinished == false,
   );
@@ -29,78 +31,34 @@ export default function Tasks() {
   );
   const ongoingTasks = tasks?.filter((task) => task.finishedOn == null);
   return (
-    <>
-      <h1 className="pb-5 text-6xl">Tasks</h1>
+    <div className="flex flex-col gap-5">
+      <PageHeader name="Tasks" breadcrumbs={[]} />
+      <Input
+        placeholder="Search for a task"
+        value={query}
+        onValueChange={setQuery}
+      />
+      <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
+      <h2 className="pb-5 text-4xl font-semibold">Unconfirmed tasks</h2>
+      <TaskTable loading={loading} rows={unConfirmedTasks} link="/tasks/" />
       <Button
-        onClick={() => setDisplayCalendar(!displayCalendar)}
-        className="mb-5"
+        onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
         color="primary"
+        className="w-1/4 max-md:w-full"
       >
-        {displayCalendar ? "Show Tables" : "Show Calendar"}
+        {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
       </Button>
-      {displayCalendar ? (
-        <>
-          {tasks ? (
-            <>
-              <TaskCalendar tasks={tasks} />
-            </>
-          ) : (
-            <TaskCalendar tasks={[]} />
-          )}
-        </>
-      ) : (
-        <>
-          <input
-            placeholder="Search for a task"
-            className={"inner mb-5 h-10 rounded-md pl-2"}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-            }}
-          ></input>
-          {ongoingTasks ? (
-            <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
-          ) : (
-            <TaskTable loading={loading} rows={[]} link="/tasks/" />
-          )}
-          <h2 className="pb-5 text-4xl">Unconfirmed tasks</h2>
-          {unConfirmedTasks ? (
-            <TaskTable
-              loading={loading}
-              rows={unConfirmedTasks}
-              link="/tasks/"
-            />
-          ) : (
-            <TaskTable loading={loading} rows={[]} link="/tasks/" />
-          )}
-          <Button
-            onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
-            color="primary"
-            className="w-1/4 max-md:w-full"
-          >
-            {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
-          </Button>
-          {finishedTasksOpen && (
-            <div className="pt-5">
-              {finishedTasks ? (
-                <TaskTable
-                  loading={loading}
-                  rows={finishedTasks}
-                  renderFinishedOn
-                  link={`/tasks/`}
-                />
-              ) : (
-                <TaskTable
-                  loading={loading}
-                  rows={[]}
-                  renderFinishedOn
-                  link={`/tasks/`}
-                />
-              )}
-            </div>
-          )}
-        </>
+      {finishedTasksOpen && (
+        <div>
+          <h2 className="pb-5 text-4xl font-semibold">Finished tasks</h2>
+          <TaskTable
+            loading={loading}
+            rows={finishedTasks}
+            renderFinishedOn
+            link={`/tasks/`}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }

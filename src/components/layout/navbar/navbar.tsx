@@ -21,6 +21,7 @@ const DuDatNavbar: FC = () => {
 
   const navItems: NavItem[] = [
     { label: "My Groups", href: "/groups" },
+    { label: "Calendar", href: "/tasks/calendar" },
     { label: "My Tasks", href: "/tasks" },
   ];
   return (
@@ -28,23 +29,23 @@ const DuDatNavbar: FC = () => {
       <Navbar
         onMenuOpenChange={setIsMenuOpen}
         isMenuOpen={isMenuOpen}
-        className="mb-5 bg-blue"
+        className="fixed bg-blue text-white"
       >
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            className="sm:hidden"
+            className="md:hidden"
           />
           <NavbarBrand>
             <Link href="/">
-              <span className="text-2xl font-bold">DuDat</span>
+              <span className="text-4xl font-bold">DuDat</span>
             </Link>
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent className="hidden gap-4 sm:flex" justify="center">
+        <NavbarContent className="hidden gap-4 md:flex" justify="center">
           {navItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} className="text-2xl font-semibold">
               <Link href={item.href}>{item.label}</Link>
             </NavbarItem>
           ))}
@@ -54,7 +55,7 @@ const DuDatNavbar: FC = () => {
             <LoginPanel />
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu className="font-mono">
+        <NavbarMenu className="font-sans">
           {navItems.map((item) => (
             <NavbarMenuItem
               key={item.href}

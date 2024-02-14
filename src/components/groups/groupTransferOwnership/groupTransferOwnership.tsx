@@ -114,7 +114,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
         </TableBody>
       </Table>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="bg-black font-mono text-white">
+        <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">

@@ -1,17 +1,26 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter as useNavigation } from "next/navigation";
 import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 
 export default function TaskReroute() {
   const router = useRouter();
   const navigation = useNavigation();
   const id = router.query.id as string;
-  const { data: groupId, isFetching } = api.tasks.getTaskWithGroupId.useQuery({
-    taskId: id,
-  });
-  if (isFetching) return <>Loading...</>;
+  const { data: session } = useSession();
+  const { data: groupId, isFetching: loading } =
+    api.tasks.getTaskWithGroupId.useQuery(
+      {
+        taskId: id,
+      },
+      { enabled: session != null },
+    );
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   if (!groupId) return <Code404 />;
   navigation.replace(`/groups/${groupId.groupId}/tasks/${id}`);
   return (

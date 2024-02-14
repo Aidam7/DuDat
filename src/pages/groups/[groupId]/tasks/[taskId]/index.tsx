@@ -4,11 +4,15 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
-import TaskActionPanel from "~/components/tasks/actionPanel/actionPanel";
+import Loading from "~/components/layout/loading";
+import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
+import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
+import TaskProgressBar from "~/components/tasks/taskProgressBar";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
-import { formatDateToString } from "~/utils/func";
+import { type IBreadcrumb } from "~/utils/types";
 export default function TaskDetail() {
   const [displayCategoryManage, setDisplayCategoryManage] = useState(false);
   const router = useRouter();
@@ -38,66 +42,34 @@ export default function TaskDetail() {
     { taskId: taskId },
     { enabled: task != null && task != undefined },
   );
-  if (!session) return <>Please sign in</>;
-  if (loading) return <>Loading...</>;
+  if (loading) return <Loading />;
+  if (!session) return <SignIn />;
   if (!task || !group) return <Code404 />;
+  const breadcrumbs: IBreadcrumb[] = [
+    { name: "Groups", link: "/groups/" },
+    { name: `${group.name}`, link: `/groups/${groupId}` },
+    { name: "Tasks", link: `/groups/${groupId}` },
+    { name: `${task.title}`, link: "." },
+  ];
   return (
-    <>
-      <h1 className="mb-5 text-6xl">{task.title}</h1>
-      <CategoryChipDisplay categories={categories} />
-      {task.description != "" ? (
-        <span>{task.description}</span>
-      ) : (
-        <span className="italic text-gray-600">
-          No description was provided
-        </span>
-      )}
-      {task.dueOn ? (
-        <>
-          {task.finishedOn ? (
-            <span className="italic text-gray-600">
-              This task was due on {formatDateToString(task.dueOn)}
-            </span>
-          ) : (
-            <>Finish this task before: {formatDateToString(task.dueOn)}</>
-          )}
-        </>
-      ) : (
-        <>
-          {task.finishedOn ? (
-            <span className="italic text-gray-600">
-              This task could have been finished at any time
-            </span>
-          ) : (
-            <span className="italic text-gray-600">
-              You can finish this task anytime you want
-            </span>
-          )}
-        </>
-      )}
-      {task.finishedOn && (
-        <>
-          Task was finished on {task.finishedOn.toLocaleDateString()}
-          <br />{" "}
-          {task.confirmedAsFinished ? (
-            <span className="italic text-gray-600">
-              Confirmed by the author
-            </span>
-          ) : (
-            <span className="italic text-gray-600">
-              Not yet confirmed by the author
-            </span>
-          )}
-        </>
-      )}
-      <TaskActionPanel task={task} group={group} assignees={assignees ?? []} />
+    <div className="flex flex-col gap-5">
+      <div className="mb-2 flex flex-row items-center max-sm:flex-col">
+        <PageHeader
+          name={task.title}
+          description={task.description}
+          breadcrumbs={breadcrumbs}
+        />
+        <TaskActionPanel
+          task={task}
+          group={group}
+          assignees={assignees ?? []}
+        />
+      </div>
+      <CategoryChipDisplay categories={categories} displayWrapper />
+      <TaskProgressBar task={task} />
       <div className="mb-5">
         <h2 className="text-4xl">Assignees</h2>
-        {assignees ? (
-          <UserTable rows={assignees} loading={loadingAssignees} />
-        ) : (
-          <UserTable rows={[]} loading={loadingAssignees} />
-        )}
+        <UserTable rows={assignees} loading={loadingAssignees} />
       </div>
       <div className="flex-co ml-auto flex gap-2">
         <Button
@@ -118,6 +90,6 @@ export default function TaskDetail() {
           />
         </>
       )}
-    </>
+    </div>
   );
 }

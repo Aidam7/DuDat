@@ -29,7 +29,6 @@ const CategoryCreate: React.FC = () => {
       onSubmit={handleSubmit}
       className="items-left justify-left flex flex-col gap-5"
     >
-      <h3 className="text-3xl font-bold">Create a category</h3>
       <Input
         type="text"
         value={name}

@@ -9,9 +9,10 @@ import {
 } from "~/utils/func";
 import { type ITaskWithGroup } from "~/utils/types";
 interface Props {
-  tasks: ITaskWithGroup[];
+  tasks: ITaskWithGroup[] | undefined | null;
 }
 const TaskCalendar: FC<Props> = (props: Props) => {
+  if (!props.tasks) props.tasks = [];
   const events = props.tasks.map((task) => ({
     start: new Date(
       task.startOn
@@ -62,17 +63,15 @@ const TaskCalendar: FC<Props> = (props: Props) => {
     };
   };
   return (
-    <div className="flex flex-col items-center rounded-xl bg-white p-5">
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        events={events}
-        className="min-h-[600px] w-full bg-white text-black"
-        onSelectEvent={onSelectEvent}
-        eventPropGetter={eventStyleGetter}
-      />
-    </div>
+    <Calendar
+      localizer={localizer}
+      startAccessor="start"
+      endAccessor="end"
+      events={events}
+      className="min-h-[600px] w-full bg-white text-black"
+      onSelectEvent={onSelectEvent}
+      eventPropGetter={eventStyleGetter}
+    />
   );
 };
 

@@ -1,8 +1,11 @@
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import GroupTable from "~/components/groups/table";
+import GroupTable from "~/components/groups/groupTable";
+import Loading from "~/components/layout/loading";
+import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
 
@@ -20,34 +23,31 @@ export default function Groups() {
     { enabled: session != null },
   );
   const router = useRouter();
-  if (!session) return <>Please sign in</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   const columns: ITableColumns[] = [
     { key: "name", label: "Name" },
     { key: "description", label: "Description" },
   ];
   return (
     <>
-      <h1 className="pb-5 text-6xl">Groups</h1>
-      <Button
-        color="primary"
-        className="mb-5 ml-auto w-min"
-        onClick={() => router.push("/groups/create")}
-      >
-        Create a new group
-      </Button>
-      <input
+      <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
+        <PageHeader name="Groups" description="" breadcrumbs={[]} />
+        <Button
+          color="primary"
+          className="ml-auto font-semibold max-sm:w-full"
+          onClick={() => router.push("/groups/create")}
+        >
+          Create a new group
+        </Button>
+      </div>
+      <Input
         placeholder="Search for a group"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
+        className="mb-5"
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
-      {groups ? (
-        <GroupTable columns={columns} loading={loading} rows={groups} />
-      ) : (
-        <GroupTable columns={columns} loading={loading} rows={[]} />
-      )}
+        onValueChange={setQuery}
+      />
+      <GroupTable columns={columns} loading={loading} rows={groups} />
     </>
   );
 }
