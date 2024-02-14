@@ -4,7 +4,9 @@ import { useRouter } from "next/router";
 import { Pie } from "react-chartjs-2";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
+import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
+import { type IBreadcrumb } from "~/utils/types";
 export default function UserDetail() {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const router = useRouter();
@@ -24,12 +26,14 @@ export default function UserDetail() {
       },
     ],
   };
+  const breadcrumbs: IBreadcrumb[] = [
+    { name: "Users", link: "/" },
+    { name: user.name, link: `.` },
+  ];
   return (
     <>
-      <h1 className="text-6xl">{user.name}</h1>
-      {user.image && (
-        <Image src={user.image} alt={`Users image`} width={200} height={200} />
-      )}
+      <PageHeader name={user.name} breadcrumbs={breadcrumbs} />
+      <Image src={user.image} alt={`Users image`} width={200} height={200} />
       <div className="w-full max-md:w-[50%] sm:w-[25%]">
         <Pie data={data} />
       </div>
