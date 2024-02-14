@@ -10,6 +10,7 @@ import DuDatNavbar from "~/components/layout/navbar/";
 import "~/styles/globals.css";
 import "../components/tasks/taskCalendar/calendar.scss";
 import Footer from "~/components/layout/footer";
+import CheckAuth from "~/components/auth/checkAuth";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   // getLayout?: (page: ReactElement) => ReactNode,
@@ -42,7 +43,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
             </Head>
             <DuDatNavbar />
             <div className="flex flex-col px-8 py-20 md:px-16 lg:px-32 xl:px-64">
-              <Component {...pageProps} />
+              <CheckAuth>
+                <Component {...pageProps} />
+              </CheckAuth>
             </div>
             <Analytics />
             <Footer />
