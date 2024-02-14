@@ -1,4 +1,5 @@
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import Link from "next/link";
 import React, { type FC } from "react";
 import { type IBreadcrumb } from "~/utils/types";
 
@@ -11,8 +12,8 @@ const BreadcrumbDisplay: FC<Props> = (props: Props) => {
   return (
     <Breadcrumbs variant="bordered">
       {props.breadcrumbs.map((breadcrumb) => (
-        <BreadcrumbItem key={breadcrumb.link} href={breadcrumb.link}>
-          {breadcrumb.name}
+        <BreadcrumbItem key={breadcrumb.link}>
+          <Link href={breadcrumb.link}>{breadcrumb.name}</Link>
         </BreadcrumbItem>
       ))}
     </Breadcrumbs>
