@@ -12,8 +12,8 @@ interface Props {
   tasks: ITaskWithGroup[] | undefined | null;
 }
 const TaskCalendar: FC<Props> = (props: Props) => {
-  if (!props.tasks) props.tasks = [];
-  const events = props.tasks.map((task) => ({
+  const tasks = props.tasks ?? [];
+  const events = tasks.map((task) => ({
     start: new Date(
       task.startOn
         ? task.startOn
