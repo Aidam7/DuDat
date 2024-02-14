@@ -29,7 +29,7 @@ const DuDatNavbar: FC = () => {
       <Navbar
         onMenuOpenChange={setIsMenuOpen}
         isMenuOpen={isMenuOpen}
-        className="mb-5 bg-blue text-white"
+        className="fixed bg-blue text-white"
       >
         <NavbarContent>
           <NavbarMenuToggle
