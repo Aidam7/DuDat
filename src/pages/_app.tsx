@@ -9,6 +9,7 @@ import Head from "next/head";
 import DuDatNavbar from "~/components/layout/navbar/";
 import "~/styles/globals.css";
 import "../components/tasks/taskCalendar/calendar.scss";
+import Footer from "~/components/layout/footer";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   // getLayout?: (page: ReactElement) => ReactNode,
@@ -40,10 +41,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
               <link rel="icon" href="/favicon.ico" />
             </Head>
             <DuDatNavbar />
-            <main className="mt-20 flex min-h-screen flex-col px-8 pb-5 md:px-16 lg:px-32 xl:px-64">
+            <main className="mb-10 mt-20 flex min-h-screen flex-col px-8 pb-5 md:px-16 lg:px-32 xl:px-64">
               <Component {...pageProps} />
               <Analytics />
             </main>
+            <Footer />
           </Wrapper>
         </SessionProvider>
       </NextUIProvider>
