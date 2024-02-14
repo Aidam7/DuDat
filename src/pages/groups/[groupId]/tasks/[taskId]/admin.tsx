@@ -4,7 +4,6 @@ import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
 import TaskConfirmFinished from "~/components/tasks/taskConfirmFinished";
 import TaskDelete from "~/components/tasks/taskDelete";
@@ -17,23 +16,15 @@ export default function TaskAdminPanel() {
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: isMember, isFetching: authenticating } =
-    api.users.isMemberOfGroup.useQuery(
-      { groupId: groupId, userId: session?.user?.id ?? "" },
-      { enabled: session != null },
-    );
   const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
     { id: taskId },
-    { enabled: session != null && isMember },
+    { enabled: session != null },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
   if (loading) return <Loading />;
-  if (authenticating) return <Loading text="Authenticating..." />;
-  if (!session) return <SignIn />;
   if (
-    !isMember ||
-    (task?.authorId != session.user.id &&
-      task?.group.ownerId != session.user.id)
+    task?.authorId != session?.user.id &&
+    task?.group.ownerId != session?.user.id
   )
     return <Code401 />;
   if (!task || !group) return <Code404 />;

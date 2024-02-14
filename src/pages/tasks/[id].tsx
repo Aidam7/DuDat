@@ -4,7 +4,6 @@ import { useRouter as useNavigation } from "next/navigation";
 import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
-import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 
 export default function TaskReroute() {
@@ -19,7 +18,6 @@ export default function TaskReroute() {
       },
       { enabled: session != null },
     );
-  if (!session) return <SignIn />;
   if (loading) return <Loading />;
   if (!groupId) return <Code404 />;
   navigation.replace(`/groups/${groupId.groupId}/tasks/${id}`);

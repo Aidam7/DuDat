@@ -1,22 +1,17 @@
 import { Image } from "@nextui-org/react";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Pie } from "react-chartjs-2";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
-import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 export default function UserDetail() {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const router = useRouter();
   const id = router.query.id as string;
-  const { data: session } = useSession();
-  const { data: user, isFetching: loading } = api.users.getById.useQuery(
-    { id },
-    { enabled: session != null },
-  );
-  if (!session) return <SignIn />;
+  const { data: user, isFetching: loading } = api.users.getById.useQuery({
+    id,
+  });
   if (loading) return <Loading />;
   if (!user) return <Code404 />;
   const data = {

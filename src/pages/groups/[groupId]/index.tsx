@@ -7,7 +7,6 @@ import GroupActionPanel from "~/components/groups/groupActionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -16,7 +15,7 @@ import { type IBreadcrumb } from "~/utils/types";
 export default function GroupDetail() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const findTasks = api.tasks.locateByName;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
   const { data: group, isFetching: loading } = api.groups.getById.useQuery(
@@ -41,8 +40,7 @@ export default function GroupDetail() {
     );
   const { data: categories, isFetching: loadingCategories } =
     api.categories.getByGroup.useQuery({ groupId }, { enabled: group != null });
-  if (status === "loading" || loading) return <Loading />;
-  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   if (!group) return <Code404 />;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,

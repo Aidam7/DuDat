@@ -6,7 +6,6 @@ import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import TaskProgressBar from "~/components/tasks/taskProgressBar";
@@ -43,7 +42,6 @@ export default function TaskDetail() {
     { enabled: task != null && task != undefined },
   );
   if (loading) return <Loading />;
-  if (!session) return <SignIn />;
   if (!task || !group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "/groups/" },

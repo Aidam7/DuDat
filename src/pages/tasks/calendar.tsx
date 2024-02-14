@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskCalendar from "~/components/tasks/taskCalendar";
 import { api } from "~/utils/api";
 
@@ -15,7 +14,6 @@ export default function Tasks() {
     },
     { enabled: session != null },
   );
-  if (!session) return <SignIn />;
   if (loading) return <Loading />;
   return (
     <>
