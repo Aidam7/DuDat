@@ -36,13 +36,11 @@ export default function CategoryAdminPanel() {
   ];
   return (
     <>
-      <a href={`../${category.id}`}>
-        <PageHeader
-          name={category.name}
-          description={category.description}
-          breadcrumbs={breadcrumbs}
-        />
-      </a>
+      <PageHeader
+        name={category.name}
+        description={category.description}
+        breadcrumbs={breadcrumbs}
+      />
       <div className="flex flex-col gap-5">
         <CategoryEdit category={category} />
         <CategoryDelete category={category} />
