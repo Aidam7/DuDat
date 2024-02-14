@@ -1,4 +1,4 @@
-import { BreadcrumbItem, Breadcrumbs, breadcrumbs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import React, { type FC } from "react";
 import { type IBreadcrumb } from "~/utils/types";
 
