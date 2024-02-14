@@ -105,17 +105,15 @@ export default function GroupDetail() {
         >
           {finishedTasksOpen ? "▲ Close" : "▼ Open Finished Tasks"}
         </Button>
-        {finishedTasksOpen && (
-          <div>
-            <TaskTable
-              loading={loading}
-              rows={finishedTasks}
-              doNotRenderGroup
-              renderFinishedOn
-              link={`/groups/${groupId}/tasks/`}
-            />
-          </div>
-        )}
+        <div className={finishedTasksOpen ? "" : "hidden"}>
+          <TaskTable
+            loading={loading}
+            rows={finishedTasks}
+            doNotRenderGroup
+            renderFinishedOn
+            link={`/groups/${groupId}/tasks/`}
+          />
+        </div>
       </div>
     </>
   );
