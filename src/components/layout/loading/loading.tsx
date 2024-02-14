@@ -5,7 +5,9 @@ import CenteredLayout from "../centeredLayout";
 const Loading: React.FC = () => {
   return (
     <CenteredLayout>
-      <Spinner>Loading...</Spinner>
+      <Spinner size="lg">
+        <span className="text-lg font-semibold">Loading...</span>
+      </Spinner>
     </CenteredLayout>
   );
 };
