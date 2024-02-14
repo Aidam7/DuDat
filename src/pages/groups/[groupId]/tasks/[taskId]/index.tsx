@@ -65,10 +65,8 @@ export default function TaskDetail() {
       </div>
       <CategoryChipDisplay categories={categories} displayWrapper />
       <TaskProgressBar task={task} />
-      <div className="mb-5">
-        <h2 className="text-4xl">Assignees</h2>
-        <UserTable rows={assignees} loading={loadingAssignees} />
-      </div>
+      <h2 className="text-4xl">Assignees</h2>
+      <UserTable rows={assignees} loading={loadingAssignees} />
       <div className="flex-co ml-auto flex gap-2">
         <Button
           color="warning"
@@ -79,15 +77,13 @@ export default function TaskDetail() {
             : "Open category panel"}
         </Button>
       </div>
-      {displayCategoryManage && (
-        <>
-          <h2 className="text-4xl">Categories</h2>
-          <TaskManageCategories
-            task={task}
-            link={`/groups/${groupId}/categories/`}
-          />
-        </>
-      )}
+      <div className={`${!displayCategoryManage && "hidden"}`}>
+        <h2 className="mb-5 text-4xl">Categories</h2>
+        <TaskManageCategories
+          task={task}
+          link={`/groups/${groupId}/categories/`}
+        />
+      </div>
     </div>
   );
 }
