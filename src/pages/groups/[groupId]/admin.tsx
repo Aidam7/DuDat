@@ -9,7 +9,7 @@ import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
-import { IBreadcrumb } from "~/utils/types";
+import { type IBreadcrumb } from "~/utils/types";
 
 export default function GroupAdminPanel() {
   const router = useRouter();

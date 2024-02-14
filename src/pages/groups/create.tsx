@@ -1,7 +1,7 @@
 import React from "react";
 import GroupCreateForm from "~/components/groups/groupCreate";
 import PageHeader from "~/components/layout/pageHeader";
-import { IBreadcrumb } from "~/utils/types";
+import { type IBreadcrumb } from "~/utils/types";
 
 const Create: React.FC = () => {
   const breadcrumbs: IBreadcrumb[] = [

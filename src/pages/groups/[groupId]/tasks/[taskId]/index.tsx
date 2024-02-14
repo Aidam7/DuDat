@@ -10,6 +10,7 @@ import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import TaskProgressBar from "~/components/tasks/taskProgressBar";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
+import { type IBreadcrumb } from "~/utils/types";
 export default function TaskDetail() {
   const [displayCategoryManage, setDisplayCategoryManage] = useState(false);
   const router = useRouter();
@@ -42,10 +43,20 @@ export default function TaskDetail() {
   if (!session) return <>Please sign in</>;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
+  const breadcrumbs: IBreadcrumb[] = [
+    { name: "Groups", link: "/groups/" },
+    { name: `${group.name}`, link: `/groups/${groupId}` },
+    { name: "Tasks", link: `/groups/${groupId}` },
+    { name: `${task.title}`, link: "." },
+  ];
   return (
     <div className="flex flex-col gap-5">
       <div className="mb-2 flex flex-row items-center max-sm:flex-col">
-        <PageHeader name={task.title} description={task.description} />
+        <PageHeader
+          name={task.title}
+          description={task.description}
+          breadcrumbs={breadcrumbs}
+        />
         <TaskActionPanel
           task={task}
           group={group}

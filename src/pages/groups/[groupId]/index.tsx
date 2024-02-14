@@ -9,7 +9,7 @@ import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
-import { IBreadcrumb } from "~/utils/types";
+import { type IBreadcrumb } from "~/utils/types";
 
 export default function GroupDetail() {
   const router = useRouter();

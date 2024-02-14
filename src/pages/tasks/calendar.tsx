@@ -17,7 +17,7 @@ export default function Tasks() {
   if (!session) return <>Please sign in</>;
   return (
     <>
-      <PageHeader name="Calendar" />
+      <PageHeader name="Calendar" breadcrumbs={[]} />
       {loading ? <Spinner>Loading...</Spinner> : <TaskCalendar tasks={tasks} />}
     </>
   );

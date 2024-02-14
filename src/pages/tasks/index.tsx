@@ -29,7 +29,7 @@ export default function Tasks() {
   const ongoingTasks = tasks?.filter((task) => task.finishedOn == null);
   return (
     <div className="flex flex-col gap-5">
-      <PageHeader name="Tasks" />
+      <PageHeader name="Tasks" breadcrumbs={[]} />
       <Input
         placeholder="Search for a task"
         value={query}

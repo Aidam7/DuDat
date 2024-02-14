@@ -5,7 +5,7 @@ import { useState } from "react";
 import GroupTable from "~/components/groups/groupTable";
 import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
-import { IBreadcrumb, type ITableColumns } from "~/utils/types";
+import { type ITableColumns } from "~/utils/types";
 
 export default function Groups() {
   const { data: session } = useSession();

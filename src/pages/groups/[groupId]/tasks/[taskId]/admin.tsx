@@ -9,6 +9,7 @@ import TaskDelete from "~/components/tasks/taskDelete";
 import TaskEdit from "~/components/tasks/taskEdit";
 import TaskRemoveAssignments from "~/components/tasks/taskRemoveAssignments";
 import { api } from "~/utils/api";
+import { type IBreadcrumb } from "~/utils/types";
 export default function TaskAdminPanel() {
   const router = useRouter();
   const taskId = router.query.taskId as string;
@@ -34,10 +35,21 @@ export default function TaskAdminPanel() {
     return <Code401 />;
   if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
+  const breadcrumbs: IBreadcrumb[] = [
+    { name: "Groups", link: "/groups/" },
+    { name: `${group.name}`, link: `/groups/${groupId}` },
+    { name: "Tasks", link: `/groups/${groupId}` },
+    { name: `${task.title}`, link: `/groups/${groupId}/tasks/${taskId}` },
+    { name: "Admin Panel", link: "" },
+  ];
   return (
     <>
       <a href={`../${task.id}`} className="mb-5">
-        <PageHeader name={task.title} description={task.description} />
+        <PageHeader
+          name={task.title}
+          description={task.description}
+          breadcrumbs={breadcrumbs}
+        />
       </a>
       <TaskConfirmFinished task={task} />
       <TaskAddAssignments group={group} task={task} />

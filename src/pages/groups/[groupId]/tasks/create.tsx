@@ -5,7 +5,7 @@ import Code404 from "~/components/layout/errorCodes/404";
 import PageHeader from "~/components/layout/pageHeader";
 import TaskCreateForm from "~/components/tasks/taskCreate";
 import { api } from "~/utils/api";
-import { IBreadcrumb } from "~/utils/types";
+import { type IBreadcrumb } from "~/utils/types";
 
 const Create: React.FC = () => {
   const router = useRouter();
