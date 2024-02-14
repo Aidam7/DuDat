@@ -2,7 +2,9 @@ import { Button } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
@@ -16,8 +18,8 @@ export default function CategoryDetail() {
     api.categories.getById.useQuery({ id: categoryId });
   const { data: tasks, isFetching: loadingTasks } =
     api.categories.getTasks.useQuery({ id: categoryId });
-  if (loading || status == "loading") return <div>Loading...</div>;
-  if (!session) return <>Please sign in</>;
+  if (loading || status == "loading") return <Loading />;
+  if (!session) return <SignIn />;
   if (!category) return <Code404 />;
   const isAuthor =
     category.authorId == session.user.id ||

@@ -2,7 +2,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import CategoryCreate from "~/components/categories/categoryCreate";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 
@@ -14,7 +16,8 @@ function CreateCategory() {
     { id: groupId },
     { enabled: !!session },
   );
-  if (status === "loading" || loading) return <div>Loading...</div>;
+  if (status === "loading" || loading) return <Loading />;
+  if (!session) return <SignIn />;
   if (!group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "/groups" },

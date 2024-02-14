@@ -1,7 +1,9 @@
 import { Button, Input } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
@@ -19,7 +21,8 @@ export default function Tasks() {
     },
     { enabled: session != null },
   );
-  if (!session) return <>Please sign in</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   const unConfirmedTasks = tasks?.filter(
     (task) => task.finishedOn != null && task.confirmedAsFinished == false,
   );

@@ -5,7 +5,9 @@ import { useState } from "react";
 import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import GroupActionPanel from "~/components/groups/groupActionPanel";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import UserTable from "~/components/users/table";
 import { api } from "~/utils/api";
@@ -39,8 +41,8 @@ export default function GroupDetail() {
     );
   const { data: categories, isFetching: loadingCategories } =
     api.categories.getByGroup.useQuery({ groupId }, { enabled: group != null });
-  if (status === "loading" || loading) return <>Loading...</>;
-  if (!session) return <>Please sign in</>;
+  if (status === "loading" || loading) return <Loading />;
+  if (!session) return <SignIn />;
   if (!group) return <Code404 />;
   const wishes = tasksAndWishes?.filter(
     (task) => task.taskAssignment.length == 0 && task.finishedOn == null,

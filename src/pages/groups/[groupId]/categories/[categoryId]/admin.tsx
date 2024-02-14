@@ -4,7 +4,9 @@ import CategoryDelete from "~/components/categories/categoryDelete";
 import CategoryEdit from "~/components/categories/categoryEdit";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 export default function CategoryAdminPanel() {
@@ -16,8 +18,8 @@ export default function CategoryAdminPanel() {
       { id: categoryId },
       { enabled: session != null },
     );
-  if (!session) return <>Please sign in</>;
-  if (loading) return <>Loading...</>;
+  if (loading) return <Loading />;
+  if (!session) return <SignIn />;
   if (!category) return <Code404 />;
   if (
     category.authorId != session.user.id &&

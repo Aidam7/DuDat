@@ -2,7 +2,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import TaskAddAssignments from "~/components/tasks/taskAddAssignments";
 import TaskConfirmFinished from "~/components/tasks/taskConfirmFinished";
 import TaskDelete from "~/components/tasks/taskDelete";
@@ -25,15 +27,15 @@ export default function TaskAdminPanel() {
     { enabled: session != null && isMember },
   );
   const { data: group } = api.groups.getById.useQuery({ id: groupId });
-  if (!session) return <>Please sign in</>;
-  if (authenticating) return <>Authenticating...</>;
+  if (loading) return <Loading />;
+  if (authenticating) return <Loading text="Authenticating..." />;
+  if (!session) return <SignIn />;
   if (
     !isMember ||
     (task?.authorId != session.user.id &&
       task?.group.ownerId != session.user.id)
   )
     return <Code401 />;
-  if (loading) return <>Loading...</>;
   if (!task || !group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "/groups/" },

@@ -1,6 +1,7 @@
-import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import TaskCalendar from "~/components/tasks/taskCalendar";
 import { api } from "~/utils/api";
 
@@ -14,11 +15,12 @@ export default function Tasks() {
     },
     { enabled: session != null },
   );
-  if (!session) return <>Please sign in</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   return (
     <>
       <PageHeader name="Calendar" breadcrumbs={[]} />
-      {loading ? <Spinner>Loading...</Spinner> : <TaskCalendar tasks={tasks} />}
+      <TaskCalendar tasks={tasks} />
     </>
   );
 }

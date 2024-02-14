@@ -3,7 +3,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import GroupTable from "~/components/groups/groupTable";
+import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 import { type ITableColumns } from "~/utils/types";
 
@@ -21,7 +23,8 @@ export default function Groups() {
     { enabled: session != null },
   );
   const router = useRouter();
-  if (!session) return <>Please sign in</>;
+  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   const columns: ITableColumns[] = [
     { key: "name", label: "Name" },
     { key: "description", label: "Description" },
