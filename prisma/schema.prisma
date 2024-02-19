@@ -55,6 +55,7 @@ model User {
   categoryOwnership      Category[]
   finishedTasksCount     Int               @default(0)
   finishedTasksLateCount Int               @default(0)
+  startedStreak          DateTime?
 
   @@index([name])
   @@index([id])
