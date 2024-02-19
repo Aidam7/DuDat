@@ -329,6 +329,7 @@ export const tasksRouter = createTRPCRouter({
           group: true,
         },
       });
+
       if (!task) throw new Error("Task not found");
       if (
         task.authorId != ctx.session.user.id &&
@@ -337,28 +338,57 @@ export const tasksRouter = createTRPCRouter({
         throw new Error(
           "You are not authorized to confirm this task as finished",
         );
-      let updatedTask;
-      if (!task.finishedOn) {
-        updatedTask = await ctx.prisma.task.update({
+
+      if (!task.finishedOn) throw new Error("Task is not finished yet");
+
+      if (task.confirmedAsFinished)
+        throw new Error("Task is already confirmed as finished");
+
+      const updatedTask = await ctx.prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          confirmedAsFinished: true,
+        },
+      });
+      updatedTask.finishedOn = task.finishedOn;
+
+      if (!updatedTask.dueOn) {
+        await ctx.prisma.user.updateMany({
           where: {
-            id: input.taskId,
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
           },
           data: {
-            finishedOn: new Date(),
-            confirmedAsFinished: true,
+            finishedTasksCount: {
+              increment: 1,
+            },
+          },
+        });
+        return updatedTask;
+      }
+
+      if (updatedTask.finishedOn > updatedTask.dueOn) {
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+          },
+          data: {
+            finishedTasksLateCount: {
+              increment: 1,
+            },
+            startedStreak: null,
           },
         });
       } else {
-        updatedTask = await ctx.prisma.task.update({
-          where: {
-            id: input.taskId,
-          },
-          data: {
-            confirmedAsFinished: true,
-          },
-        });
-      }
-      if (!updatedTask.dueOn) {
         await ctx.prisma.user.updateMany({
           where: {
             taskAssignment: {
@@ -383,58 +413,13 @@ export const tasksRouter = createTRPCRouter({
             startedStreak: null,
           },
           data: {
-            startedStreak: new Date(),
+            startedStreak: updatedTask.finishedOn,
           },
         });
-      } else {
-        const now = new Date();
-        await ctx.prisma.user.updateMany({
-          where: {
-            taskAssignment: {
-              some: {
-                taskId: input.taskId,
-              },
-            },
-          },
-          data: {
-            [now > updatedTask.dueOn
-              ? "finishedTasksLateCount"
-              : "finishedTasksCount"]: {
-              increment: 1,
-            },
-          },
-        });
-        if (now < updatedTask.dueOn) {
-          await ctx.prisma.user.updateMany({
-            where: {
-              taskAssignment: {
-                some: {
-                  taskId: input.taskId,
-                },
-              },
-              startedStreak: null,
-            },
-            data: {
-              startedStreak: new Date(),
-            },
-          });
-        } else {
-          await ctx.prisma.user.updateMany({
-            where: {
-              taskAssignment: {
-                some: {
-                  taskId: input.taskId,
-                },
-              },
-            },
-            data: {
-              startedStreak: null,
-            },
-          });
-        }
       }
       return updatedTask;
     }),
+
   edit: protectedProcedure
     .input(
       z.object({
