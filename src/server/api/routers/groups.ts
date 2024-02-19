@@ -7,9 +7,6 @@ import {
 } from "~/server/api/trpc";
 
 export const groupsRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.group.findMany();
-  }),
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {

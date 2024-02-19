@@ -3,9 +3,6 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const tasksRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.task.findMany();
-  }),
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -154,26 +151,6 @@ export const tasksRouter = createTRPCRouter({
           taskAssignment: true,
         },
       });
-    }),
-  isAuthorOrGroupOwner: protectedProcedure
-    .input(z.object({ taskId: z.string(), userId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const task = await ctx.prisma.task.findFirst({
-        where: {
-          id: input.taskId,
-        },
-        include: {
-          group: true,
-        },
-      });
-      if (!task) throw new Error("Task not found");
-      if (
-        task.authorId != ctx.session.user.id &&
-        task.group.ownerId != ctx.session.user.id &&
-        input.userId != ctx.session.user.id
-      )
-        throw new Error("You are not authorized to perform this action");
-      return task ? true : false;
     }),
   assignUser: protectedProcedure
     .input(z.object({ userId: z.string(), taskId: z.string() }))
