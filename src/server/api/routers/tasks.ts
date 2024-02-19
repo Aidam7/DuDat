@@ -373,7 +373,21 @@ export const tasksRouter = createTRPCRouter({
             },
           },
         });
+        await ctx.prisma.user.updateMany({
+          where: {
+            taskAssignment: {
+              some: {
+                taskId: input.taskId,
+              },
+            },
+            startedStreak: null,
+          },
+          data: {
+            startedStreak: new Date(),
+          },
+        });
       } else {
+        const now = new Date();
         await ctx.prisma.user.updateMany({
           where: {
             taskAssignment: {
@@ -383,13 +397,41 @@ export const tasksRouter = createTRPCRouter({
             },
           },
           data: {
-            [new Date() > updatedTask.dueOn
+            [now > updatedTask.dueOn
               ? "finishedTasksLateCount"
               : "finishedTasksCount"]: {
               increment: 1,
             },
           },
         });
+        if (now < updatedTask.dueOn) {
+          await ctx.prisma.user.updateMany({
+            where: {
+              taskAssignment: {
+                some: {
+                  taskId: input.taskId,
+                },
+              },
+              startedStreak: null,
+            },
+            data: {
+              startedStreak: new Date(),
+            },
+          });
+        } else {
+          await ctx.prisma.user.updateMany({
+            where: {
+              taskAssignment: {
+                some: {
+                  taskId: input.taskId,
+                },
+              },
+            },
+            data: {
+              startedStreak: null,
+            },
+          });
+        }
       }
       return updatedTask;
     }),
