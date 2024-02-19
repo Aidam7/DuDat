@@ -6,6 +6,7 @@ import { Pie } from "react-chartjs-2";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
+import UserDisplayStreak from "~/components/users/userStreakDisplay";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 export default function UserDetail() {
@@ -44,7 +45,7 @@ export default function UserDetail() {
           </Button>
         )}
       </div>
-
+      <UserDisplayStreak user={user} />
       <div className="w-full max-md:w-[50%] sm:w-[25%]">
         <Pie data={data} />
       </div>
