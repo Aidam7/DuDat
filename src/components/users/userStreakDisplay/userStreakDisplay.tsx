@@ -7,7 +7,7 @@ interface Props {
 }
 
 const UserDisplayStreak: FC<Props> = (props: Props) => {
-  const startedStreak = props.user.startedStreak as Date | null;
+  const startedStreak = props.user.startedStreak;
   return (
     <div className="flex items-center justify-center">
       {startedStreak ? (
