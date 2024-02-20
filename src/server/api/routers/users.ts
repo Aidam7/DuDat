@@ -21,11 +21,25 @@ export const usersRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.id !== input.id)
         throw new Error("You can only delete yourself");
+      const groupsOwned = await ctx.prisma.group.findMany({
+        where: { ownerId: input.id },
+      });
+      if (groupsOwned.length > 0)
+        throw Error("Cannot delete user that owns groups");
+      const categoriesOwned = await ctx.prisma.category.findMany({
+        where: { authorId: input.id },
+      });
+      const tasksOwned = await ctx.prisma.task.findMany({
+        where: { authorId: input.id },
+      });
+      if (tasksOwned.length > 0)
+        throw Error("Cannot delete user that owns tasks");
+      if (categoriesOwned.length > 0)
+        throw Error("Cannot delete user that owns categories");
       const deletedUser = await ctx.prisma.user.delete({
         where: { id: input.id },
       });
-      if (deletedUser) return true;
-      return false;
+      return deletedUser ? true : false;
     }),
   locateByName: protectedProcedure
     .input(z.object({ name: z.string() }))
