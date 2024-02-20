@@ -40,9 +40,17 @@ export default function UserDetail() {
       <div className="flex flex-row items-center gap-5">
         <Image src={user.image} alt={`Users image`} width={200} height={200} />{" "}
         {isSelf && (
-          <Button color="primary" onClick={() => void signOut()}>
-            {sessionData ? "Sign out" : "Sign in"}
-          </Button>
+          <>
+            <Button color="primary" onClick={() => void signOut()}>
+              {sessionData ? "Sign out" : "Sign in"}
+            </Button>
+            <Button
+              color="warning"
+              onClick={() => void router.push(`/users/${id}/settings`)}
+            >
+              Settings
+            </Button>
+          </>
         )}
       </div>
       <UserDisplayStreak user={user} />
