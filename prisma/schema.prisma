@@ -79,7 +79,7 @@ model Task {
   finishedOn          DateTime?
   group               Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId             String
-  author              User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author              User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
   authorId            String
   taskAssignment      TaskAssignment[]
   categories          CategoryAssignment[]
