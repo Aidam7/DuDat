@@ -28,7 +28,7 @@ export default function GroupAdminPanel() {
   if (session?.user.id != group.ownerId) return <Code401 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "../" },
-    { name: `${group.name}`, link: `./` },
+    { name: `${group.name}`, link: `/groups/${groupId}` },
     { name: "Admin Panel", link: `` },
   ];
   return (
