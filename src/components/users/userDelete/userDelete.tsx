@@ -1,6 +1,5 @@
 import {
   Button,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -10,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { type User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React, { useState, type FC } from "react";
+import React, { type FC } from "react";
 import { api } from "~/utils/api";
 
 interface Props {
@@ -23,6 +22,7 @@ const UserDelete: FC<Props> = (props: Props) => {
     isOpen: isConfirmOpen,
     onOpen: onConfirmOpen,
     onOpenChange: onConfirmOpenChange,
+    onClose: onConfirmClose,
   } = useDisclosure();
   const {
     isOpen: isErrorOpen,
@@ -39,8 +39,9 @@ const UserDelete: FC<Props> = (props: Props) => {
         onSuccess: () => {
           router.push(`/`);
         },
-        onError(error, variables, context) {
-          return error;
+        onError() {
+          onConfirmClose();
+          onErrorOpen();
         },
       },
     );
@@ -55,7 +56,7 @@ const UserDelete: FC<Props> = (props: Props) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h1>{"Sorry to see you go :("}</h1>
+                <h1 className="text-2xl">{"Sorry to see you go :("}</h1>
                 <h4>Are you sure you want to delete your account?</h4>
               </ModalHeader>
               <ModalBody>
@@ -81,20 +82,17 @@ const UserDelete: FC<Props> = (props: Props) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h4>An error occurred</h4>
+                <h4>{"We couldn't delete your account"}</h4>
               </ModalHeader>
               <ModalBody>
                 <span>
-                  This process is{" "}
-                  <span className="font-bold text-red-500">irreversible</span>.
+                  {userDeleteMutation.error?.message ??
+                    "An unknown error occurred."}
                 </span>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onPress={onClose}>
                   Close
-                </Button>
-                <Button color="danger" variant="flat" onPress={handleDelete}>
-                  Delete
                 </Button>
               </ModalFooter>
             </>
