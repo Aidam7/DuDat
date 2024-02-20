@@ -10,7 +10,7 @@ const Code401: React.FC = () => {
       <p className="mb-10 hidden text-3xl">
         You are not authorized to enter this page.
       </p>
-      <Image src={img401} alt="403" width={500} height={500} />
+      <Image src={img401} alt="401" width={500} height={500} />
     </CenteredLayout>
   );
 };
