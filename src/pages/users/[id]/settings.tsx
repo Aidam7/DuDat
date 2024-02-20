@@ -6,6 +6,7 @@ import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
 import UserDelete from "~/components/users/userDelete";
+import UserEdit from "~/components/users/userEdit";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 
@@ -25,9 +26,16 @@ export default function UserSettings() {
   ];
   if (user.id !== sessionData?.user.id) return <Code401 />;
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <PageHeader name="Settings" breadcrumbs={breadcrumbs} />
-      <UserDelete user={user} />
-    </>
+      <div>
+        <h2 className="mb-5 text-2xl font-semibold">Change your name</h2>
+        <UserEdit user={user} />
+      </div>
+      <div>
+        <h2 className="mb-5 text-2xl font-semibold">Delete your account</h2>
+        <UserDelete user={user} />
+      </div>
+    </div>
   );
 }
