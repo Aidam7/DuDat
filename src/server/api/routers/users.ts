@@ -94,4 +94,14 @@ export const usersRouter = createTRPCRouter({
         },
       });
     }),
+  editName: protectedProcedure
+    .input(z.object({ userId: z.string(), newName: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.session.user.id != input.userId)
+        throw new Error("You can only edit yourself");
+      return await ctx.prisma.user.update({
+        where: { id: input.userId },
+        data: { name: input.newName },
+      });
+    }),
 });
