@@ -78,7 +78,6 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Create a task</h3>
         <Input
           type="text"
           label="Task Title"

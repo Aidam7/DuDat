@@ -25,10 +25,10 @@ const Create: React.FC = () => {
     { name: "Create", link: "." },
   ];
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <PageHeader name="Create task" breadcrumbs={breadcrumbs} />
       <TaskCreateForm groupId={groupId} />
-    </>
+    </div>
   );
 };
 
