@@ -147,6 +147,15 @@ export const groupsRouter = createTRPCRouter({
           authorId: group.ownerId,
         },
       });
+      await ctx.prisma.category.updateMany({
+        where: {
+          groupId: input.groupId,
+          authorId: input.userId,
+        },
+        data: {
+          authorId: group.ownerId,
+        },
+      });
       await ctx.prisma.taskAssignment.deleteMany({
         where: {
           userId: input.userId,
@@ -182,6 +191,10 @@ export const groupsRouter = createTRPCRouter({
   leave: protectedProcedure
     .input(z.object({ groupId: z.string() }))
     .mutation(async ({ ctx, input }) => {
+      const group = await ctx.prisma.group.findFirst({
+        where: { id: input.groupId },
+      });
+      if (!group) throw new Error("Group not found");
       const deleted = await ctx.prisma.groupMembership.deleteMany({
         where: {
           groupId: input.groupId,
@@ -194,6 +207,24 @@ export const groupsRouter = createTRPCRouter({
         },
       });
       if (!deleted) return false;
+      await ctx.prisma.task.updateMany({
+        where: {
+          groupId: input.groupId,
+          authorId: ctx.session.user.id,
+        },
+        data: {
+          authorId: group.ownerId,
+        },
+      });
+      await ctx.prisma.category.updateMany({
+        where: {
+          groupId: input.groupId,
+          authorId: ctx.session.user.id,
+        },
+        data: {
+          authorId: group.ownerId,
+        },
+      });
       await ctx.prisma.taskAssignment.deleteMany({
         where: {
           userId: ctx.session.user.id,
