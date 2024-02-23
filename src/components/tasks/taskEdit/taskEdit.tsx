@@ -73,7 +73,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
         className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Edit this task</h3>
+        <h3 className="mb-4 text-2xl font-bold">Edit this task</h3>
         <Input
           type="text"
           label="Task Title"
