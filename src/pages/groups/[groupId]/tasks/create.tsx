@@ -20,8 +20,8 @@ const Create: React.FC = () => {
   if (!group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: ".../" },
-    { name: `${group.name}`, link: "../" },
-    { name: "Tasks", link: "../" },
+    { name: `${group.name}`, link: `/groups/${group.id}` },
+    { name: "Tasks", link: `/groups/${group.id}` },
     { name: "Create", link: "." },
   ];
   return (
