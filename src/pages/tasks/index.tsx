@@ -37,7 +37,10 @@ export default function Tasks() {
         onValueChange={setQuery}
       />
       <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
-      <h2 className="pb-5 text-4xl font-semibold">Unconfirmed tasks</h2>
+      <h2 className="text-4xl font-semibold">Unconfirmed tasks</h2>
+      <p className="pl-5 text-2xl italic">
+        Please check that these tasks have been finished
+      </p>
       <TaskTable loading={loading} rows={unConfirmedTasks} link="/tasks/" />
       <Button
         onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}
