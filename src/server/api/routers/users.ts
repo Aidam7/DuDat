@@ -1,19 +1,31 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { leaveGroup } from "./groups";
 
 export const usersRouter = createTRPCRouter({
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.user.findFirst({
         where: {
           id: input.id,
+        },
+      });
+    }),
+  getByIdExtended: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.user.findFirst({
+        where: {
+          id: input.id,
+        },
+        include: {
+          groupOwnership: true,
+          groupMembership: true,
+          taskOwnership: true,
+          categoryOwnership: true,
         },
       });
     }),
@@ -25,32 +37,38 @@ export const usersRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
           message: "Cannot delete other users",
         });
-      const groupsOwned = await ctx.prisma.group.findMany({
-        where: { ownerId: input.id },
+      const groups = await ctx.prisma.group.findMany({
+        where: { groupMembership: { some: { userId: ctx.session.user.id } } },
       });
+      const groupsMemberOf = groups.filter(
+        (group) => group.ownerId !== ctx.session.user.id,
+      );
+      const groupsOwned = groups.filter(
+        (group) => group.ownerId === ctx.session.user.id,
+      );
       if (groupsOwned.length > 0)
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "Cannot delete user with group ownership",
         });
-      const categoriesOwned = await ctx.prisma.category.findMany({
-        where: { authorId: input.id },
-      });
-      const tasksOwned = await ctx.prisma.task.findMany({
-        where: { authorId: input.id },
-      });
-      if (tasksOwned.length > 0)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Cannot delete user with task ownership",
+      for (const group of groupsMemberOf) {
+        const left = await leaveGroup({
+          prisma: ctx.prisma,
+          input: { groupId: group.id, userId: ctx.session.user.id },
         });
-      if (categoriesOwned.length > 0)
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Cannot delete user with category ownership",
-        });
+        if (!left)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to leave group",
+          });
+      }
       const deletedUser = await ctx.prisma.user.delete({
-        where: { id: input.id },
+        where: {
+          id: input.id,
+          groupOwnership: { none: {} },
+          taskOwnership: { none: {} },
+          categoryOwnership: { none: {} },
+        },
       });
       return deletedUser ? true : false;
     }),

@@ -7,6 +7,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { api } from "~/utils/api";
@@ -15,11 +16,16 @@ interface Props {
 }
 export const GroupLeave: FC<Props> = (props: Props) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { data } = useSession();
   const leaveGroupMutation = api.groups.leave.useMutation();
   const router = useRouter();
   const handleLeave = () => {
+    if (!data?.user.id) return;
     leaveGroupMutation.mutate(
-      { groupId: props.groupId },
+      {
+        groupId: props.groupId,
+        userId: data.user.id,
+      },
       {
         onSuccess: () => {
           router.push("/groups");

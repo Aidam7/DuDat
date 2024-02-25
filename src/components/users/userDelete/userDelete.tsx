@@ -9,7 +9,8 @@ import {
 } from "@nextui-org/react";
 import { type User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React, { type FC } from "react";
+import React, { useState, type FC } from "react";
+import Loading from "~/components/layout/loading";
 import { api } from "~/utils/api";
 
 interface Props {
@@ -18,6 +19,9 @@ interface Props {
 
 const UserDelete: FC<Props> = (props: Props) => {
   const userDeleteMutation = api.users.deleteById.useMutation();
+  const { data: user, isFetching } = api.users.getByIdExtended.useQuery({
+    id: props.user.id,
+  });
   const {
     isOpen: isConfirmOpen,
     onOpen: onConfirmOpen,
@@ -30,7 +34,18 @@ const UserDelete: FC<Props> = (props: Props) => {
     onOpenChange: onErrorOpenChange,
   } = useDisclosure();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("An unknown error occurred");
+  if (isFetching) return <Loading />;
+  if (!user) return null;
   const handleDelete = async () => {
+    if (!!user.groupOwnership) {
+      setErrorMessage(
+        "Please transfer all your groups before deleting your account.",
+      );
+      onConfirmClose();
+      onErrorOpen();
+      return;
+    }
     await userDeleteMutation.mutateAsync(
       {
         id: props.user.id,
@@ -40,6 +55,9 @@ const UserDelete: FC<Props> = (props: Props) => {
           router.push(`/`);
         },
         onError() {
+          setErrorMessage(
+            userDeleteMutation.error?.message ?? "An unknown error occurred",
+          );
           onConfirmClose();
           onErrorOpen();
         },
@@ -85,10 +103,7 @@ const UserDelete: FC<Props> = (props: Props) => {
                 <h4>{"We couldn't delete your account"}</h4>
               </ModalHeader>
               <ModalBody>
-                <span>
-                  {userDeleteMutation.error?.message ??
-                    "An unknown error occurred."}
-                </span>
+                <span>{errorMessage}</span>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onPress={onClose}>
