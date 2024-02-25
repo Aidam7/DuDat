@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -36,7 +37,11 @@ export const categoriesRouter = createTRPCRouter({
           groupId: input.groupId,
         },
       });
-      if (!isMember) throw new Error("Not a member of this group");
+      if (!isMember)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Must be a member of group",
+        });
       return await ctx.prisma.category.create({
         data: {
           name: input.name,
@@ -88,7 +93,8 @@ export const categoriesRouter = createTRPCRouter({
           authorId: ctx.session.user.id,
         },
       });
-      if (!task) throw new Error("Task not found");
+      if (!task)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Task not found" });
       const category = await ctx.prisma.category.findFirst({
         where: {
           id: input.categoryId,
@@ -101,7 +107,11 @@ export const categoriesRouter = createTRPCRouter({
           },
         },
       });
-      if (!category) throw new Error("Category not found");
+      if (!category)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Category not found",
+        });
       return await ctx.prisma.categoryAssignment.create({
         data: {
           taskId: input.taskId,

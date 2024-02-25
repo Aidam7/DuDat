@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -20,12 +21,18 @@ export const usersRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.id !== input.id)
-        throw new Error("You can only delete yourself");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Cannot delete other users",
+        });
       const groupsOwned = await ctx.prisma.group.findMany({
         where: { ownerId: input.id },
       });
       if (groupsOwned.length > 0)
-        throw Error("Cannot delete user that owns groups");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot delete user with group ownership",
+        });
       const categoriesOwned = await ctx.prisma.category.findMany({
         where: { authorId: input.id },
       });
@@ -33,9 +40,15 @@ export const usersRouter = createTRPCRouter({
         where: { authorId: input.id },
       });
       if (tasksOwned.length > 0)
-        throw Error("Cannot delete user that owns tasks");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot delete user with task ownership",
+        });
       if (categoriesOwned.length > 0)
-        throw Error("Cannot delete user that owns categories");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Cannot delete user with category ownership",
+        });
       const deletedUser = await ctx.prisma.user.delete({
         where: { id: input.id },
       });
@@ -112,7 +125,10 @@ export const usersRouter = createTRPCRouter({
     .input(z.object({ userId: z.string(), newName: z.string() }))
     .mutation(async ({ ctx, input }) => {
       if (ctx.session.user.id != input.userId)
-        throw new Error("You can only edit yourself");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Cannot edit other users",
+        });
       return await ctx.prisma.user.update({
         where: { id: input.userId },
         data: { name: input.newName },
