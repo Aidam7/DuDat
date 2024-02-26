@@ -7,7 +7,7 @@ import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 
-function CreateCategory() {
+function CategoryCreate() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
@@ -31,4 +31,4 @@ function CreateCategory() {
   );
 }
 
-export default CreateCategory;
+export default CategoryCreate;

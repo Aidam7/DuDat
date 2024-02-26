@@ -4,7 +4,7 @@ import PageHeader from "~/components/layout/pageHeader";
 import TaskCalendar from "~/components/tasks/taskCalendar";
 import { api } from "~/utils/api";
 
-export default function Tasks() {
+export default function TaskCalendarPage() {
   const { data: session } = useSession();
   const findTasksQuery = api.tasks.locateByAssignee;
   const assigneeId = session ? session.user.id : "";

@@ -3,7 +3,7 @@ import GroupCreateForm from "~/components/groups/groupCreate";
 import PageHeader from "~/components/layout/pageHeader";
 import { type IBreadcrumb } from "~/utils/types";
 
-const Create: React.FC = () => {
+const GroupCreate: React.FC = () => {
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "./" },
     { name: `Create`, link: "." },
@@ -16,4 +16,4 @@ const Create: React.FC = () => {
   );
 };
 
-export default Create;
+export default GroupCreate;

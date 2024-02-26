@@ -8,7 +8,7 @@ import TaskCreateForm from "~/components/tasks/taskCreate";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 
-const Create: React.FC = () => {
+const TaskCreate: React.FC = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const groupId = router.query.groupId as string;
@@ -32,4 +32,4 @@ const Create: React.FC = () => {
   );
 };
 
-export default Create;
+export default TaskCreate;
