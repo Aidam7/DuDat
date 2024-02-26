@@ -38,7 +38,8 @@ const UserDelete: FC<Props> = (props: Props) => {
   if (isFetching) return <Loading />;
   if (!user) return null;
   const handleDelete = async () => {
-    if (!!user.groupOwnership) {
+    console.log(user.groupOwnership);
+    if (user.groupOwnership.length > 0) {
       setErrorMessage(
         "Please transfer all your groups before deleting your account.",
       );
