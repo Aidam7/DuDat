@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { api } from "~/utils/api";
+import TaskConfirmFinished from "../taskConfirmFinished";
 interface Props {
   task: Task;
   group: Group;
@@ -52,14 +53,17 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
         </Button>
       )}
       {hasPerm && (
-        <Button
-          color="warning"
-          onClick={() =>
-            router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
-          }
-        >
-          Settings
-        </Button>
+        <>
+          <TaskConfirmFinished task={task} />
+          <Button
+            color="warning"
+            onClick={() =>
+              router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
+            }
+          >
+            Settings
+          </Button>
+        </>
       )}
     </>
   );

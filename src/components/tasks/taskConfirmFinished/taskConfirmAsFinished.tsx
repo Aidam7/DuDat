@@ -35,6 +35,7 @@ const TaskConfirmFinished: React.FC<Props> = (props: Props) => {
       },
     );
   }
+  if (!props.task.finishedOn) return null;
   return (
     <>
       <Button

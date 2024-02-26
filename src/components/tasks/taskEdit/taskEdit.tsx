@@ -117,7 +117,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
             dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
           />
         </div>
-        <Input type="submit" value="Submit" />
+        <Input type="submit" value="Submit" color="primary" />
       </form>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">

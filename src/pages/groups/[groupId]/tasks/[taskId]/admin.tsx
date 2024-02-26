@@ -36,8 +36,8 @@ export default function TaskAdminPanel() {
     { name: "Admin Panel", link: "" },
   ];
   return (
-    <>
-      <a href={`../${task.id}`} className="mb-5">
+    <div className="flex flex-col gap-5">
+      <a href={`../${task.id}`}>
         <PageHeader
           name={task.title}
           description={task.description}
@@ -48,8 +48,7 @@ export default function TaskAdminPanel() {
       <TaskAddAssignments group={group} task={task} />
       <TaskRemoveAssignments group={group} task={task} />
       <TaskEdit task={task} />
-      <div className="mb-2" />
       <TaskDelete task={task} />
-    </>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -54,16 +55,13 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
     );
   }
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Transfer ownership</h2>
-      <input
+      <Input
         placeholder="Search for a new owner"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      ></Input>
       <Table
         isStriped
         onRowAction={(key) => router.push(`/users/${key}`)}
@@ -147,7 +145,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 export default GroupTransferOwnership;

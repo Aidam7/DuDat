@@ -126,7 +126,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         <Switch isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
         </Switch>
-        <Input type="submit" value="Submit" />
+        <Input type="submit" value="Submit" color="primary" />
       </form>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">
