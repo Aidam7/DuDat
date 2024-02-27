@@ -9,6 +9,7 @@ import Head from "next/head";
 import DuDatNavbar from "~/components/layout/navbar/";
 import "~/styles/globals.css";
 import "../components/tasks/taskCalendar/calendar.scss";
+import "react-datepicker/dist/react-datepicker.css";
 import Footer from "~/components/layout/footer";
 import CheckAuth from "~/components/auth/checkAuth";
 

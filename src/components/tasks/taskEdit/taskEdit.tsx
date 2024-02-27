@@ -13,7 +13,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
 interface Props {
   task: Task;
