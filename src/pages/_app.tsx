@@ -7,11 +7,11 @@ import { Analytics } from "@vercel/analytics/react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import DuDatNavbar from "~/components/layout/navbar/";
-import "~/styles/globals.css";
 import "../components/tasks/taskCalendar/calendar.scss";
 import "react-datepicker/dist/react-datepicker.css";
 import Footer from "~/components/layout/footer";
 import CheckAuth from "~/components/auth/checkAuth";
+import "~/styles/globals.css";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   // getLayout?: (page: ReactElement) => ReactNode,

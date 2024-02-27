@@ -8,3 +8,6 @@
 :root::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+.react-datepicker-popper {
+  z-index: 20 !important;
+}
