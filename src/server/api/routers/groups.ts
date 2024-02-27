@@ -1,11 +1,7 @@
 import { type PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const leaveGroupInputSchema = z.object({
   groupId: z.string(),
@@ -131,13 +127,20 @@ export const groupsRouter = createTRPCRouter({
         },
       });
     }),
-  locateByName: publicProcedure
+  locateByName: protectedProcedure
     .input(z.object({ name: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.group.findMany({
         where: {
           name: {
             contains: input.name,
+          },
+          groupMembership: {
+            some: {
+              userId: {
+                equals: ctx.session.user.id,
+              },
+            },
           },
         },
       });
