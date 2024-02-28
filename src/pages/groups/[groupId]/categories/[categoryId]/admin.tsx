@@ -12,7 +12,7 @@ export default function CategoryAdminPanel() {
   const router = useRouter();
   const categoryId = router.query.categoryId as string;
   const { data: session } = useSession();
-  const { data: category, isFetching: loading } =
+  const { data: category, isInitialLoading: loading } =
     api.categories.getById.useQuery(
       { id: categoryId },
       { enabled: session != null },

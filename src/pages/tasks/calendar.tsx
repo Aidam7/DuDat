@@ -8,7 +8,7 @@ export default function TaskCalendarPage() {
   const { data: session } = useSession();
   const findTasksQuery = api.tasks.locateByAssignee;
   const assigneeId = session ? session.user.id : "";
-  const { data: tasks, isFetching: loading } = findTasksQuery.useQuery(
+  const { data: tasks, isInitialLoading: loading } = findTasksQuery.useQuery(
     {
       assigneeId: assigneeId,
     },

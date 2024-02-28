@@ -13,7 +13,7 @@ export default function Groups() {
   const [query, setQuery] = useState("");
   let memberId = "";
   if (session) memberId = session.user.id;
-  const { data: groups, isFetching: loading } = findGroups.useQuery(
+  const { data: groups, isInitialLoading: loading } = findGroups.useQuery(
     {
       name: query,
       memberId: memberId,

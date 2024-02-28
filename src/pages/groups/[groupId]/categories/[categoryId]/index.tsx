@@ -13,7 +13,7 @@ export default function CategoryDetail() {
   const { data: session } = useSession();
   const categoryId = router.query.categoryId as string;
   const groupId = router.query.groupId as string;
-  const { data: category, isFetching: loading } =
+  const { data: category, isInitialLoading: loading } =
     api.categories.getById.useQuery({ id: categoryId });
   const { data: tasks, isFetching: loadingTasks } =
     api.categories.getTasks.useQuery({ id: categoryId });

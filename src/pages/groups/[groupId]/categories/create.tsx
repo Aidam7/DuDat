@@ -11,10 +11,8 @@ function CategoryCreatePage() {
   const router = useRouter();
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: group, isFetching: loading } = api.groups.getById.useQuery(
-    { id: groupId },
-    { enabled: !!session },
-  );
+  const { data: group, isInitialLoading: loading } =
+    api.groups.getById.useQuery({ id: groupId }, { enabled: !!session });
   if (loading) return <Loading />;
   if (!group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [

@@ -18,12 +18,13 @@ export default function GroupDetail() {
   const { data: session } = useSession();
   const findTasks = api.tasks.locateByName;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
-  const { data: group, isFetching: loading } = api.groups.getById.useQuery(
-    { id: groupId },
-    {
-      enabled: session != null,
-    },
-  );
+  const { data: group, isInitialLoading: loading } =
+    api.groups.getById.useQuery(
+      { id: groupId },
+      {
+        enabled: session != null,
+      },
+    );
   const { data: tasksAndWishes } = findTasks.useQuery({
     name: "",
     groupId,

@@ -14,7 +14,7 @@ export default function UserSettings() {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const id = router.query.id as string;
-  const { data: user, isFetching: loading } = api.users.getById.useQuery({
+  const { data: user, isInitialLoading: loading } = api.users.getById.useQuery({
     id,
   });
   if (loading) return <Loading />;

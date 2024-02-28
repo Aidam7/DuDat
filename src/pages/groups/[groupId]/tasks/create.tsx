@@ -12,11 +12,9 @@ const TaskCreate: React.FC = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const groupId = router.query.groupId as string;
-  const { data: group, isFetching } = api.groups.getById.useQuery(
-    { id: groupId },
-    { enabled: !!session },
-  );
-  if (isFetching) return <Loading />;
+  const { data: group, isInitialLoading: loading } =
+    api.groups.getById.useQuery({ id: groupId }, { enabled: !!session });
+  if (loading) return <Loading />;
   if (!group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: ".../" },

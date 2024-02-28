@@ -16,7 +16,7 @@ export default function TaskAdminPanel() {
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
+  const { data: task, isInitialLoading: loading } = api.tasks.getById.useQuery(
     { id: taskId },
     { enabled: session != null },
   );

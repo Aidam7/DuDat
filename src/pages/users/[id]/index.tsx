@@ -14,7 +14,7 @@ export default function UserDetail() {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const router = useRouter();
   const id = router.query.id as string;
-  const { data: user, isFetching: loading } = api.users.getById.useQuery({
+  const { data: user, isInitialLoading: loading } = api.users.getById.useQuery({
     id,
   });
   if (loading) return <Loading />;

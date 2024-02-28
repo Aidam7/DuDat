@@ -17,13 +17,14 @@ export default function GroupAdminPanel() {
   const groupId = router.query.groupId as string;
 
   const { data: session } = useSession();
-  const { data: group, isFetching } = api.groups.getById.useQuery(
-    { id: groupId },
-    {
-      enabled: session != null,
-    },
-  );
-  if (isFetching) return <Loading />;
+  const { data: group, isInitialLoading: loading } =
+    api.groups.getById.useQuery(
+      { id: groupId },
+      {
+        enabled: session != null,
+      },
+    );
+  if (loading) return <Loading />;
   if (!group) return <Code404 />;
   if (session?.user.id != group.ownerId) return <Code401 />;
   const breadcrumbs: IBreadcrumb[] = [
