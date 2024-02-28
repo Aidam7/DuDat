@@ -5,7 +5,6 @@ import { useState } from "react";
 import GroupTable from "~/components/groups/groupTable";
 import PageHeader from "~/components/layout/pageHeader";
 import { api } from "~/utils/api";
-import { type ITableColumns } from "~/utils/types";
 
 export default function Groups() {
   const { data: session } = useSession();
@@ -21,10 +20,6 @@ export default function Groups() {
     { enabled: session != null },
   );
   const router = useRouter();
-  const columns: ITableColumns[] = [
-    { key: "name", label: "Name" },
-    { key: "description", label: "Description" },
-  ];
   return (
     <>
       <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
@@ -43,7 +38,7 @@ export default function Groups() {
         value={query}
         onValueChange={setQuery}
       />
-      <GroupTable columns={columns} loading={loading} rows={groups} />
+      <GroupTable loading={loading} rows={groups} />
     </>
   );
 }
