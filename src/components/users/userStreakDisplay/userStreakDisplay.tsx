@@ -9,7 +9,7 @@ interface Props {
 const UserDisplayStreak: FC<Props> = (props: Props) => {
   const startedStreak = props.user.startedStreak;
   return (
-    <div className="flex items-center justify-center">
+    <div className="w-fit">
       {startedStreak ? (
         <div className="rounded-full bg-green-500 px-4 py-2 text-white">
           Streak: {formatDateToString(startedStreak)}
