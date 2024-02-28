@@ -20,12 +20,7 @@ import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { api } from "~/utils/api";
-import { type ITableColumns } from "~/utils/types";
 
-const columns: ITableColumns[] = [
-  { label: "User", key: "name" },
-  { label: "", key: "actions" },
-];
 interface Props {
   group: Group;
 }
@@ -67,10 +62,9 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
         onRowAction={(key) => router.push(`/users/${key}`)}
         selectionMode="single"
       >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
+        <TableHeader>
+          <TableColumn key="name">User</TableColumn>
+          <TableColumn key="actions">{""}</TableColumn>
         </TableHeader>
         <TableBody
           items={users}
