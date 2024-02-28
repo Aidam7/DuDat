@@ -10,10 +10,8 @@ import {
 import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
-import { type ITableColumns } from "~/utils/types";
 
 type Props = {
-  columns: ITableColumns[];
   rows: Group[] | null | undefined;
   loading: boolean;
 };
@@ -25,7 +23,7 @@ export const GroupTable: FC<Props> = (props: Props) => {
       isStriped
       selectionMode="single"
     >
-      <TableHeader columns={props.columns}>
+      <TableHeader>
         <TableColumn>Name</TableColumn>
         <TableColumn>Description</TableColumn>
       </TableHeader>
