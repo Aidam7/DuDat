@@ -5,12 +5,12 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Skeleton,
   useDisclosure,
 } from "@nextui-org/react";
 import { type User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React, { useState, type FC } from "react";
-import Loading from "~/components/layout/loading";
 import { api } from "~/utils/api";
 
 interface Props {
@@ -35,7 +35,6 @@ const UserDelete: FC<Props> = (props: Props) => {
   } = useDisclosure();
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("An unknown error occurred");
-  if (isFetching) return <Loading />;
   if (!user) return null;
   const handleDelete = async () => {
     console.log(user.groupOwnership);
@@ -67,9 +66,11 @@ const UserDelete: FC<Props> = (props: Props) => {
   };
   return (
     <>
-      <Button onPress={onConfirmOpen} color="danger" className="w-full">
-        Delete your account
-      </Button>
+      <Skeleton isLoaded={!isFetching} className="rounded-xl bg-danger">
+        <Button onPress={onConfirmOpen} color="danger" className="w-full">
+          Delete your account
+        </Button>
+      </Skeleton>
       <Modal isOpen={isConfirmOpen} onOpenChange={onConfirmOpenChange}>
         <ModalContent>
           {(onClose) => (
