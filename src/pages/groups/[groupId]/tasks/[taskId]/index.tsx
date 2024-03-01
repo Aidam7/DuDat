@@ -51,7 +51,7 @@ export default function TaskDetail() {
   ];
   return (
     <div className="flex flex-col gap-5">
-      <div className="mb-2 flex flex-row items-center max-sm:flex-col">
+      <div className="flex flex-row items-center max-sm:flex-col">
         <PageHeader
           name={task.title}
           description={task.description}
