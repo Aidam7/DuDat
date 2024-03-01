@@ -12,12 +12,13 @@ import { useRouter } from "next/navigation";
 import { type FC } from "react";
 
 type Props = {
-  rows: Category[];
+  rows: Category[] | null | undefined;
   loading: boolean;
   link: string;
 };
 export const CategoryTable: FC<Props> = (props: Props) => {
   const router = useRouter();
+  const rows = props.rows ?? [];
   const tableHeader = (
     <TableHeader>
       <TableColumn>Title</TableColumn>
@@ -26,7 +27,7 @@ export const CategoryTable: FC<Props> = (props: Props) => {
   );
   const tableBody = (
     <TableBody
-      items={props.rows}
+      items={rows}
       isLoading={props.loading}
       loadingContent={<Spinner label="Loading..." />}
       emptyContent={"We couldn't find anything"}

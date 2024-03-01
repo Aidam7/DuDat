@@ -1,15 +1,72 @@
+import { type PrismaClient } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+export const leaveGroupInputSchema = z.object({
+  groupId: z.string(),
+  userId: z.string(),
+});
+
+export async function leaveGroup({
+  prisma,
+  input,
+}: {
+  prisma: PrismaClient;
+  input: z.infer<typeof leaveGroupInputSchema>;
+}) {
+  const group = await prisma.group.findFirst({
+    where: { id: input.groupId },
+  });
+  if (!group)
+    throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
+  if (group.ownerId === input.userId)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "The Dutchman must have a captain!",
+    });
+  const deleted = await prisma.groupMembership.deleteMany({
+    where: {
+      groupId: input.groupId,
+      group: {
+        isNot: {
+          ownerId: input.userId,
+        },
+      },
+      userId: input.userId,
+    },
+  });
+  if (!deleted) return false;
+  await prisma.task.updateMany({
+    where: {
+      groupId: input.groupId,
+      authorId: input.userId,
+    },
+    data: {
+      authorId: group.ownerId,
+    },
+  });
+  await prisma.category.updateMany({
+    where: {
+      groupId: input.groupId,
+      authorId: input.userId,
+    },
+    data: {
+      authorId: group.ownerId,
+    },
+  });
+  await prisma.taskAssignment.deleteMany({
+    where: {
+      userId: input.userId,
+      task: {
+        groupId: input.groupId,
+      },
+    },
+  });
+  return true;
+}
 
 export const groupsRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.group.findMany();
-  }),
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -57,22 +114,33 @@ export const groupsRouter = createTRPCRouter({
           id: input.id,
         },
       });
-      if (!group) throw new Error("Group not found");
+      if (!group)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
       if (group.ownerId !== ctx.session.user.id)
-        throw new Error("You are not the owner of this group");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Must be owner of the group",
+        });
       await ctx.prisma.group.delete({
         where: {
           id: input.id,
         },
       });
     }),
-  locateByName: publicProcedure
+  locateByName: protectedProcedure
     .input(z.object({ name: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.group.findMany({
         where: {
           name: {
             contains: input.name,
+          },
+          groupMembership: {
+            some: {
+              userId: {
+                equals: ctx.session.user.id,
+              },
+            },
           },
         },
       });
@@ -108,9 +176,13 @@ export const groupsRouter = createTRPCRouter({
       const group = await ctx.prisma.group.findFirst({
         where: { id: input.groupId },
       });
-      if (!group) throw new Error("Group not found");
+      if (!group)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
       if (group.ownerId !== ctx.session.user.id)
-        throw new Error("You are not the owner of this group");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Must be owner of the group",
+        });
       if (!input.ownerId) input.ownerId = group.ownerId;
       return await ctx.prisma.group.update({
         where: {
@@ -129,11 +201,18 @@ export const groupsRouter = createTRPCRouter({
       const group = await ctx.prisma.group.findFirst({
         where: { id: input.groupId },
       });
-      if (!group) throw new Error("Group not found");
+      if (!group)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
       if (group.ownerId !== ctx.session.user.id)
-        throw new Error("You are not the owner of this group");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Must be owner of the group",
+        });
       if (group.ownerId === input.userId)
-        throw new Error("The Dutchman must have a captain!");
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "The Dutchman must have a captain!",
+        });
       const deleted = await ctx.prisma.groupMembership.deleteMany({
         where: {
           groupId: input.groupId,
@@ -142,6 +221,15 @@ export const groupsRouter = createTRPCRouter({
       });
       if (!deleted) return false;
       await ctx.prisma.task.updateMany({
+        where: {
+          groupId: input.groupId,
+          authorId: input.userId,
+        },
+        data: {
+          authorId: group.ownerId,
+        },
+      });
+      await ctx.prisma.category.updateMany({
         where: {
           groupId: input.groupId,
           authorId: input.userId,
@@ -166,13 +254,18 @@ export const groupsRouter = createTRPCRouter({
       const group = await ctx.prisma.group.findFirst({
         where: { id: input.groupId },
       });
-      if (!group) throw new Error("Group not found");
+      if (!group)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
       const user = await ctx.prisma.user.findFirst({
         where: { id: input.userId },
       });
-      if (!user) throw new Error("User not found");
+      if (!user)
+        throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
       if (group.ownerId !== ctx.session.user.id)
-        throw new Error("You are not the owner of this group");
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Must be owner of the group",
+        });
       const membership = await ctx.prisma.groupMembership.create({
         data: {
           groupId: input.groupId,
@@ -183,28 +276,13 @@ export const groupsRouter = createTRPCRouter({
       return false;
     }),
   leave: protectedProcedure
-    .input(z.object({ groupId: z.string() }))
+    .input(leaveGroupInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const deleted = await ctx.prisma.groupMembership.deleteMany({
-        where: {
-          groupId: input.groupId,
-          group: {
-            isNot: {
-              ownerId: ctx.session.user.id,
-            },
-          },
-          userId: ctx.session.user.id,
-        },
-      });
-      if (!deleted) return false;
-      await ctx.prisma.taskAssignment.deleteMany({
-        where: {
-          userId: ctx.session.user.id,
-          task: {
-            groupId: input.groupId,
-          },
-        },
-      });
-      return true;
+      if (input.userId !== ctx.session.user.id)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Cannot leave group for another user",
+        });
+      return leaveGroup({ prisma: ctx.prisma, input });
     }),
 });

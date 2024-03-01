@@ -35,7 +35,7 @@ const TaskManageCategories: FC<Props> = (props: Props) => {
   const tableHeader = (
     <TableHeader>
       <TableColumn>Title</TableColumn>
-      <TableColumn>Description</TableColumn>
+      <TableColumn className="max-md:hidden">Description</TableColumn>
       <TableColumn>{""}</TableColumn>
     </TableHeader>
   );
@@ -60,8 +60,16 @@ const TaskManageCategories: FC<Props> = (props: Props) => {
     >
       {(category) => (
         <TableRow>
-          <TableCell>{category.name}</TableCell>
           <TableCell>
+            <span className="text-lg">{category.name}</span>{" "}
+            {category.description !== "" && (
+              <p className="md:hidden">
+                <span className="font-semibold">Description:</span>{" "}
+                {category.description}
+              </p>
+            )}
+          </TableCell>
+          <TableCell className="max-md:hidden">
             {category.description == "" ? "—" : category.description}
           </TableCell>
           <TableCell>

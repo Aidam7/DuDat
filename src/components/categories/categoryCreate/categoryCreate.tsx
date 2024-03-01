@@ -1,4 +1,4 @@
-import { Button, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useRouter as useNav } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -29,7 +29,6 @@ const CategoryCreate: React.FC = () => {
       onSubmit={handleSubmit}
       className="items-left justify-left flex flex-col gap-5"
     >
-      <h3 className="text-3xl font-bold">Create a category</h3>
       <Input
         type="text"
         value={name}
@@ -43,7 +42,9 @@ const CategoryCreate: React.FC = () => {
         onValueChange={setDescription}
         label="Description:"
       />
-      <Button type="submit">Create</Button>
+      <Input type="submit" value="Submit" color="primary">
+        Create
+      </Input>
     </form>
   );
 };

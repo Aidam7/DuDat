@@ -13,7 +13,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
 interface Props {
   task: Task;
@@ -73,7 +72,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
         className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Edit this task</h3>
+        <h3 className="mb-4 text-2xl font-bold">Edit this task</h3>
         <Input
           type="text"
           label="Task Title"
@@ -117,7 +116,7 @@ export const TaskEdit: FC<Props> = (props: Props) => {
             dateFormat={isAllDay ? "dd/MM/yyyy" : "dd/MM/yyyy, HH:mm"}
           />
         </div>
-        <Input type="submit" value="Submit" />
+        <Input type="submit" value="Submit" color="primary" />
       </form>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">

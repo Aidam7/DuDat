@@ -1,9 +1,15 @@
-import { Button } from "@nextui-org/react";
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@nextui-org/react";
 import { type Task, type Group, type User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { api } from "~/utils/api";
+import TaskConfirmFinished from "../taskConfirmFinished";
 interface Props {
   task: Task;
   group: Group;
@@ -13,7 +19,6 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   const { task, group, assignees } = props;
   const router = useRouter();
   const { data: session } = useSession();
-  const [openActions, setOpenActions] = useState(false);
   const assignToTaskMutation = api.tasks.assignUser.useMutation();
   const unassignFromTaskMutation = api.tasks.unassignUser.useMutation();
   const markTaskASFinishedMutation = api.tasks.finishTask.useMutation();
@@ -48,14 +53,17 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
         </Button>
       )}
       {hasPerm && (
-        <Button
-          color="warning"
-          onClick={() =>
-            router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
-          }
-        >
-          Settings
-        </Button>
+        <>
+          <TaskConfirmFinished task={task} />
+          <Button
+            color="warning"
+            onClick={() =>
+              router.push(`/groups/${groupId}/tasks/${taskId}/admin`)
+            }
+          >
+            Settings
+          </Button>
+        </>
       )}
     </>
   );
@@ -116,13 +124,19 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   }
   return (
     <>
-      <div className="ml-auto flex flex-row gap-2 max-sm:hidden">{actions}</div>
-      <div className="ml-auto sm:hidden">
-        <Button onClick={() => setOpenActions(!openActions)} className="mb-2">
-          {openActions ? "▲ Close panel" : "▼ Open panel"}
-        </Button>
+      <div className="ml-auto flex flex-row gap-2 max-lg:hidden">{actions}</div>
+      <div className="ml-auto lg:hidden">
+        <Popover>
+          <PopoverTrigger>
+            <Button>
+              <span className="text-lg">Action Panel</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="flex flex-col gap-2">{actions}</div>
+          </PopoverContent>
+        </Popover>
       </div>
-      {openActions && <div className="flex flex-col gap-2">{actions}</div>}
     </>
   );
 };
