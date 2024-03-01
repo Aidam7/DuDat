@@ -50,15 +50,17 @@ export const authOptions: NextAuthOptions = {
     createUser: async ({ user }) => {
       //* For some reason TS doesn't recognize that name really does exist after the first check, so, whatever, we check twice
       if (!user.name) return;
-      user = await prisma.user.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
-          image: `https://api.dicebear.com/7.x/lorelei-neutral/svg?seed=${user.id}&backgroundColor=ffffff,b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`,
-        },
-      });
+      if (env.IMAGE_API) {
+        user = await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+            image: env.IMAGE_API,
+          },
+        });
+      }
       if (!user.name) return;
       const group = await prisma.group.create({
         data: {

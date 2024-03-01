@@ -7,23 +7,27 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState, type FC } from "react";
 import LoginPanel from "~/components/auth/LoginPanel";
 
 const DuDatNavbar: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { status } = useSession();
   interface NavItem {
     label: string;
     href: string;
   }
 
-  const navItems: NavItem[] = [
+  let navItems: NavItem[] = [
     { label: "My Groups", href: "/groups" },
     { label: "Calendar", href: "/tasks/calendar" },
     { label: "My Tasks", href: "/tasks" },
   ];
+
+  navItems = status === "authenticated" ? navItems : [];
+
   return (
     <>
       <Navbar
@@ -34,7 +38,7 @@ const DuDatNavbar: FC = () => {
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            className="md:hidden"
+            className={`md:hidden ${status !== "authenticated" && "hidden"}`}
           />
           <NavbarBrand>
             <Link href="/">
@@ -55,7 +59,7 @@ const DuDatNavbar: FC = () => {
             <LoginPanel />
           </NavbarItem>
         </NavbarContent>
-        <NavbarMenu className="font-sans">
+        <NavbarMenu>
           {navItems.map((item) => (
             <NavbarMenuItem
               key={item.href}

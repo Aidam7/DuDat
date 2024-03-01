@@ -55,7 +55,6 @@ const TaskRemoveAssignments: FC<Props> = (props: Props) => {
       <h2 className="text-2xl font-bold">Remove assignees</h2>
       <Input
         placeholder="Search for a member"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
         onValueChange={setQuery}
       />

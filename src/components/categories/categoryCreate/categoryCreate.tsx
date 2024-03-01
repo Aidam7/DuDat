@@ -1,4 +1,4 @@
-import { Button, Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { useRouter as useNav } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -42,7 +42,9 @@ const CategoryCreate: React.FC = () => {
         onValueChange={setDescription}
         label="Description:"
       />
-      <Button type="submit">Create</Button>
+      <Input type="submit" value="Submit" color="primary">
+        Create
+      </Input>
     </form>
   );
 };

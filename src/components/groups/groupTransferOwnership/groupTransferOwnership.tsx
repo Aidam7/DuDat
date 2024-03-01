@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -19,12 +20,7 @@ import { type Group } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, type FC } from "react";
 import { api } from "~/utils/api";
-import { type ITableColumns } from "~/utils/types";
 
-const columns: ITableColumns[] = [
-  { label: "User", key: "name" },
-  { label: "", key: "actions" },
-];
 interface Props {
   group: Group;
 }
@@ -54,25 +50,21 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
     );
   }
   return (
-    <>
+    <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Transfer ownership</h2>
-      <input
+      <Input
         placeholder="Search for a new owner"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      ></Input>
       <Table
         isStriped
         onRowAction={(key) => router.push(`/users/${key}`)}
         selectionMode="single"
       >
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
+        <TableHeader>
+          <TableColumn key="name">User</TableColumn>
+          <TableColumn key="actions">{""}</TableColumn>
         </TableHeader>
         <TableBody
           items={users}
@@ -147,7 +139,7 @@ const GroupTransferOwnership: FC<Props> = (props: Props) => {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 export default GroupTransferOwnership;

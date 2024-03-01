@@ -6,24 +6,22 @@ import Code401 from "~/components/layout/errorCodes/401";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 export default function CategoryAdminPanel() {
   const router = useRouter();
   const categoryId = router.query.categoryId as string;
   const { data: session } = useSession();
-  const { data: category, isFetching: loading } =
+  const { data: category, isInitialLoading: loading } =
     api.categories.getById.useQuery(
       { id: categoryId },
       { enabled: session != null },
     );
   if (loading) return <Loading />;
-  if (!session) return <SignIn />;
   if (!category) return <Code404 />;
   if (
-    category.authorId != session.user.id &&
-    category.group.ownerId != session.user.id
+    category.authorId != session?.user.id &&
+    category.group.ownerId != session?.user.id
   )
     return <Code401 />;
   const breadcrumbs: IBreadcrumb[] = [

@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -50,14 +51,11 @@ const GroupRemoveMembers: FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Manage members</h2>
-      <input
+      <Input
         placeholder="Search for a member"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      ></Input>
       <Table selectionMode="single" aria-label="Member table">
         <TableHeader>
           <TableColumn>User</TableColumn>

@@ -6,7 +6,6 @@ import CategoryChipDisplay from "~/components/categories/categoryChipDisplay";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskActionPanel from "~/components/tasks/taskActionPanel/taskActionPanel";
 import TaskManageCategories from "~/components/tasks/taskManageCategories";
 import TaskProgressBar from "~/components/tasks/taskProgressBar";
@@ -19,7 +18,7 @@ export default function TaskDetail() {
   const taskId = router.query.taskId as string;
   const groupId = router.query.groupId as string;
   const { data: session } = useSession();
-  const { data: task, isFetching: loading } = api.tasks.getById.useQuery(
+  const { data: task, isInitialLoading: loading } = api.tasks.getById.useQuery(
     { id: taskId },
     { enabled: session != null },
   );
@@ -43,7 +42,6 @@ export default function TaskDetail() {
     { enabled: task != null && task != undefined },
   );
   if (loading) return <Loading />;
-  if (!session) return <SignIn />;
   if (!task || !group) return <Code404 />;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "/groups/" },
@@ -53,7 +51,7 @@ export default function TaskDetail() {
   ];
   return (
     <div className="flex flex-col gap-5">
-      <div className="mb-2 flex flex-row items-center max-sm:flex-col">
+      <div className="flex flex-row items-center max-sm:flex-col">
         <PageHeader
           name={task.title}
           description={task.description}
@@ -67,10 +65,8 @@ export default function TaskDetail() {
       </div>
       <CategoryChipDisplay categories={categories} displayWrapper />
       <TaskProgressBar task={task} />
-      <div className="mb-5">
-        <h2 className="text-4xl">Assignees</h2>
-        <UserTable rows={assignees} loading={loadingAssignees} />
-      </div>
+      <h2 className="text-4xl">Assignees</h2>
+      <UserTable rows={assignees} loading={loadingAssignees} />
       <div className="flex-co ml-auto flex gap-2">
         <Button
           color="warning"
@@ -81,15 +77,13 @@ export default function TaskDetail() {
             : "Open category panel"}
         </Button>
       </div>
-      {displayCategoryManage && (
-        <>
-          <h2 className="text-4xl">Categories</h2>
-          <TaskManageCategories
-            task={task}
-            link={`/groups/${groupId}/categories/`}
-          />
-        </>
-      )}
+      <div className={`${!displayCategoryManage && "hidden"}`}>
+        <h2 className="mb-5 text-4xl">Categories</h2>
+        <TaskManageCategories
+          task={task}
+          link={`/groups/${groupId}/categories/`}
+        />
+      </div>
     </div>
   );
 }

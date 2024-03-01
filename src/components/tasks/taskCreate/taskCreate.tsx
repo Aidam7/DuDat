@@ -12,7 +12,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, type FC, type FormEvent } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { api } from "~/utils/api";
 import { roundToEndOfDay, roundToHalfHour, roundToZero } from "~/utils/func";
 interface Props {
@@ -78,7 +77,6 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         className="items-left justify-left flex flex-col gap-5"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Create a task</h3>
         <Input
           type="text"
           label="Task Title"
@@ -127,7 +125,7 @@ export const TaskCreate: FC<Props> = (props: Props) => {
         <Switch isSelected={isWish} onValueChange={setIsWish}>
           Is a wish?
         </Switch>
-        <Input type="submit" value="Submit" />
+        <Input type="submit" value="Submit" color="primary" />
       </form>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="bg-black font-mono text-white">

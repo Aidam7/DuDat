@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 
@@ -14,14 +13,13 @@ export default function Tasks() {
   const [query, setQuery] = useState("");
   if (session) assigneeId = session.user.id;
   const [finishedTasksOpen, setFinishedTasksOpen] = useState(false);
-  const { data: tasks, isFetching: loading } = findTasksQuery.useQuery(
+  const { data: tasks, isInitialLoading: loading } = findTasksQuery.useQuery(
     {
       title: query,
       assigneeId: assigneeId,
     },
     { enabled: session != null },
   );
-  if (!session) return <SignIn />;
   if (loading) return <Loading />;
   const unConfirmedTasks = tasks?.filter(
     (task) => task.finishedOn != null && task.confirmedAsFinished == false,
@@ -39,7 +37,10 @@ export default function Tasks() {
         onValueChange={setQuery}
       />
       <TaskTable loading={loading} rows={ongoingTasks} link="/tasks/" />
-      <h2 className="pb-5 text-4xl font-semibold">Unconfirmed tasks</h2>
+      <h2 className="text-4xl font-semibold">Unconfirmed tasks</h2>
+      <p className="pl-5 text-2xl italic">
+        Please check that these tasks have been finished
+      </p>
       <TaskTable loading={loading} rows={unConfirmedTasks} link="/tasks/" />
       <Button
         onClick={() => setFinishedTasksOpen(!finishedTasksOpen)}

@@ -4,26 +4,24 @@ import { useRouter } from "next/router";
 import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
-import SignIn from "~/components/layout/signIn";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
 
 export default function CategoryDetail() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const categoryId = router.query.categoryId as string;
   const groupId = router.query.groupId as string;
-  const { data: category, isFetching: loading } =
+  const { data: category, isInitialLoading: loading } =
     api.categories.getById.useQuery({ id: categoryId });
   const { data: tasks, isFetching: loadingTasks } =
     api.categories.getTasks.useQuery({ id: categoryId });
-  if (loading || status == "loading") return <Loading />;
-  if (!session) return <SignIn />;
+  if (loading) return <Loading />;
   if (!category) return <Code404 />;
   const isAuthor =
-    category.authorId == session.user.id ||
-    category.group.ownerId == session.user.id;
+    category.authorId == session?.user.id ||
+    category.group.ownerId == session?.user.id;
   const breadcrumbs: IBreadcrumb[] = [
     { name: "Groups", link: "/groups" },
     { name: `${category.group.name}`, link: `/groups/${category.group.id}` },

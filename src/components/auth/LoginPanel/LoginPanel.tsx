@@ -1,5 +1,5 @@
 import { Button, Image } from "@nextui-org/react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 
@@ -31,12 +31,11 @@ const LoginButton: React.FC = () => {
           </div>
         )}
       </Link>
-      <Button
-        color="primary"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </Button>
+      {!sessionData && (
+        <Button color="primary" onClick={() => void signIn()}>
+          Sign in
+        </Button>
+      )}
     </div>
   );
 };
