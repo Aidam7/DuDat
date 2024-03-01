@@ -18,6 +18,7 @@ export const formatDateToString = (date: Date, cutSeconds = true) => {
 export const roundToHalfHour = (date: Date): Date => {
   const roundedMinutes = Math.ceil(date.getMinutes() / 30) * 30;
   date.setMinutes(roundedMinutes);
+  date.setSeconds(0);
   return date;
 };
 

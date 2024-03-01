@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { api } from "~/utils/api";
 import TaskConfirmFinished from "../taskConfirmFinished";
+import TaskCopy from "../taskCopy/taskCopy";
 interface Props {
   task: Task;
   group: Group;
@@ -32,6 +33,7 @@ const TaskActionPanel: FC<Props> = (props: Props) => {
   const taskId = task.id;
   const actions = (
     <>
+      <TaskCopy task={task} />
       {isAssigned ? (
         <>
           {task.finishedOn == null ? (
