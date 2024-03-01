@@ -604,8 +604,9 @@ export const tasksRouter = createTRPCRouter({
         });
 
       const createdOn = original.createdOn;
-      const now = new Date();
-      const timeDifference = now.getTime() - createdOn.getTime();
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const timeDifference = tomorrow.getTime() - createdOn.getTime();
 
       const startOn = original.startOn
         ? roundToHalfHour(new Date(original.startOn.getTime() + timeDifference))
@@ -620,7 +621,7 @@ export const tasksRouter = createTRPCRouter({
           description: original.description,
           groupId: original.groupId,
           authorId: ctx.session.user.id,
-          createdOn: now,
+          createdOn: tomorrow,
           startOn: startOn,
           dueOn: dueOn,
         },
