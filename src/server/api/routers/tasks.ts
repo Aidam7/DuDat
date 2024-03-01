@@ -490,6 +490,13 @@ export const tasksRouter = createTRPCRouter({
               taskId: input.taskId,
             },
           },
+          group: {
+            tasks: {
+              some: {
+                id: input.taskId,
+              },
+            },
+          },
         },
       });
     }),
@@ -568,5 +575,93 @@ export const tasksRouter = createTRPCRouter({
           categoryId: input.categoryId,
         },
       });
+    }),
+  cloneTask: protectedProcedure
+    .input(z.object({ taskId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const original = await ctx.prisma.task.findFirst({
+        where: {
+          id: input.taskId,
+        },
+        include: {
+          group: true,
+          categories: true,
+          taskAssignment: true,
+        },
+      });
+
+      if (!original)
+        throw new TRPCError({ code: "NOT_FOUND", message: "Task not found" });
+
+      if (
+        original.authorId != ctx.session.user.id &&
+        original.group.ownerId != ctx.session.user.id
+      )
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to clone this task",
+        });
+
+      const createdOn = original.createdOn;
+      const now = new Date();
+      const timeDifference = now.getTime() - createdOn.getTime();
+
+      const startOn = original.startOn
+        ? new Date(original.startOn.getTime() + timeDifference)
+        : null;
+      const dueOn = original.dueOn
+        ? new Date(original.dueOn.getTime() + timeDifference)
+        : null;
+
+      const copy = await ctx.prisma.task.create({
+        data: {
+          title: `${original.title} — Copy`,
+          description: original.description,
+          groupId: original.groupId,
+          authorId: ctx.session.user.id,
+          createdOn: now,
+          startOn: startOn,
+          dueOn: dueOn,
+        },
+      });
+
+      if (!copy)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create copy",
+        });
+
+      const categoryAssignments = original.categories.map((category) => ({
+        taskId: copy.id,
+        categoryId: category.id,
+      }));
+
+      const createdCategoryAssignments =
+        await ctx.prisma.categoryAssignment.createMany({
+          data: categoryAssignments,
+        });
+
+      if (!createdCategoryAssignments)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create category assignments",
+        });
+
+      const taskAssignments = original.taskAssignment.map((assignment) => ({
+        taskId: copy.id,
+        userId: assignment.userId,
+      }));
+
+      const createdTaskAssignments = await ctx.prisma.taskAssignment.createMany(
+        { data: taskAssignments },
+      );
+
+      if (!createdTaskAssignments)
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create task assignments",
+        });
+
+      return copy;
     }),
 });
