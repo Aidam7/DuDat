@@ -53,6 +53,7 @@ const UserDelete: FC<Props> = (props: Props) => {
       {
         onSuccess: () => {
           router.push(`/`);
+          router.refresh();
         },
         onError() {
           setErrorMessage(
