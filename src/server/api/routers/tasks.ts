@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { roundToHalfHour } from "~/utils/func";
 
 export const tasksRouter = createTRPCRouter({
   getById: protectedProcedure
@@ -607,10 +608,10 @@ export const tasksRouter = createTRPCRouter({
       const timeDifference = now.getTime() - createdOn.getTime();
 
       const startOn = original.startOn
-        ? new Date(original.startOn.getTime() + timeDifference)
+        ? roundToHalfHour(new Date(original.startOn.getTime() + timeDifference))
         : null;
       const dueOn = original.dueOn
-        ? new Date(original.dueOn.getTime() + timeDifference)
+        ? roundToHalfHour(new Date(original.dueOn.getTime() + timeDifference))
         : null;
 
       const copy = await ctx.prisma.task.create({
