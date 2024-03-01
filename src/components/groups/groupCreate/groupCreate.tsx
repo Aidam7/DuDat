@@ -30,7 +30,6 @@ export const GroupCreate: FC = () => {
         className="flex flex-col items-center justify-center"
         onSubmit={handleSubmit}
       >
-        <h3 className="mb-4 text-3xl font-bold">Create a group</h3>
         <Input
           type="text"
           label="Group name"

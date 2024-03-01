@@ -13,7 +13,7 @@ import { type FC } from "react";
 import { type ITaskWithGroup } from "~/utils/types";
 
 type Props = {
-  rows: ITaskWithGroup[];
+  rows: ITaskWithGroup[] | null | undefined;
   loading: boolean;
   doNotRenderGroup?: boolean;
   renderFinishedOn?: boolean;
@@ -22,6 +22,7 @@ type Props = {
 
 export const TaskTable: FC<Props> = (props: Props) => {
   const router = useRouter();
+  const rows = props.rows ?? [];
   const tableHeader = (
     <TableHeader>
       <TableColumn>
@@ -29,7 +30,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
         <div className="md:hidden">Task</div>
       </TableColumn>
       <TableColumn className="max-md:hidden">Description</TableColumn>
-      <TableColumn className="max-mad: hidden">Due Date</TableColumn>
+      <TableColumn className="max-md:hidden">Due Date</TableColumn>
       <TableColumn className={props.renderFinishedOn ? "" : "hidden"}>
         Finished On
       </TableColumn>
@@ -43,7 +44,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
 
   const tableBody = (
     <TableBody
-      items={props.rows}
+      items={rows}
       isLoading={props.loading}
       loadingContent={<Spinner label="Loading..." />}
       emptyContent={"We couldn't find anything"}
@@ -62,13 +63,13 @@ export const TaskTable: FC<Props> = (props: Props) => {
               </Link>
             )}
             {task.description !== "" && (
-              <p>
+              <p className="md:hidden">
                 <span className="font-semibold">Description:</span>{" "}
                 {task.description}
               </p>
             )}
             {task.dueOn !== null && (
-              <p>
+              <p className="md:hidden">
                 <span className="font-semibold">Due on:</span>{" "}
                 {task.dueOn.toLocaleDateString()}
               </p>
@@ -78,7 +79,7 @@ export const TaskTable: FC<Props> = (props: Props) => {
           <TableCell className="max-md:hidden">
             {task.description !== "" ? task.description : "—"}
           </TableCell>
-          <TableCell className="max-md: hidden">
+          <TableCell className="max-md:hidden">
             {task.dueOn !== null ? task.dueOn.toLocaleDateString() : "—"}
           </TableCell>
           <TableCell className={props.renderFinishedOn ? "" : "hidden"}>

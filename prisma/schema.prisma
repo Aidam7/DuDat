@@ -9,8 +9,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("DATABASE_URL") // uses connection pooling
+  directUrl = env("DATABASE_NON_POOLING_URL") // uses a direct connection
 }
 
 // Necessary for Next auth
@@ -42,7 +42,7 @@ model Session {
 
 model User {
   id                     String            @id @default(cuid())
-  name                   String?
+  name                   String
   email                  String?           @unique
   emailVerified          DateTime?
   image                  String            @default("")
@@ -55,6 +55,7 @@ model User {
   categoryOwnership      Category[]
   finishedTasksCount     Int               @default(0)
   finishedTasksLateCount Int               @default(0)
+  startedStreak          DateTime?
 
   @@index([name])
   @@index([id])
@@ -78,7 +79,7 @@ model Task {
   finishedOn          DateTime?
   group               Group                @relation(fields: [groupId], references: [id], onDelete: Cascade)
   groupId             String
-  author              User                 @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author              User                 @relation(fields: [authorId], references: [id], onDelete: Restrict)
   authorId            String
   taskAssignment      TaskAssignment[]
   categories          CategoryAssignment[]

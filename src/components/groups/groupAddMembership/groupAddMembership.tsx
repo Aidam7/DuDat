@@ -1,6 +1,7 @@
 import {
   Button,
   Image,
+  Input,
   Spinner,
   Table,
   TableBody,
@@ -44,14 +45,11 @@ const GroupAddMembers: FC<Props> = (props: Props) => {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-2xl font-bold">Add members</h2>
-      <input
+      <Input
         placeholder="Search for a new member"
-        className={"inner mb-5 h-10 rounded-md pl-2"}
         value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      ></input>
+        onValueChange={setQuery}
+      ></Input>
       <Table selectionMode="single" aria-label="Member table">
         <TableHeader>
           <TableColumn>User</TableColumn>
