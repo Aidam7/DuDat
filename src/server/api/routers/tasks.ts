@@ -594,15 +594,6 @@ export const tasksRouter = createTRPCRouter({
       if (!original)
         throw new TRPCError({ code: "NOT_FOUND", message: "Task not found" });
 
-      if (
-        original.authorId != ctx.session.user.id &&
-        original.group.ownerId != ctx.session.user.id
-      )
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "You are not authorized to clone this task",
-        });
-
       const createdOn = original.createdOn;
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
