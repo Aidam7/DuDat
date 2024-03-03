@@ -11,6 +11,8 @@
     "studio": "npx prisma studio"
   },
   "dependencies": {
+    "@dicebear/collection": "^7.0.5",
+    "@dicebear/core": "^7.0.5",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@nextui-org/react": "^2.1.13",
     "@prisma/client": "^5.3.1",
