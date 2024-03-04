@@ -9,6 +9,7 @@ import GoogleProvider from "next-auth/providers/google";
 
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
+import { generateAvatar } from "~/utils/func";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -50,21 +51,33 @@ export const authOptions: NextAuthOptions = {
     createUser: async ({ user }) => {
       //* For some reason TS doesn't recognize that name really does exist after the first check, so, whatever, we check twice
       if (!user.name) return;
-      if (env.IMAGE_API) {
+      const name = user.name.charAt(0).toUpperCase() + user.name.slice(1);
+      if (env.IMAGE_API !== "") {
         user = await prisma.user.update({
           where: {
             id: user.id,
           },
           data: {
-            name: user.name.charAt(0).toUpperCase() + user.name.slice(1),
+            name: name,
             image: env.IMAGE_API,
+          },
+        });
+      } else {
+        const avatar = await generateAvatar(user.id);
+        user = await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            name: name,
+            image: avatar,
           },
         });
       }
       if (!user.name) return;
       const group = await prisma.group.create({
         data: {
-          name: user.name,
+          name: `${user.name}'s Group`,
           ownerId: user.id,
           description: `You personal group, ${user.name}!`,
         },

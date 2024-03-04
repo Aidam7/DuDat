@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { api } from "~/utils/api";
 import TaskConfirmFinished from "../taskConfirmFinished";
-import TaskCopy from "../taskCopy/taskCopy";
+import TaskCopy from "../taskCopy/";
 interface Props {
   task: Task;
   group: Group;
