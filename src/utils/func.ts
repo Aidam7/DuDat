@@ -1,3 +1,6 @@
+import { loreleiNeutral } from "@dicebear/collection";
+import { createAvatar } from "@dicebear/core";
+
 export const formatDateToString = (date: Date, cutSeconds = true) => {
   let formattedDate = `${date.toLocaleDateString()}`;
   if (
@@ -41,4 +44,21 @@ export const roundToPreviousHour = (date: Date): Date => {
   date.setMinutes(0, 0, 0);
   date.setHours(date.getHours() - 1);
   return date;
+};
+
+export const generateAvatar = async (seed: string) => {
+  return await createAvatar(loreleiNeutral, {
+    seed: seed,
+    backgroundColor: ["b6e3f4", "c0aede", "d1d4f9", "ffd5dc", "ffdfbf"],
+  }).toDataUri();
+};
+
+export const generateRandomString = (length = 25) => {
+  let result = "";
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
 };
