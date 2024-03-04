@@ -3,8 +3,6 @@ import { SessionProvider } from "next-auth/react";
 import { type AppProps, type AppType } from "next/app";
 import { api } from "~/utils/api";
 import { NextUIProvider } from "@nextui-org/react";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { type NextPage } from "next";
 import Head from "next/head";
 import DuDatNavbar from "~/components/layout/navbar/";
@@ -49,8 +47,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
                 <Component {...pageProps} />
               </CheckAuth>
             </div>
-            <Analytics />
-            <SpeedInsights />
             <Footer />
           </Wrapper>
         </SessionProvider>
