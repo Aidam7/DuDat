@@ -6,6 +6,7 @@ import Code404 from "~/components/layout/errorCodes/404";
 import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
 import UserActionPanel from "~/components/users/userActionPanel";
+import UserBadgeDisplay from "~/components/users/userBadgeDisplay/userBadgeDisplay";
 import UserDisplayStreak from "~/components/users/userStreakDisplay";
 import { api } from "~/utils/api";
 import { type IBreadcrumb } from "~/utils/types";
@@ -33,14 +34,15 @@ export default function UserDetail() {
     { name: user.name, link: `.` },
   ];
   return (
-    <>
+    <div className="flex flex-col gap-2">
       <PageHeader name={user.name} breadcrumbs={breadcrumbs} />
       <div className="items-top flex flex-row gap-5">
         <Image src={user.image} alt={`Users image`} width={200} height={200} />{" "}
         <UserActionPanel user={user} />
       </div>
+      <h2 className="text-4xl font-semibold">Tasks</h2>
+      <UserBadgeDisplay user={user} />
       <div className="flex w-full flex-col gap-5 max-md:w-full sm:w-[25%]">
-        <h2 className="text-4xl font-semibold">Tasks</h2>
         <UserDisplayStreak user={user} />
         <div>
           <p className="text-2xl">
@@ -60,6 +62,6 @@ export default function UserDetail() {
         </div>
         <Pie data={data} />
       </div>
-    </>
+    </div>
   );
 }
