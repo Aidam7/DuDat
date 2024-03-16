@@ -9,10 +9,10 @@ const GroupCreate: React.FC = () => {
     { name: `Create`, link: "." },
   ];
   return (
-    <>
+    <div className="flex flex-col gap-5">
       <PageHeader name="Create group" breadcrumbs={breadcrumbs} />
       <GroupCreateForm />
-    </>
+    </div>
   );
 };
 
