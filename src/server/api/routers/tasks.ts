@@ -657,4 +657,20 @@ export const tasksRouter = createTRPCRouter({
 
       return copy;
     }),
+  locateTasksToConfirm: protectedProcedure
+    .input(z.object({ ownerId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.task.findMany({
+        where: {
+          authorId: input.ownerId,
+          confirmedAsFinished: false,
+          finishedOn: {
+            not: null,
+          },
+        },
+        include: {
+          group: true,
+        },
+      });
+    }),
 });
