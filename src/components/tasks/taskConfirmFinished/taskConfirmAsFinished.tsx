@@ -21,6 +21,7 @@ const TaskConfirmFinished: React.FC<Props> = (props: Props) => {
   const confirmTaskAsFinishedMutation =
     api.tasks.confirmTaskAsFinished.useMutation();
   const { data: session } = useSession();
+  const apiUtils = api.useUtils();
   function handleConfirmTaskAsFinished() {
     if (!session || !props.task || props.task.confirmedAsFinished) return;
     if (session.user.id != props.task.authorId) return;
@@ -30,7 +31,7 @@ const TaskConfirmFinished: React.FC<Props> = (props: Props) => {
       },
       {
         onSuccess: () => {
-          props.task.confirmedAsFinished = true;
+          void apiUtils.tasks.getById.invalidate({ id: props.task.id });
         },
       },
     );
