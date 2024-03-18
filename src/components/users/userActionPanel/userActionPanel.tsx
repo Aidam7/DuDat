@@ -19,7 +19,10 @@ const UserActionPanel: FC<Props> = (props: Props) => {
   if (!isSelf) return null;
   const actions = (
     <>
-      <Button color="primary" onClick={() => void signOut()}>
+      <Button
+        color="primary"
+        onClick={() => void signOut({ callbackUrl: "/", redirect: true })}
+      >
         Sign out
       </Button>
       <Button
