@@ -9,6 +9,7 @@ import { api } from "~/utils/api";
 export default function Tasks() {
   const { data: session } = useSession();
   const findTasksQuery = api.tasks.locateByAssigneeAndTitle;
+  const findUnconfirmedTasksQuery = api.tasks.locateTasksToConfirm;
   let assigneeId = "";
   const [query, setQuery] = useState("");
   if (session) assigneeId = session.user.id;
@@ -20,10 +21,14 @@ export default function Tasks() {
     },
     { enabled: session != null },
   );
-  if (loading) return <Loading />;
-  const unConfirmedTasks = tasks?.filter(
-    (task) => task.finishedOn != null && task.confirmedAsFinished == false,
-  );
+  const { data: unConfirmedTasks, isInitialLoading: loadingUnconfirmedTasks } =
+    findUnconfirmedTasksQuery.useQuery(
+      {
+        ownerId: assigneeId,
+      },
+      { enabled: session != null },
+    );
+  if (loading || loadingUnconfirmedTasks) return <Loading />;
   const finishedTasks = tasks?.filter(
     (task) => task.finishedOn != null && task.confirmedAsFinished == true,
   );
