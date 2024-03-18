@@ -41,13 +41,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
               <meta name="description" content="A dead simple TODO app" />
               <link rel="icon" href="/favicon.ico" />
             </Head>
-            <DuDatNavbar />
-            <div className="flex flex-col px-8 py-20 md:px-16 lg:px-32 xl:px-64">
-              <CheckAuth>
-                <Component {...pageProps} />
-              </CheckAuth>
+            <div className="flex h-screen flex-col justify-between">
+              <DuDatNavbar />
+              <div className="flex flex-col px-8 py-20 md:px-16 lg:px-32 xl:px-64">
+                <CheckAuth>
+                  <Component {...pageProps} />
+                </CheckAuth>
+              </div>
+              <Footer />
             </div>
-            <Footer />
           </Wrapper>
         </SessionProvider>
       </NextUIProvider>
