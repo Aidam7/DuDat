@@ -13,22 +13,13 @@ const LoginButton: React.FC = () => {
         className="flex items-center break-words"
       >
         {sessionData?.user.image && (
-          <div className="pr-2">
-            <Image
-              src={sessionData.user.image}
-              alt={`${sessionData.user.name}'s avatar`}
-              className="mr-2 rounded-full max-md:hidden"
-              height={48}
-              width={48}
-            />
-            <Image
-              src={sessionData.user.image}
-              alt={`${sessionData.user.name}'s avatar`}
-              className="mr-2 rounded-full md:hidden"
-              height={36}
-              width={36}
-            />
-          </div>
+          <Image
+            src={sessionData.user.image}
+            alt={`${sessionData.user.name}'s avatar`}
+            className="m-1 rounded-full"
+            height={48}
+            width={48}
+          />
         )}
       </Link>
       {!sessionData && (
