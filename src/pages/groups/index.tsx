@@ -22,7 +22,7 @@ export default function Groups() {
   const router = useRouter();
   return (
     <>
-      <div className="mb-5 flex flex-col items-center gap-5 sm:flex-row">
+      <div className="mb-5 flex flex-col gap-5">
         <PageHeader name="Groups" description="" breadcrumbs={[]} />
         <Button
           color="primary"
