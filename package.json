@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@dicebear/collection": "^8.0.1",
-    "@dicebear/core": "^8.0.1",
+    "@dicebear/core": "^8.0.2",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@nextui-org/react": "^2.4.1",
     "@prisma/client": "^5.13.0",
