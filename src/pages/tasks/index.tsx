@@ -5,6 +5,7 @@ import Loading from "~/components/layout/loading";
 import PageHeader from "~/components/layout/pageHeader";
 import TaskTable from "~/components/tasks/taskTable";
 import { api } from "~/utils/api";
+import { splitTasksByState } from "~/utils/taskFilters";
 
 export default function Tasks() {
   const { data: session } = useSession();
@@ -29,10 +30,8 @@ export default function Tasks() {
       { enabled: session != null },
     );
   if (loading || loadingUnconfirmedTasks) return <Loading />;
-  const finishedTasks = tasks?.filter(
-    (task) => task.finishedOn != null && task.confirmedAsFinished == true,
-  );
-  const ongoingTasks = tasks?.filter((task) => task.finishedOn == null);
+  const { finished: finishedTasks, ongoing: ongoingTasks } =
+    splitTasksByState(tasks);
   return (
     <div className="flex flex-col gap-5">
       <PageHeader name="Tasks" breadcrumbs={[]} />

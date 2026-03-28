@@ -8,7 +8,9 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@dicebear/collection": "^8.0.1",
@@ -54,7 +56,8 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^13.5.6",
     "prisma": "^5.14.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^3.2.4"
   },
   "ct3aMetadata": {
     "initVersion": "7.19.0"
